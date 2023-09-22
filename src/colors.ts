@@ -324,6 +324,11 @@ export function parseColor(color: string): RGBA {
 }
 
 
+export function rgbaToString(color: RGBA): string {
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`;
+}
+
+
 
 function hexToRgb(color: string): RGBA {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(color);

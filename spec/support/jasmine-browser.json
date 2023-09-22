@@ -3,7 +3,7 @@
   "srcFiles": [],
   "specDir": ".",
   "specFiles": [
-    "dist/test/specs/**/*[sS]pec.?(m)js"
+    "test/specs/**/*[sS]pec.?(m)js"
   ],
   "helpers": [],
   "esmFilenameExtension": ".js",

@@ -3,6 +3,7 @@
 import { PointShape, Line, Triangle, Square, } from '../src/shapes/base_shapes';
 import { Point } from '../src/base';
 import { zip } from '../src/math';
+import structuredClone from '@ungap/structured-clone'
 
 
 describe('shape module', function() {

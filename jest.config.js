@@ -10,16 +10,19 @@
     }
   },
 };*/
+import structuredClone from '@ungap/structured-clone'
 
 
-module.exports = {
+
+export default {
   preset: 'ts-jest',
-  // testEnvironment: 'jsdom',
+  testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
      'test/specs',
      'dist'
   ],
   // setupFiles: ["<rootDir>/global.mock.js"],
+  setupFiles: ["jest-canvas-mock"],
   // transform: {
   //   "^.+\\.(t|j)s$": "ts-jest",
   //   "\\.[jt]s?$": "ts-jest",
@@ -29,6 +32,9 @@ module.exports = {
   //     "useESM": true
   //   }
   // },
+  globals: {
+    structuredClone,
+  },
   moduleNameMapper: {
     "(.+)\\.js": "$1"
   },

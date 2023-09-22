@@ -246,3 +246,16 @@ export function numDecimals(val: number): number {
 
     return vs.split('.')[1].length;
 }
+
+
+export function floor(a: number): number;
+export function floor(a: number[]): number[];
+export function floor(a: unknown): unknown {
+    if (Array.isArray(a)) {
+        return a.map(Math.floor);
+    } else if (typeof a === 'number') {
+        return Math.floor(a);
+    } else {
+        throw new Error('Can only take floor of number and number arrays');
+    }
+}

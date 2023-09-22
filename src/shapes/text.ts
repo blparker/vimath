@@ -1,8 +1,8 @@
 /// <reference types="offscreencanvas/index.d.ts" />
 
 
-import { Color } from '../colors.js';
-import { Point, Shift, RIGHT, OFFSET_GUTTER } from '../base.js';
+import { Color, Colors, RGBA } from '../colors.js';
+import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER } from '../base.js';
 import * as math from '../math.js';
 import { Shape } from './base_shapes.js';
 
@@ -21,12 +21,12 @@ export class CanvasTextMetrics implements TextMetrics {
 
     measureText(text: string, size: number): [number, number] {
         const ctx = this.canvas.getContext('2d');
-        ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (ctx === null) {
             throw new Error('Context of offscreen canvas is null');
         }
 
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         ctx.font = `${size}px Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol`;
 
         const metrics = ctx.measureText(text);
@@ -38,15 +38,18 @@ export class CanvasTextMetrics implements TextMetrics {
 }
 
 
+export type TextBaseline = 'top' | 'middle' | 'bottom';
+
+
 export class Text implements Shape {
     private _text: string;
     private _x: number;
     private _y: number;
     private _size: number;
-    private _align: 'left' | 'center' | 'right';
-    private _baseline: 'top' | 'middle' | 'bottom';
+    private _align: HAlign;
+    private _baseline: TextBaseline;
     private _tex: boolean;
-    private _color: Color;
+    private _color: RGBA;
     private _vertical: boolean;
     private _width: number;
     private _height: number;
@@ -55,7 +58,8 @@ export class Text implements Shape {
     private _angle: number = 0;
     private _currentScale: number = 1;
     // private _canvas = new OffscreenCanvas(256, 256);
-    constructor({ text, x = 0, y = 0, size = 20, align = 'center', baseline = 'middle', tex = false, color = Color.black, vertical = false, textMetrics = null, offsetGutter = OFFSET_GUTTER }: { text: string; x?: number; y?: number; size?: number; align?: 'left' | 'center' | 'right'; baseline?: 'top' | 'middle' | 'bottom'; tex?: boolean; color?: Color; vertical?: boolean; textMetrics?: TextMetrics | null; offsetGutter?: number; }) {
+
+    constructor({ text, x = 0, y = 0, size = 20, align = 'center', baseline = 'middle', tex = false, color = Colors.black(), vertical = false, textMetrics = null, offsetGutter = OFFSET_GUTTER }: { text: string; x?: number; y?: number; size?: number; align?: HAlign; baseline?: 'top' | 'middle' | 'bottom'; tex?: boolean; color?: RGBA; vertical?: boolean; textMetrics?: TextMetrics | null; offsetGutter?: number; }) {
         this._text = text;
         this._x = x;
         this._y = y;
@@ -238,5 +242,25 @@ export class Text implements Shape {
 
     get text(): string {
         return this._text;
+    }
+
+    get size(): number {
+        return this._size;
+    }
+
+    get align(): HAlign {
+        return this._align;
+    }
+
+    get baseline(): TextBaseline {
+        return this._baseline;
+    }
+
+    get color(): RGBA {
+        return this._color;
+    }
+
+    get vertical(): boolean {
+        return this._vertical;
     }
 }

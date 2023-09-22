@@ -4,6 +4,7 @@ import { Square } from "../src/shapes/base_shapes";
 import { Colors } from "../src/colors";
 import { Easing } from "../src/easing";
 import { zip } from "../src/math";
+import structuredClone from '@ungap/structured-clone'
 
 
 function expectArraysClose(a1: number[][], a2: number[][]) {
@@ -158,7 +159,6 @@ describe('change fill color animation module', () => {
 
     test('should change the fill color', () => {
         const target = new Square();
-        const startColor = structuredClone(target.color());
 
         const a = new ChangeFillColor({ target, toColor: Colors.white(), duration: 1000, });
         a.tick(0);
