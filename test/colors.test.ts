@@ -1,4 +1,4 @@
-import { Color, parseColor } from "../src/colors";
+import { parseColor } from "../src/colors";
 
 
 describe('colors module', function() {

@@ -259,3 +259,16 @@ export function floor(a: unknown): unknown {
         throw new Error('Can only take floor of number and number arrays');
     }
 }
+
+
+export function abs(a: number): number;
+export function abs(a: number[]): number[];
+export function abs(a: unknown): unknown {
+    if (Array.isArray(a)) {
+        return a.map(Math.abs);
+    } else if (typeof a === 'number') {
+        return Math.abs(a);
+    } else {
+        throw new Error('Can only take absolute value of number and number arrays');
+    }
+}

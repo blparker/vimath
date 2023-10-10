@@ -181,4 +181,11 @@ describe('text module', function() {
         expect(t.moveCenter([-2, -2]).center()).toEqual([-2, -2]);
     });
 
+    test('should get center when baseline is not middle', () => {
+        // Height of the text is 0.3478260869565215, so center will be -(0.3478260869565215 / 2)
+        const t = new Text({ text: 'TEST', x: 0, y: 0, baseline: 'top' });
+
+        expect(t.center()[0]).toBeCloseTo(0);
+        expect(t.center()[1]).toBeCloseTo(-0.17391343478261);
+    });
 });

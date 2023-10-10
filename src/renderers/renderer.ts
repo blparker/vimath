@@ -1,20 +1,28 @@
-import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK } from "../base";
-import { RGBA, rgbaToString } from "../colors";
-import { Shape, PointShape } from "../shapes/base_shapes.js";
+import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign } from '../base';
+import { RGBA, rgbaToString } from '../colors';
+import { Shape, PointShape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
-import { Text, TextBaseline } from "../shapes/text";
+import { Text, TextBaseline } from '../shapes/text';
+import { TextRenderer } from './text';
 
 
 type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; };
 type TextArgs = { text: string, x: number, y: number, size: number, color: RGBA, align: HAlign, baseline: TextBaseline, vertical?: boolean };
-type ImageArgs = { image: HTMLImageElement, x: number, y: number, align: HAlign };
+type ImageArgs = { image: HTMLImageElement, x: number, y: number, align: HAlign, verticalAlign: VAlign };
+
 
 export interface Canvas {
     line({ from, to, lineWidth, color }: LineArgs): void;
     text({ text, x, y, size, color, align, baseline, vertical = false }: TextArgs): void;
     image({ image, x, y, align = 'center' }: ImageArgs): void;
+    clear(): void
 }
 
+const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
+    'top': 'top',
+    'middle': 'alphabetic',
+    'bottom': 'bottom',
+} as const;
 
 export class HtmlCanvas implements Canvas {
     private readonly canvas: HTMLCanvasElement;
@@ -52,6 +60,7 @@ export class HtmlCanvas implements Canvas {
         this.ctx.font = `${size}px ${FONT_STACK.join(', ')}`;
         this.ctx.fillStyle = rgbaToString(color);
         this.ctx.textAlign = align;
+        // this.ctx.textBaseline = textBaselineToCanvas[baseline];
         this.ctx.textBaseline = baseline;
 
         if (vertical) {
@@ -59,18 +68,34 @@ export class HtmlCanvas implements Canvas {
             [x, y] = [-y, x];
         }
 
-        this.ctx.fillText(text, x, y);
+        this.ctx.fillText(text, ...this.translate([x, y]));
 
+        // const m = this.ctx.measureText(text);
+        // this.ctx.strokeRect(...this.translate([x, y]), m.width, m.actualBoundingBoxAscent + m.actualBoundingBoxDescent);
         this.ctx.restore();
     }
 
-    image({ image, x, y, align = 'center' }: ImageArgs): void {
+    image({ image, x, y, align, verticalAlign }: ImageArgs): void {
+        let [tX, tY] = this.translate([x, y]);
+
         if (align == 'center') {
-            x -= image.naturalWidth / 2;
-            y -= image.naturalHeight / 2;
+            tX -= image.naturalWidth / 2;
+        } else if (align == 'right') {
+            tX -= image.naturalWidth;
         }
 
-        this.ctx.drawImage(image, x, y);
+        if (verticalAlign == 'middle') {
+            tY -= image.naturalHeight / 2;
+        } else if (verticalAlign == 'bottom') {
+            tY -= image.naturalHeight;
+        }
+
+        this.ctx.drawImage(image, tX, tY);
+        // this.ctx.strokeRect(tX, tY, image.naturalWidth, image.naturalHeight)
+    }
+
+    clear(): void {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     private translate(point: Point): Point {
@@ -97,58 +122,12 @@ export class HtmlCanvas implements Canvas {
 
 export interface ShapeRenderer<T extends Shape> {
     // readonly canvas: Canvas;
-    render(shape: T): ShapeRenderer<T>;
+    render(shape: T): Promise<ShapeRenderer<T>>;
 }
 
 
-abstract class NativeRenderer<T extends Shape> implements ShapeRenderer<T> {
+export abstract class NativeRenderer<T extends Shape> implements ShapeRenderer<T> {
     constructor(protected canvas: Canvas) {}
 
-    abstract render(shape: T): ShapeRenderer<T>;
-}
-
-
-export class PointShapeRenderer extends NativeRenderer<PointShape> {
-    render(shape: PointShape): ShapeRenderer<PointShape> {
-        const points = shape.computedPoints();
-
-        if (points.length <= 1) {
-            throw new Error('Two or more points required to render PointShape');
-        }
-
-        const line = (p1: Point, p2: Point) => this.canvas.line({ from: p1, to: p2, lineWidth: 2, color: shape.lineColor() });
-
-        for (let i = 1; i < points.length; i++) {
-            const p1 = points[i - 1];
-            const p2 = points[i];
-
-            line(p1, p2);
-        }
-
-        if (points.length > 2) {
-            // Connect the last point back to the first point
-            line(points[points.length - 1], points[0]);
-        }
-
-        return this;
-    }
-}
-
-
-export class TextRenderer extends NativeRenderer<Text> {
-    render(shape: Text): ShapeRenderer<Text> {
-        const [x, y] = shape.center()
-        this.canvas.text({
-            text: shape.text,
-            x,
-            y,
-            size: shape.size,
-            color: shape.color,
-            align: shape.align,
-            baseline: shape.baseline,
-            vertical: shape.vertical
-        });
-
-        return this;
-    }
+    abstract render(shape: T): Promise<ShapeRenderer<T>>;
 }

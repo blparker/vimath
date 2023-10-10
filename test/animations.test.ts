@@ -1,4 +1,4 @@
-import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget } from "../src/animations";
+import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget } from "../src/animations/animations";
 import { LEFT, Point, Shift } from "../src/base";
 import { Square } from "../src/shapes/base_shapes";
 import { Colors } from "../src/colors";

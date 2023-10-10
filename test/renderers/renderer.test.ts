@@ -1,8 +1,12 @@
-// import { createCanvas, Canvas as NodeCanvas } from "../../node_modules/canvas/index";
-import { Colors, DEFAULT_PADDING, Line, Point, PointShape, RGBA, Square, X_TICKS, Y_TICKS } from "../../src/index";
-import { Canvas, HtmlCanvas, PointShapeRenderer, TextRenderer } from "../../src/renderers/renderer";
-import { Text } from "../../src/shapes/text";
-import { TestTextMetrics } from "../utils";
+// import { createCanvas, Canvas as NodeCanvas } from '../../node_modules/canvas/index';
+import { Colors, DEFAULT_PADDING, Line, Point, PointShape, RGBA, Square, X_TICKS, Y_TICKS } from '../../src/index';
+import { Canvas, HtmlCanvas } from '../../src/renderers/renderer';
+import { TextRenderer } from '../../src/renderers/text';
+import { PointShapeRenderer } from '../../src/renderers/shape';
+// import { TextRenderer } from '../../src/renderers/text';
+import { Text } from '../../src/shapes/text';
+import { TestTextMetrics } from '../utils';
+import { getRenderer } from '../../src/renderers/renderer_factory';
 // import { JSDOM } from '../../node_modules/jsdom/lib/api.js';
 // import { JSDOM } from 'jsdom';
 // import { setupJestCanvasMock } from '../../node_modules/jest-canvas-mock/lib/index';
@@ -16,7 +20,7 @@ import { TestTextMetrics } from "../utils";
 //     }
 
 //     line({ from, to, lineColor, color }: { from: Point; to: Point; lineColor: RGBA; color: RGBA; }): void {
-//         throw new Error("Method not implemented.");
+//         throw new Error('Method not implemented.');
 //     }
 // }
 
@@ -95,12 +99,12 @@ describe('renderer module', () => {
         const ctx = new OffscreenCanvas(256, 256).getContext('2d');
         ctx!.font = '20px Iowan Old Style';
 
-        console.log("### ", ctx?.measureText('foo'))
+        // console.log('### ', ctx?.measureText('foo'))
 
         const canvas = createTestCanvas(400, 200);
         const spy = jest.spyOn(canvas, 'text');
 
-        const text = new Text({ text: 'Hello world', x: 0, y: 0, size: 20, align: 'center', baseline: 'top', color: Colors.red(), textMetrics: new TestTextMetrics(100, 10) })
+        const text = new Text({ text: 'Hello world', x: 0, y: 0, size: 20, align: 'center', baseline: 'top', color: Colors.white(), textMetrics: new TestTextMetrics(100, 10) })
         const r = new TextRenderer(canvas).render(text);
 
         // text should only be called once, from -> to
@@ -110,7 +114,25 @@ describe('renderer module', () => {
         expect(spy.mock.calls[0][0].align).toEqual('center');
         expect(spy.mock.calls[0][0].baseline).toEqual('top');
         expect(spy.mock.calls[0][0].vertical).toEqual(false);
-        expect(spy.mock.calls[0][0].color).toEqual(Colors.red());
+        expect(spy.mock.calls[0][0].color).toEqual(Colors.white());
+    });
+
+    test('should render tex', async () => {
+        const t = new Text({ text: String.raw`\mathbb{M}`, tex: true });
+        const canvas = createTestCanvas(400, 200);
+        const r = await new TextRenderer(canvas).render(t);
+    });
+
+    test('renderer factory should return renderer for point shape', () => {
+        const line = new Line({ from: [-1, 0], to: [1, 0] });
+        const renderer = getRenderer(createTestCanvas(400, 200), line);
+        expect(renderer).toBeInstanceOf(PointShapeRenderer);
+    });
+
+    test('renderer factory should return renderer for text', () => {
+        const text = new Text({ text: 'Test' });
+        const renderer = getRenderer(createTestCanvas(400, 200), text);
+        expect(renderer).toBeInstanceOf(TextRenderer);
     });
 });
 
@@ -125,5 +147,14 @@ describe('html canvas module', () => {
 
         expect(drawCalls[0].props.path[0].props).toEqual(calcAbsPosition(canvas, [-1, 0]));
         expect(drawCalls[0].props.path[1].props).toEqual(calcAbsPosition(canvas, [1, 0]));
+    });
+
+    test('it should pass line color', () => {
+        const canvas = createTestCanvas(400, 200);
+        canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: Colors.blue() });
+
+        const drawCalls = canvas.ctx.__getDrawCalls();
+        console.log(canvas.ctx.__getEvents())
+        // expect(drawCalls[0].props.path[0].props).toEqual(calcAbsPosition(canvas, [-1, 0]));
     });
 });

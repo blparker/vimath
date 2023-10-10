@@ -17,6 +17,9 @@ import structuredClone from '@ungap/structured-clone'
 export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    resources: 'usable'
+  },
   testPathIgnorePatterns: [
      'test/specs',
      'dist'

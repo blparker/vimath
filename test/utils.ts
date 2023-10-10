@@ -1,5 +1,14 @@
 import { Point, X_TICKS, Y_TICKS } from '../src/base';
 import { TextMetrics } from '../src/shapes/text';
+import { HtmlCanvas } from '../src/renderers/renderer';
+
+
+export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {
+    const cvs: HTMLCanvasElement = document.createElement('canvas');
+    cvs.width = cvsWidth; cvs.height = cvsHeight;
+
+    return new HtmlCanvas(cvs);
+}
 
 
 export class TestTextMetrics implements TextMetrics {

@@ -7,9 +7,10 @@
     "build": "tsc",
     "test": "npx jest --verbose --config jest.config.js",
     "test-specs": "jasmine-browser-runner runSpecs",
-    "bundle-prod": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=imanim --format=esm",
+    "bundle-prod-ts": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=imanim --format=esm",
+    "bundle-prod": "./node_modules/.bin/esbuild ./dist/src/index.js --bundle --sourcemap --outdir=./dist/out --global-name=imanim --format=esm",
     "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=imanim --watch --format=esm",
-    "local-publish": "npm run build && npm run bundle-prod && cd ../dist && npm pack --pack-destination ."
+    "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination ."
   },
   "author": "",
   "license": "ISC",
@@ -39,6 +40,8 @@
   "dependencies": {
     "@types/offscreencanvas": "^2019.7.1",
     "decimal.js": "^10.4.3",
+    "mathjax": "^4.0.0-beta.3",
+    "mathjax-full": "^3.2.2",
     "pmath-js": "^1.0.1"
   },
   "type": "module"

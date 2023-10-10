@@ -1,10 +1,10 @@
 // import * as Easing from './easing.js';
-import { Point, Shift } from './base.js';
-import { Shape, Styleable, isShape } from './shapes/base_shapes.js';
-import { Color, RGBA } from './colors.js';
-import { Easing, EasingFunction } from './easing.js';
-import { arrLerp, clamp, distance, lerp } from './math.js';
-import * as math from './math.js';
+import { Point, Shift } from '../base.js';
+import { Shape, Styleable, isShape } from '../shapes/base_shapes.js';
+import { RGBA } from '../colors.js';
+import { Easing, EasingFunction } from '../easing.js';
+import { arrLerp, clamp, distance, lerp } from '../math.js';
+import * as math from '../math.js';
 
 
 export type AnimationArgs = {

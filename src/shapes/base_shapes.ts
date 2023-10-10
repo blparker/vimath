@@ -1,17 +1,17 @@
 
-import { Color, Colors, RGBA } from '../colors.js';
-import { Point, Shift, RIGHT, OFFSET_GUTTER } from '../base.js';
+import { Colors, RGBA } from '../colors.js';
+import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '../base.js';
 import * as math from '../math.js';
 // import { Decimal } from 'decimal.js';
 
 const DEFAULT_LINE_WIDTH = 3;
 
 
-class BaseParams {
-    lineColor: Color | null = null;
-    fillColor: Color | null = null;
-    lineWidth: number = DEFAULT_LINE_WIDTH;
-}
+// class BaseParams {
+//     lineColor: Color | null = null;
+//     fillColor: Color | null = null;
+//     lineWidth: number = DEFAULT_LINE_WIDTH;
+// }
 
 
 export interface Shape {
@@ -47,6 +47,19 @@ export function isShape(o: any): o is Shape {
 }
 
 
+type StyleArgs = {
+    lineColor?: RGBA,
+    lineWidth?: number,
+    color?: RGBA
+};
+
+const defaultStyleArgs = {
+    lineColor: Colors.black(),
+    lineWidth: DEFAULT_LINE_WIDTH,
+    color: Colors.transparent(),
+} as const;
+
+
 export class PointShape implements Shape, Styleable {
     private _points: Point[];
     private _closePath: boolean;
@@ -54,12 +67,18 @@ export class PointShape implements Shape, Styleable {
     private _angle: number = 0;
     private _currentScale: number = 1;
     private _color: RGBA = Colors.black();
-    private _lineColor: RGBA = Colors.black();
+    private _lineColor: RGBA;
+    private _lineWidth: number;
 
-    constructor({ points, closePath = true, offsetGutter = OFFSET_GUTTER }: { points: Point[], closePath?: boolean, offsetGutter?: number }) {
+    constructor({ points, closePath = true, offsetGutter = OFFSET_GUTTER, ...styleArgs }: { points: Point[], closePath?: boolean, offsetGutter?: number } & Prettify<StyleArgs>) {
         this._points = points;
         this._closePath = closePath;
         this._offsetGutter = offsetGutter;
+
+        const a = { ...defaultStyleArgs, ...styleArgs };
+        this._color = a.color;
+        this._lineColor = a.lineColor;
+        this._lineWidth = a.lineWidth;
     }
 
     shift(...shifts: Shift[]): PointShape {
@@ -286,12 +305,15 @@ export class PointShape implements Shape, Styleable {
         return this;
     }
 
+    lineWidth(): number {
+        return this._lineWidth;
+    }
 }
 
 
 export class Circle extends PointShape {
-    constructor({ x = 0, y = 0, radius = 1 }: { x?: number, y?: number, radius?: number }) {
-        super({ points: Circle.#points(x, y, radius) });
+    constructor({ x = 0, y = 0, radius = 1, ...styleArgs }: { x?: number, y?: number, radius?: number } & Prettify<StyleArgs> = {}) {
+        super({ points: Circle.#points(x, y, radius), ...styleArgs });
     }
 
     static #points(x: number, y: number, radius: number, numPoints: number = 100): Point[] {
@@ -310,8 +332,8 @@ export class Circle extends PointShape {
 
 
 export class Line extends PointShape {
-    constructor({ from, to }: { from: Point, to: Point }) {
-        super({ points: Line.#points(from, to) });
+    constructor({ from, to, ...styleArgs }: { from: Point, to: Point } & Prettify<StyleArgs>) {
+        super({ points: Line.#points(from, to), ...styleArgs });
     }
 
     static #points(from: Point, to: Point): Point[] {
@@ -321,8 +343,8 @@ export class Line extends PointShape {
 
 
 export class Triangle extends PointShape {
-    constructor({ x = 0, y = 0, height = 2 }: { x?: number, y?: number, height?: number }) {
-        super({ points: Triangle.#points(x, y, height) });
+    constructor({ x = 0, y = 0, height = 2, ...styleArgs }: { x?: number, y?: number, height?: number } & Prettify<StyleArgs> = {}) {
+        super({ points: Triangle.#points(x, y, height), ...styleArgs });
     }
 
     static #points(x: number, y: number, size: number): Point[] {
@@ -337,9 +359,9 @@ export class Triangle extends PointShape {
 
 
 export class Square extends PointShape {
-    constructor({ x = 0, y = 0, size = 2, }: { x?: number, y?: number, size?: number } = {}) {
+    constructor({ x = 0, y = 0, size = 2, ...styleArgs }: { x?: number, y?: number, size?: number } & StyleArgs = {}) {
         // super({ x, y, radius: size, sides: 4, strokeColor, fill, lineWidth, hoverable, fillHoverable });
-        super({ points: Square.#points(x, y, size) });
+        super({ points: Square.#points(x, y, size), ...styleArgs });
     }
 
     static #points(x: number, y: number, size: number): Point[] {
@@ -355,8 +377,8 @@ export class Square extends PointShape {
 
 
 export class NSidedPolygon extends PointShape {
-    constructor({ sides, x = 0, y = 0, radius = 1 }: { sides: number, x?: number, y?: number, radius?: number }) {
-        super({ points: NSidedPolygon.#points(x, y, radius, sides) });
+    constructor({ sides, x = 0, y = 0, radius = 1, ...styleArgs }: { sides: number, x?: number, y?: number, radius?: number } & StyleArgs) {
+        super({ points: NSidedPolygon.#points(x, y, radius, sides), ...styleArgs });
     }
 
     static #points(x: number, y: number, radius: number, sides: number): Point[] {

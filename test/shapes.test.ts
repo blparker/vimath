@@ -1,9 +1,10 @@
 // import { describe, expect, test } from '@jest/globals';
 // import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
-import { PointShape, Line, Triangle, Square, } from '../src/shapes/base_shapes';
+import { PointShape, Line, Triangle, Square, Circle, } from '../src/shapes/base_shapes';
 import { Point } from '../src/base';
 import { zip } from '../src/math';
 import structuredClone from '@ungap/structured-clone'
+import { Colors } from '../src/colors';
 
 
 describe('shape module', function() {
@@ -116,4 +117,18 @@ describe('shape module', function() {
         expect(s.moveCenter([-2, -2]).center()).toEqual([-2, -2]);
     });
 
+    test('should set the line and fill colors of a shape', () => {
+        const s = new Square({ lineColor: Colors.blue(), color: Colors.red() });
+        expect(s.lineColor()).toEqual(Colors.blue());
+        expect(s.color()).toEqual(Colors.red());
+    });
+
+    test('shapes can be constructed with default args', () => {
+        const circle = new Circle();
+        expect(circle.center()).toEqual([0, 0]);
+        expect(circle.right()).toEqual([1, 0]);
+
+        const triangle = new Triangle();
+        const square = new Square();
+    });
 });
