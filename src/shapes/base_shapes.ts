@@ -1,5 +1,5 @@
 
-import { Colors, RGBA } from '../colors.js';
+import { Colors, RGBA, parseColor } from '../colors.js';
 import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '../base.js';
 import * as math from '../math.js';
 // import { Decimal } from 'decimal.js';
@@ -48,9 +48,9 @@ export function isShape(o: any): o is Shape {
 
 
 type StyleArgs = {
-    lineColor?: RGBA,
+    lineColor?: string | RGBA,
+    color?: string | RGBA
     lineWidth?: number,
-    color?: RGBA
 };
 
 const defaultStyleArgs = {
@@ -76,8 +76,8 @@ export class PointShape implements Shape, Styleable {
         this._offsetGutter = offsetGutter;
 
         const a = { ...defaultStyleArgs, ...styleArgs };
-        this._color = a.color;
-        this._lineColor = a.lineColor;
+        this._color = parseColor(a.color);
+        this._lineColor = parseColor(a.lineColor);
         this._lineWidth = a.lineWidth;
     }
 

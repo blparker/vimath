@@ -29,7 +29,7 @@ describe('colors module', function() {
     });
 
 
-    // test('it', () => {
-        
-    // });
+    test('it should return color from HTML color', () => {
+        expect(parseColor('blue')).toEqual([0, 0, 255, 1.0]);
+    });
 });
