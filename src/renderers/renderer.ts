@@ -6,23 +6,28 @@ import { Text, TextBaseline } from '../shapes/text';
 import { TextRenderer } from './text';
 
 
+type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
 type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; };
+type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; };
 type TextArgs = { text: string, x: number, y: number, size: number, color: RGBA, align: HAlign, baseline: TextBaseline, vertical?: boolean };
 type ImageArgs = { image: HTMLImageElement, x: number, y: number, align: HAlign, verticalAlign: VAlign };
 
 
 export interface Canvas {
+    arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void;
     line({ from, to, lineWidth, color }: LineArgs): void;
+    path({ points, lineWidth, lineColor, color }: PathArgs): void;
     text({ text, x, y, size, color, align, baseline, vertical = false }: TextArgs): void;
     image({ image, x, y, align = 'center' }: ImageArgs): void;
     clear(): void
 }
 
-const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
-    'top': 'top',
-    'middle': 'alphabetic',
-    'bottom': 'bottom',
-} as const;
+// const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
+//     'top': 'top',
+//     'middle': 'alphabetic',
+//     'bottom': 'bottom',
+// } as const;
+
 
 export class HtmlCanvas implements Canvas {
     private readonly canvas: HTMLCanvasElement;
@@ -39,6 +44,24 @@ export class HtmlCanvas implements Canvas {
         this.ctx = ctx;
     }
 
+    arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void {
+        this.ctx.save();
+
+        this.ctx.strokeStyle = rgbaToString(lineColor);
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.fillStyle = rgbaToString(color);
+
+        const path = new Path2D();
+
+        const tRadius = Math.abs(this.translate([0, 0])[0] - this.translate([radius, 0])[0]);
+        path.arc(...math.floor(this.translate(center)) as Point, tRadius, 0, angle)
+
+        this.ctx.fill(path)
+        this.ctx.stroke(path);
+
+        this.ctx.restore();
+    }
+
     line({ from, to, lineWidth, color }: LineArgs): void {
         this.ctx.save();
 
@@ -49,6 +72,33 @@ export class HtmlCanvas implements Canvas {
         path.moveTo(...math.floor(this.translate(from)) as Point);
         path.lineTo(...math.floor(this.translate(to)) as Point);
 
+        this.ctx.stroke(path);
+
+        this.ctx.restore();
+    }
+
+    path({ points, lineWidth, lineColor, color }: PathArgs): void {
+        if (points.length <= 1) {
+            throw new Error('Path contains too few points. Expects a path consisting of at least 2 points');
+        } else if (points.length === 2) {
+            this.line({ from: points[0], to: points[1], lineWidth, color: lineColor });
+            return;
+        }
+
+        this.ctx.save();
+        this.ctx.strokeStyle = rgbaToString(lineColor);
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.fillStyle = rgbaToString(color);
+
+        const path = new Path2D();
+        path.moveTo(...math.floor(this.translate(points[0])) as Point);
+
+        for (let i = 1; i < points.length; i++) {
+            const pt = points[i];
+            path.lineTo(...math.floor(this.translate(pt)) as Point);
+        }
+
+        this.ctx.fill(path);
         this.ctx.stroke(path);
 
         this.ctx.restore();

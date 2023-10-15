@@ -50,7 +50,7 @@ export class TextRenderer extends NativeRenderer<Text> {
     }
 
     private getTextImage(shape: Text): Promise<HTMLImageElement> {
-        const scaleFactor = 0.45;
+        const scaleFactor = 0.415;
         // const node = mjDocument.convert(shape.text, mjOptions);
         const node = mjDocument.convert(shape.text, {display: false});
         // console.log("### NODE = ", node.children[0])

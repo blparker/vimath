@@ -8,7 +8,11 @@ import { Animation } from '../src/animations/animations';
 
 
 class TestCanvas implements Canvas {
+    arc({ center, radius, angle, lineWidth, color }: { center: Point; radius: number; angle: number; lineWidth: number; color: RGBA; }): void {}
+
     line({ from, to, lineWidth, color }: { from: Point; to: Point; lineWidth: number; color: RGBA; }): void {}
+
+    path({ points, lineWidth, lineColor, color }: { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; }): void {}
 
     text({ text, x, y, size, color, align, baseline, vertical }: { text: string; x: number; y: number; size: number; color: RGBA; align: HAlign; baseline: TextBaseline; vertical?: boolean | undefined; }): void {}
 
@@ -46,13 +50,14 @@ describe('scene module', () => {
         const canvas = new TestCanvas();
         const clearSpy = jest.spyOn(canvas, 'clear');
         const lineSpy = jest.spyOn(canvas, 'line');
+        const pathSpy = jest.spyOn(canvas, 'path');
         const animSpy = jest.spyOn(anim, 'tick');
 
         const scene = new TestScene({ canvas }).compose();
         scene.nextTick(0);
 
         expect(clearSpy).toHaveBeenCalledTimes(1);
-        expect(lineSpy).toHaveBeenCalledTimes(1);
+        expect(pathSpy).toHaveBeenCalledTimes(1);
         expect(animSpy).toHaveBeenCalledTimes(1);
         expect(animSpy.mock.calls[0][0]).toBe(0);
         expect(animSpy.mock.results[0].value).toBe(false);

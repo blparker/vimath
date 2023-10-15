@@ -53,32 +53,27 @@ describe('renderer module', () => {
         r.render(s);
 
         const drawCalls = canvas.ctx.__getDrawCalls();
+        const path = drawCalls[1].props.path;
 
         /* The first draw call is a moveTo which moves the path to [-1, 1], which needs to be translated into an absolute position. 
            X = -1 is 6 units away from the left, Y = 1 is 3 units away from the top */
-        expect(drawCalls[0].props.path[0].type).toEqual('moveTo');
-        expect(drawCalls[0].props.path[0].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[0]));
+        expect(path[0].type).toEqual('moveTo');
+        expect(path[0].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[0]));
 
         // Where the moveTo command was moving the path to points[i], the next draw call is drawing the line to points[i + 1]
-        expect(drawCalls[0].props.path[1].type).toEqual('lineTo');
-        expect(drawCalls[0].props.path[1].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[1]));
+        expect(path[1].type).toEqual('lineTo');
+        expect(path[1].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[1]));
 
         // Same concept for the other points
-        expect(drawCalls[1].props.path[0].type).toEqual('moveTo');
-        expect(drawCalls[1].props.path[0].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[1]));
-        expect(drawCalls[1].props.path[1].type).toEqual('lineTo');
-        expect(drawCalls[1].props.path[1].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[2]));
+        expect(path[2].type).toEqual('lineTo');
+        expect(path[2].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[2]));
 
-        expect(drawCalls[2].props.path[0].type).toEqual('moveTo');
-        expect(drawCalls[2].props.path[0].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[2]));
-        expect(drawCalls[2].props.path[1].type).toEqual('lineTo');
-        expect(drawCalls[2].props.path[1].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[3]));
+        expect(path[3].type).toEqual('lineTo');
+        expect(path[3].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[3]));
 
         // The last call is a line back to the starting point
-        expect(drawCalls[3].props.path[0].type).toEqual('moveTo');
-        expect(drawCalls[3].props.path[0].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[3]));
-        expect(drawCalls[3].props.path[1].type).toEqual('lineTo');
-        expect(drawCalls[3].props.path[1].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[0]));
+        expect(path[4].type).toEqual('lineTo');
+        expect(path[4].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[0]));
     });
 
     test('should render a PointShape with two points correctly', () => {
@@ -154,7 +149,7 @@ describe('html canvas module', () => {
         canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: Colors.blue() });
 
         const drawCalls = canvas.ctx.__getDrawCalls();
-        console.log(canvas.ctx.__getEvents())
+        // console.log(canvas.ctx.__getEvents())
         // expect(drawCalls[0].props.path[0].props).toEqual(calcAbsPosition(canvas, [-1, 0]));
     });
 });

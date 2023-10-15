@@ -122,8 +122,18 @@ export function mult(l: number, r: number): number {
 }
 
 
-export function div(l: number, r: number): number {
-    return Decimal.div(l, r).toNumber();
+export function div(l: number, r: number): number;
+export function div(l: number[], r: number): number[];
+
+export function div(l: unknown, r: number): unknown {
+    // return Decimal.div(l, r).toNumber();
+    if (Array.isArray(l)) {
+        return l.map(v => Decimal.div(v, r).toNumber());
+    } else if (typeof l === 'number') {
+        return Decimal.div(l, r).toNumber();
+    } else {
+        throw new Error('Unknown dividend type');
+    }
 }
 
 // export function add(l: number | number[], r: number | number[]): number[] {
@@ -270,5 +280,56 @@ export function abs(a: unknown): unknown {
         return Math.abs(a);
     } else {
         throw new Error('Can only take absolute value of number and number arrays');
+    }
+}
+
+
+export function sum(arrs: number[][]): number[];
+export function sum(arrs: number[][], idx?: number): number;
+export function sum(arrs: number[][], idx?: number): unknown {
+    let sum = arrs[0];
+
+    for (let i = 1; i < arrs.length; i++) {
+        sum = add(sum, arrs[i]);
+    }
+
+    if (idx !== undefined) {
+        return sum[idx];
+    } else {
+        return sum;
+    }
+}
+
+
+export function max(arrs: number[]): number;
+export function max(arrs: number[][], idx: number): number;
+export function max(arrs: unknown, idx?: number): number {
+    if (!Array.isArray(arrs)) {
+        throw new Error('First argument must be array like');
+    } else if (arrs.length === 0) {
+        throw new Error('Cannot take max of empty array');
+    }
+
+    if (Array.isArray(arrs[0]) && idx !== undefined) {
+        return Math.max(...arrs.map(a => a[idx]));
+    } else {
+        return Math.max(...arrs);
+    }
+}
+
+
+export function min(arrs: number[]): number;
+export function min(arrs: number[][], idx: number): number;
+export function min(arrs: unknown, idx?: number): number {
+    if (!Array.isArray(arrs)) {
+        throw new Error('First argument must be array like');
+    } else if (arrs.length === 0) {
+        throw new Error('Cannot take min of empty array');
+    }
+
+    if (Array.isArray(arrs[0]) && idx !== undefined) {
+        return Math.min(...arrs.map(a => a[idx]));
+    } else {
+        return Math.min(...arrs);
     }
 }

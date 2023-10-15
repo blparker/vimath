@@ -73,4 +73,32 @@ describe('math module', () => {
     //     expect(math.add([0], 1)).toEqual([1]);
     //     expect(math.add(0, 1)).toEqual([1]);
     // });
+
+    test('should sum arrays', () => {
+        const sum = math.sum([[1, 1], [2, 2], [3, 3]]);
+        expect(sum).toEqual([6, 6]);
+    });
+
+    test('should sum array index', () => {
+        const sum = math.sum([[0, 1], [0, 2], [0, 3]], 1);
+        expect(sum).toEqual(6);
+    });
+
+    test('should take max of array', () => {
+        expect(math.max([0, 5, 1, 2])).toEqual(5);
+    });
+
+    test('should take max of arrays with index', () => {
+        expect(math.max([[0, 1], [3, 2], [2, 5]], 0)).toEqual(3);
+        expect(math.max([[0, 1], [3, 2], [2, 5]], 1)).toEqual(5);
+    });
+
+    test('should take min of array', () => {
+        expect(math.min([0, 5, -1, 2])).toEqual(-1);
+    });
+
+    test('should take min of arrays with index', () => {
+        expect(math.min([[0, 1], [3, 2], [-2, 5]], 0)).toEqual(-2);
+        expect(math.min([[0, 1], [3, 2], [2, 5]], 1)).toEqual(1);
+    });
 });

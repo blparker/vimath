@@ -310,13 +310,147 @@ export class PointShape implements Shape, Styleable {
     }
 }
 
+export class CircleArc implements Shape, Styleable {
+    private _angle: number = 0;
+    private _currentScale: number = 1;
+    private cX: number;
+    private cY: number;
+    private radius: number;
+    private _color: RGBA = Colors.black();
+    private _lineColor: RGBA;
+    private _lineWidth: number;
 
-export class Circle extends PointShape {
     constructor({ x = 0, y = 0, radius = 1, ...styleArgs }: { x?: number, y?: number, radius?: number } & Prettify<StyleArgs> = {}) {
-        super({ points: Circle.#points(x, y, radius), ...styleArgs });
+        this.cX = x;
+        this.cY = y;
+        this.radius = radius;
+
+        const a = { ...defaultStyleArgs, ...styleArgs };
+        this._color = parseColor(a.color);
+        this._lineColor = parseColor(a.lineColor);
+        this._lineWidth = a.lineWidth;
     }
 
-    static #points(x: number, y: number, radius: number, numPoints: number = 100): Point[] {
+    shift(...shifts: Shift[]): Shape {
+        for (const shift of shifts) {
+            [this.cX, this.cY] = math.add(this.center(), shift);
+        }
+
+        return this;
+    }
+
+    moveTo(point: Point): Shape {
+        [this.cX, this.cY] = point;
+        return this;
+    }
+
+    scale(factor: number): Shape {
+        this._currentScale = factor;
+        this.radius *= factor;
+        return this;
+    }
+
+    rotate(angle: number): Shape {
+        this._angle = angle;
+        return this;
+    }
+
+    nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
+        let offsetX = 0, offsetY = 0;
+        let [dX, dY] = direction;
+
+        if (dX !== 0) {
+            // Left or right side
+            offsetX = math.add(this.radius, OFFSET_GUTTER);
+        } else {
+            // Top or bottom side
+            offsetY = math.add(this.radius, OFFSET_GUTTER);
+        }
+
+        dX = math.add(dX, offsetX * Math.sign(dX));
+        dY = math.add(dY, offsetY * Math.sign(dY));
+
+        const dest = shape.center();
+        const center = this.center();
+
+        const nX = math.add(center[0], math.add(dest[0], dX));
+        const nY = math.add(center[1], math.add(dest[1], dY));
+
+        this.moveCenter([nX, nY]);
+
+        return this;
+    }
+
+    center(): Point {
+        return [this.cX, this.cY];
+    }
+
+    moveCenter(newCenter: Point): Shape {
+        [this.cX, this.cY] = newCenter;
+        return this;
+    }
+
+    top(): Point {
+        return [this.cX, this.cY + this.radius];
+    }
+
+    bottom(): Point {
+        return [this.cX, this.cY - this.radius];
+    }
+
+    left(): Point {
+        return [this.cX - this.radius, this.cY];
+    }
+
+    right(): Point {
+        return [this.cX + this.radius, this.cY];
+    }
+
+    width(): number {
+        return this.radius * 2;
+    }
+
+    height(): number {
+        return this.radius * 2;
+    }
+
+    color(): RGBA {
+        return this._color;
+    }
+
+    changeColor(newColor: RGBA): Styleable {
+        this._color = newColor;
+        return this;
+    }
+
+    lineColor(): RGBA {
+        return this._lineColor;
+    }
+
+    changeLineColor(newColor: RGBA): Styleable {
+        this._lineColor = newColor;
+        return this;
+    }
+
+    lineWidth(): number {
+        return this._lineWidth;
+    }
+
+    get angle() {
+        return this._angle;
+    }
+
+    get currentScale() {
+        return this._currentScale;
+    }
+}
+
+export class Circle extends PointShape {
+    constructor({ x = 0, y = 0, radius = 1, numVertices = 100, ...styleArgs }: { x?: number, y?: number, radius?: number, numVertices?: number } & Prettify<StyleArgs> = {}) {
+        super({ points: Circle.#points(x, y, radius, numVertices), ...styleArgs });
+    }
+
+    static #points(x: number, y: number, radius: number, numPoints: number): Point[] {
         const points = [];
 
         for (let i = 0; i < numPoints; i++) {
