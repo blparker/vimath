@@ -1,9 +1,14 @@
-import { Shift, Point, RIGHT } from '../base.js';
+import { Shift, Point, RIGHT, OFFSET_GUTTER } from '../base.js';
 import { Shape } from './base_shapes.js';
 import * as math from '../math.js';
 
 
-export abstract class ComposableShape implements Shape {
+export interface Composable extends Shape {
+    children(): Shape[];
+}
+
+
+export abstract class ComposableShape implements Shape, Composable {
     private composed: boolean = false;
     private shapes: Shape[] = [];
     private maxTop: number = -Infinity;
@@ -83,7 +88,7 @@ export abstract class ComposableShape implements Shape {
     nextTo(shape: Shape, direction?: Point | undefined): Shape {
         let offsetX = 0, offsetY = 0;
         let [dX, dY] = direction ?? RIGHT();
-        const offsetGutter = 0.2;
+        const offsetGutter = OFFSET_GUTTER;
 
         if (dX !== 0) {
             // Left or right side
@@ -142,6 +147,10 @@ export abstract class ComposableShape implements Shape {
 
     height(): number {
         return this.maxTop - this.maxBottom;
+    }
+
+    children(): Shape[] {
+        return this.shapes;
     }
 
     get angle(): number {

@@ -1,5 +1,5 @@
 // import { createCanvas, Canvas as NodeCanvas } from '../../node_modules/canvas/index';
-import { Colors, DEFAULT_PADDING, Line, Point, PointShape, RGBA, Square, X_TICKS, Y_TICKS } from '../../src/index';
+import { Circle, Colors, DEFAULT_PADDING, Group, Line, Point, PointShape, RGBA, Square, X_TICKS, Y_TICKS } from '../../src/index';
 import { Canvas, HtmlCanvas } from '../../src/renderers/renderer';
 import { TextRenderer } from '../../src/renderers/text';
 import { PointShapeRenderer } from '../../src/renderers/shape';

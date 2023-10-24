@@ -6,6 +6,7 @@ export * from './shapes/axes.js';
 export * from './shapes/base_shapes.js';
 export * from './shapes/composed_shape.js';
 export * from './shapes/text.js';
+export * from './shapes/group.js';
 export * from './animations/animations.js';
 export * from './renderers/renderer.js'
 export * from './scene.js'
