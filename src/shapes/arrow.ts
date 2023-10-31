@@ -1,4 +1,5 @@
 import { Point } from '../base.js';
+import { Colors } from '../colors.js';
 import { Line, Triangle } from './base_shapes.js';
 import { ComposableShape } from './composed_shape.js';
 
@@ -22,10 +23,10 @@ export class Arrow extends ComposableShape {
 
         // Determine the orientation of the arrow tip
         const theta = Math.atan2(this.to[1], this.to[0]);
-        const tipCenterX = this.tipSize / 2 * Math.cos(theta);
-        const tipCenterY = this.tipSize / 2 * Math.sin(theta);
+        const tipCenterX = this.to[0] - this.tipSize / 2 * Math.cos(theta);
+        const tipCenterY = this.to[1] - this.tipSize / 2 * Math.sin(theta);
 
-        const tip = new Triangle({ x: tipCenterX, y: tipCenterY, height: this.tipSize }).rotate(theta);
+        const tip = new Triangle({ x: tipCenterX, y: tipCenterY, height: this.tipSize, color: Colors.black() }).rotate(-Math.PI / 2 + theta);
 
         this.add(line, tip);
 

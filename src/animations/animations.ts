@@ -18,7 +18,7 @@ export abstract class Animation {
     private _startTime: number | null;
     protected _easing: EasingFunction;
 
-    constructor({ duration, easing = Easing.easeInOutCubic }: AnimationArgs) {
+    constructor({ duration = 1000, easing = Easing.easeInOutCubic }: AnimationArgs) {
         this._duration = duration;
         this._easing = easing;
 

@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@blparker/canvas-test": "^1.0.15",
     "@jest/globals": "^29.6.4",
     "@types/jasmine": "^4.3.5",
     "@types/jest": "^29.5.4",
@@ -23,7 +24,8 @@
     "@ungap/structured-clone": "^1.2.0",
     "@web/test-runner": "^0.17.1",
     "canvas": "^2.11.2",
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.5",
+    "esbuild-plugin-tsc": "^0.4.0",
     "jasmine": "^5.1.0",
     "jasmine-browser-runner": "^2.2.0",
     "jasmine-core": "^5.1.1",

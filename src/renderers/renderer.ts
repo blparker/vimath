@@ -9,16 +9,16 @@ import { TextRenderer } from './text';
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
 type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; };
 type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; };
-type TextArgs = { text: string, x: number, y: number, size: number, color: RGBA, align: HAlign, baseline: TextBaseline, vertical?: boolean };
-type ImageArgs = { image: HTMLImageElement, x: number, y: number, align: HAlign, verticalAlign: VAlign };
+type TextArgs = { text: string; x: number; y: number; size: number; color: RGBA; align: HAlign; baseline: TextBaseline; vertical?: boolean };
+type ImageArgs = { image: HTMLImageElement; x: number; y: number; align?: HAlign; verticalAlign?: VAlign };
 
 
 export interface Canvas {
     arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void;
     line({ from, to, lineWidth, color }: LineArgs): void;
     path({ points, lineWidth, lineColor, color }: PathArgs): void;
-    text({ text, x, y, size, color, align, baseline, vertical = false }: TextArgs): void;
-    image({ image, x, y, align = 'center' }: ImageArgs): void;
+    text({ text, x, y, size, color, align, baseline, vertical }: TextArgs): void;
+    image({ image, x, y, align, verticalAlign }: ImageArgs): void;
     clear(): void
 }
 
@@ -98,6 +98,8 @@ export class HtmlCanvas implements Canvas {
             path.lineTo(...math.floor(this.translate(pt)) as Point);
         }
 
+        path.closePath();
+
         this.ctx.fill(path);
         this.ctx.stroke(path);
 
@@ -125,7 +127,7 @@ export class HtmlCanvas implements Canvas {
         this.ctx.restore();
     }
 
-    image({ image, x, y, align, verticalAlign }: ImageArgs): void {
+    image({ image, x, y, align = 'center', verticalAlign = 'middle' }: ImageArgs): void {
         let [tX, tY] = this.translate([x, y]);
 
         if (align == 'center') {

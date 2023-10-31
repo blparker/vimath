@@ -132,20 +132,65 @@ export class Text implements Shape {
     }
 
     nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
-        const [cX, cY] = shape.center();
-        let dX = math.add(cX, math.mult(direction[0], shape.width() / 2));
-        let dY = math.add(cY, math.mult(direction[1], shape.height() / 2));
+        // const [cX, cY] = shape.center();
+        // let dX = math.add(cX, math.mult(direction[0], shape.width() / 2));
+        // let dY = math.add(cY, math.mult(direction[1], shape.height() / 2));
 
-        if (dX !== 0) {
-            dX += Math.sign(dX) * this._offsetGutter;
+        // if (direction[0] !== 0) {
+        //     dX += Math.sign(dX) * this._offsetGutter;
+
+        //     if (this.align === 'center') {
+        //         dX += this.width() / 2;
+        //     } else if (this.align === 'left') {
+        //         dX += this.width();
+        //     }
+        // }
+
+        // if (direction[1] !== 0) {
+        //     // dY += Math.sign(dY) * this._offsetGutter;
+        //     // dY -= this.height();
+
+        //     if (this.baseline === 'middle') {
+        //         dY += this.height();
+        //     } else if (this.baseline === 'bottom') {
+        //         dY += this.height();
+        //     }
+        // }
+
+        // this._x = dX;
+        // this._y = dY;
+        const w = this.width();
+        const h = this.height();
+
+        const [dX, dY] = direction;
+
+        if (dX < 0) {
+            // Left
+            let alignShift = this.align === 'center' ? [-w / 2, 0] : this.align === 'left' ? [-w, 0] : [0, 0];
+            alignShift[0] -= this._offsetGutter;
+
+            this.shift(math.add(shape.left(), alignShift) as Shift);
+        } else if (dX > 0) {
+            // Right
+            let alignShift = this.align === 'center' ? [w / 2, 0] : this.align === 'right' ? [w, 0] : [0, 0];
+            alignShift[0] += this._offsetGutter;
+
+            this.shift(math.add(shape.right(), alignShift) as Shift);
         }
 
-        if (dY !== 0) {
-            dY += Math.sign(dY) * this._offsetGutter;
-        }
+        if (dY < 0) {
+            // Down
+            let alignShift = this.baseline === 'middle' ? [0, -h / 2] : this.baseline === 'bottom' ? [0, -h] : [0, 0];
+            alignShift[1] -= this._offsetGutter;
 
-        this._x = dX;
-        this._y = dY;
+            this.shift(math.add(shape.bottom(), alignShift) as Shift);
+        } else if (dY > 0) {
+            // Up
+            let alignShift = this.baseline === 'middle' ? [0, h / 2] : this.baseline === 'top' ? [0, h] : [0, 0];
+            alignShift[1] += this._offsetGutter;
+
+            this.shift(math.add(shape.top(), alignShift) as Shift);
+        }
 
         return this;
     }
@@ -292,5 +337,9 @@ export class Text implements Shape {
 
     get tex(): boolean {
         return this._tex;
+    }
+
+    get location(): Point {
+        return [this._x, this._y];
     }
 }

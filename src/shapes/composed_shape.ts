@@ -4,6 +4,7 @@ import * as math from '../math.js';
 
 
 export interface Composable extends Shape {
+    compose(): Composable;
     children(): Shape[];
 }
 
@@ -23,6 +24,7 @@ export abstract class ComposableShape implements Shape, Composable {
     composedShapes(): Shape[] {
         if (! this.composed) {
             this.compose();
+            this.composed = true;
         }
 
         return this.shapes;

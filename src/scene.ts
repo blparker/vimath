@@ -24,7 +24,7 @@ export class SceneRunner {
     run() {
         const loop = (time: number) => {
             this.scene.nextTick(time);
-            // requestAnimationFrame(loop);
+            requestAnimationFrame(loop);
         };
 
         requestAnimationFrame(loop);

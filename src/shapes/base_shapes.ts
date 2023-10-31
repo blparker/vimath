@@ -47,13 +47,13 @@ export function isShape(o: any): o is Shape {
 }
 
 
-type StyleArgs = {
+export type StyleArgs = {
     lineColor?: string | RGBA,
     color?: string | RGBA
     lineWidth?: number,
 };
 
-const defaultStyleArgs = {
+export const defaultStyleArgs = {
     lineColor: Colors.black(),
     lineWidth: DEFAULT_LINE_WIDTH,
     color: Colors.transparent(),
@@ -447,10 +447,10 @@ export class CircleArc implements Shape, Styleable {
 
 export class Circle extends PointShape {
     constructor({ x = 0, y = 0, radius = 1, numVertices = 100, ...styleArgs }: { x?: number, y?: number, radius?: number, numVertices?: number } & Prettify<StyleArgs> = {}) {
-        super({ points: Circle.#points(x, y, radius, numVertices), ...styleArgs });
+        super({ points: Circle.points(x, y, radius, numVertices), ...styleArgs });
     }
 
-    static #points(x: number, y: number, radius: number, numPoints: number): Point[] {
+    private static points(x: number, y: number, radius: number, numPoints: number): Point[] {
         const points = [];
 
         for (let i = 0; i < numPoints; i++) {
@@ -467,10 +467,10 @@ export class Circle extends PointShape {
 
 export class Line extends PointShape {
     constructor({ from, to, ...styleArgs }: { from: Point, to: Point } & Prettify<StyleArgs>) {
-        super({ points: Line.#points(from, to), ...styleArgs });
+        super({ points: Line.points(from, to), ...styleArgs });
     }
 
-    static #points(from: Point, to: Point): Point[] {
+    private static points(from: Point, to: Point): Point[] {
         return [from, to];
     }
 }
@@ -478,10 +478,10 @@ export class Line extends PointShape {
 
 export class Triangle extends PointShape {
     constructor({ x = 0, y = 0, height = 2, ...styleArgs }: { x?: number, y?: number, height?: number } & Prettify<StyleArgs> = {}) {
-        super({ points: Triangle.#points(x, y, height), ...styleArgs });
+        super({ points: Triangle.points(x, y, height), ...styleArgs });
     }
 
-    static #points(x: number, y: number, size: number): Point[] {
+    private static points(x: number, y: number, size: number): Point[] {
         const hs = size / 2;
         return [
             [x, y + hs],
@@ -495,10 +495,10 @@ export class Triangle extends PointShape {
 export class Square extends PointShape {
     constructor({ x = 0, y = 0, size = 2, ...styleArgs }: { x?: number, y?: number, size?: number } & StyleArgs = {}) {
         // super({ x, y, radius: size, sides: 4, strokeColor, fill, lineWidth, hoverable, fillHoverable });
-        super({ points: Square.#points(x, y, size), ...styleArgs });
+        super({ points: Square.points(x, y, size), ...styleArgs });
     }
 
-    static #points(x: number, y: number, size: number): Point[] {
+    private static points(x: number, y: number, size: number): Point[] {
         const hs = size / 2;
         return [
             [x - hs, y + hs],
@@ -512,10 +512,10 @@ export class Square extends PointShape {
 
 export class NSidedPolygon extends PointShape {
     constructor({ sides, x = 0, y = 0, radius = 1, ...styleArgs }: { sides: number, x?: number, y?: number, radius?: number } & StyleArgs) {
-        super({ points: NSidedPolygon.#points(x, y, radius, sides), ...styleArgs });
+        super({ points: NSidedPolygon.points(x, y, radius, sides), ...styleArgs });
     }
 
-    static #points(x: number, y: number, radius: number, sides: number): Point[] {
+    private static points(x: number, y: number, radius: number, sides: number): Point[] {
         const points: Point[] = [];
         const angle = 2 * Math.PI / sides;
 

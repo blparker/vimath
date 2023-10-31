@@ -19,6 +19,8 @@ export const FONT_STACK = ['Iowan Old Style', 'Apple Garamond', 'Baskerville', '
 export const DEFAULT_CANVAS_WIDTH = 860;
 export const DEFAULT_CANVAS_HEIGHT = 500;
 
+export const ORIGIN = [0, 0] as Point;
+
 
 // Default offset when putting things next to each other
 export const OFFSET_GUTTER = 0.2;
