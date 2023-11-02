@@ -11,13 +11,13 @@ export interface Composable extends Shape {
 
 export abstract class ComposableShape implements Shape, Composable {
     private composed: boolean = false;
-    private shapes: Shape[] = [];
     private maxTop: number = -Infinity;
     private maxBottom: number = Infinity;
     private maxLeft: number = Infinity;
     private maxRight: number = -Infinity;
     private _angle: number = 0;
     private _currentScale: number = 1;
+    protected shapes: Shape[] = [];
 
     abstract compose(): ComposableShape;
 
@@ -116,10 +116,14 @@ export abstract class ComposableShape implements Shape, Composable {
     }
 
     center(): Point {
-        return [
-            (this.maxRight + this.maxLeft) / 2,
-            (this.maxTop + this.maxBottom) / 2
-        ];
+        // return [
+        //     (this.maxRight + this.maxLeft) / 2,
+        //     (this.maxTop + this.maxBottom) / 2
+        // ];
+        const avgX = this.top()[0];
+        const avgY = this.left()[1];
+
+        return [avgX, avgY];
     }
 
     moveCenter(newCenter: Point): Shape {
@@ -128,19 +132,35 @@ export abstract class ComposableShape implements Shape, Composable {
     }
 
     top(): Point {
-        return [(this.maxRight + this.maxLeft) / 2, this.maxTop];
+        // return [(this.maxRight + this.maxLeft) / 2, this.maxTop];
+        const tops = this.shapes.map(e => e.top());
+        const avgX = math.sum(tops, 0) / tops.length;
+
+        return [avgX, math.max(tops, 1)];
     }
 
     bottom(): Point {
-        return [(this.maxRight + this.maxLeft) / 2, this.maxBottom];
+        // return [(this.maxRight + this.maxLeft) / 2, this.maxBottom];
+        const bottoms = this.shapes.map(e => e.bottom());
+        const avgX = math.sum(bottoms, 0) / bottoms.length;
+
+        return [avgX, math.min(bottoms, 1)];
     }
 
     left(): Point {
-        return [this.maxLeft, (this.maxTop + this.maxBottom) / 2];
+        // return [this.maxLeft, (this.maxTop + this.maxBottom) / 2];
+        const lefts = this.shapes.map(e => e.left());
+        const avgY = math.sum(lefts, 1) / lefts.length;
+
+        return [math.min(lefts, 0), avgY];
     }
 
     right(): Point {
-        return [this.maxRight, (this.maxTop + this.maxBottom) / 2];
+        // return [this.maxRight, (this.maxTop + this.maxBottom) / 2];
+        const rights = this.shapes.map(e => e.right());
+        const avgY = math.sum(rights, 1) / rights.length;
+
+        return [math.max(rights, 0), avgY];
     }
 
     width(): number {

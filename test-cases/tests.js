@@ -2,69 +2,72 @@ import { Circle, Scene, Line, Text, LEFT, UP, RIGHT, DOWN, ORIGIN, Square, Trian
 
 
 export class VisualTests extends TestSuite {
-    // testRenderManimLogo(canvas, done) {
-    //     class TestScene extends Scene {
-    //         compose() {
-    //             const text = new Text({ text: String.raw`\mathbb{M}`, color: '#343434', size: 200, tex: true }).shift(LEFT(2.25), UP(1.5));
-    //             const circle = new CircleArc({ color: '#87c2a5', lineColor: '#87c2a5' }).shift(LEFT(1))
-    //             const square = new Square({ color: '#525893', lineColor: '#525893' }).shift(UP(1));
-    //             const triangle = new Triangle({ color: '#e07a5f', lineColor: '#e07a5f' }).shift(RIGHT(1));
+    testRenderManimLogo(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new Line({ from: [-7, 0], to: [7, 0], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
+                this.add(new Line({ from: [0, 4], to: [0, -4], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
 
-    //             const logo = new Group(triangle, square, circle, text);
-    //             logo.moveTo([0, 0]);
+                const text = new Text({ text: String.raw`\mathbb{M}`, color: '#343434', size: 200, tex: true }).shift(LEFT(2.25), UP(1.5));
+                const circle = new CircleArc({ color: '#87c2a5', lineColor: '#87c2a5' }).shift(LEFT(1))
+                const square = new Square({ color: '#525893', lineColor: '#525893' }).shift(UP(1));
+                const triangle = new Triangle({ color: '#e07a5f', lineColor: '#e07a5f' }).shift(RIGHT(1));
 
-    //             this.add(logo);
+                const logo = new Group(triangle, square, circle, text);
+                logo.moveTo(ORIGIN);
 
-    //             return this;
-    //         }
-    //     }
+                this.add(logo);
 
-    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    // }
+                return this;
+            }
+        }
 
-    // testPointShape(canvas, done) {
-    //     class TestScene extends Scene {
-    //         compose() {
-    //             const shape = new PointShape({ points: [[0, 1], [1, -1], [-1, -1]], lineColor: Colors.orange(), color: Colors.blue(), lineWidth: 3 }).moveTo([-5, 2]);
-    //             this.add(shape);
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }
 
-    //             const shape2 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], lineColor: Colors.green() }).scale(0.5).rotate(Math.PI / 4).moveTo([-3, 2]);
-    //             this.add(shape2);
+    testPointShape(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                const shape = new PointShape({ points: [[0, 1], [1, -1], [-1, -1]], lineColor: Colors.orange(), color: Colors.blue(), lineWidth: 3 }).moveTo([-5, 2]);
+                this.add(shape);
 
-    //             const shape3 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], lineColor: Colors.red(), lineWidth: 8 }).shift(DOWN(1));
-    //             this.add(shape3);
+                const shape2 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], lineColor: Colors.green() }).scale(0.5).rotate(Math.PI / 4).moveTo([-3, 2]);
+                this.add(shape2);
 
-    //             this.add(new Text({ text: 'Bottom' }).nextTo(shape3, DOWN(1)));
-    //             this.add(new Text({ text: 'Left', align: 'right' }).nextTo(shape3, LEFT(1)));
-    //             this.add(new Text({ text: 'Right' }).nextTo(shape3, RIGHT(1)));
-    //             this.add(new Text({ text: 'Top' }).nextTo(shape3, UP(1)));
+                const shape3 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], lineColor: Colors.red(), lineWidth: 8 }).shift(DOWN(1));
+                this.add(shape3);
 
-    //             const shape4 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], strokeColor: Colors.red, lineWidth: 4 }).shift(RIGHT(4), UP(2));
-    //             this.add(shape4, new PointShape({ points: [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]], fill: Colors.orange, lineWidth: 2 }).nextTo(shape4, LEFT()));
+                this.add(new Text({ text: 'Bottom' }).nextTo(shape3, DOWN(1)));
+                this.add(new Text({ text: 'Left', align: 'right' }).nextTo(shape3, LEFT(1)));
+                this.add(new Text({ text: 'Right' }).nextTo(shape3, RIGHT(1)));
+                this.add(new Text({ text: 'Top' }).nextTo(shape3, UP(1)));
 
-    //             return this;
-    //         }
-    //     }
+                const shape4 = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]], strokeColor: Colors.red, lineWidth: 4 }).shift(RIGHT(4), UP(2));
+                this.add(shape4, new PointShape({ points: [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]], fill: Colors.orange, lineWidth: 2 }).nextTo(shape4, LEFT()));
 
-    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    // }
+                return this;
+            }
+        }
 
-    // testText(canvas, done) {
-    //     class TestScene extends Scene {
-    //         compose() {
-    //             this.add(new Line({ from: [-7, 0], to: [7, 0], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
-    //             this.add(new Line({ from: [0, 4], to: [0, -4], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }
 
-    //             this.add(new Text({ text: 'Hello world', align: 'center' }).shift(UP()));
-    //             this.add(new Text({ text: 'Hello world', align: 'left' }));
-    //             this.add(new Text({ text: 'Hello world', align: 'right' }).shift(DOWN()));
+    testText(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new Line({ from: [-7, 0], to: [7, 0], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
+                this.add(new Line({ from: [0, 4], to: [0, -4], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
 
-    //             return this;
-    //         }
-    //     }
+                this.add(new Text({ text: 'Hello world', align: 'center' }).shift(UP()));
+                this.add(new Text({ text: 'Hello world', align: 'left' }));
+                this.add(new Text({ text: 'Hello world', align: 'right' }).shift(DOWN()));
 
-    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    // }
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }
 
     testMoveToTargetAnimation(canvas, done) {
         class TestScene extends Scene {

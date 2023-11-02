@@ -1,8 +1,6 @@
 import { CircleArc, PointShape, Shape } from '../shapes/base_shapes';
-import { ComposableShape } from '../shapes/composed_shape';
-import { Group } from '../shapes/group';
 import { Text } from '../shapes/text';
-import { ComposableRenderer } from './compsable_renderer';
+import { ComposableRenderer } from './composable_renderer';
 import { Canvas, ShapeRenderer } from './renderer';
 import { CircleRenderer, PointShapeRenderer } from './shape';
 import { TextRenderer } from './text';

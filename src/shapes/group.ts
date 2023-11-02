@@ -1,131 +1,142 @@
 import { OFFSET_GUTTER, Point, RIGHT, Shift } from '../base';
 import { Shape } from './base_shapes';
 import * as math from '../math';
-import { Composable } from './composed_shape';
+import { Composable, ComposableShape } from './composed_shape';
 
 
-export class Group implements Shape, Composable {
-    private _angle: number = 0;
-    private _currentScale: number = 1;
-    private _els: Shape[] = [];
+export class Group extends ComposableShape {
+    // private _angle: number = 0;
+    // private _currentScale: number = 1;
+    // private _els: Shape[] = [];
 
     constructor(...els: Shape[]) {
+        super();
         this.add(...els);
     }
 
-    add(...els: Shape[]): Shape {
-        els.forEach(e => this._els.push(e));
+    compose(): ComposableShape {
         return this;
     }
 
-    shift(...shifts: Shift[]): Shape {
-        for (const el of this._els) {
-            el.shift(...shifts);
-        }
+    // add(...els: Shape[]): Shape {
+    //     els.forEach(e => this._els.push(e));
+    //     return this;
+    // }
 
-        return this;
-    }
+    // shift(...shifts: Shift[]): Shape {
+    //     for (const el of this._els) {
+    //         el.shift(...shifts);
+    //     }
 
-    moveTo(point: Point): Shape {
-        return this.moveCenter(point);
-    }
+    //     return this;
+    // }
 
-    scale(factor: number): Shape {
-        this._currentScale = factor;
-        return this;
-    }
+    // moveTo(point: Point): Shape {
+    //     return this.moveCenter(point);
+    // }
 
-    rotate(angle: number): Shape {
-        this._angle = angle;
-        return this;
-    }
+    // scale(factor: number): Shape {
+    //     this._currentScale = factor;
+    //     return this;
+    // }
 
-    nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
-        let offsetX = 0, offsetY = 0;
-        let [dX, dY] = direction ?? RIGHT();
-        const offsetGutter = OFFSET_GUTTER;
+    // rotate(angle: number): Shape {
+    //     this._angle = angle;
+    //     return this;
+    // }
 
-        let newX = 0, newY = 0;
+    // nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
+    //     let offsetX = 0, offsetY = 0;
+    //     let [dX, dY] = direction ?? RIGHT();
+    //     const offsetGutter = OFFSET_GUTTER;
 
-        if (dX > 0) {
-            // Put to the right
-            newX = shape.right()[0] + OFFSET_GUTTER + this.width() / 2;
-        } else if (dX < 0) {
-            // Put to the left
-            newX = shape.left()[0] - OFFSET_GUTTER - this.width() / 2;
-        } else if (dY > 0) {
-            // Put above
-            newY = shape.top()[1] + OFFSET_GUTTER + this.height() / 2;
-        } else if (dY < 0) {
-            // Put below
-            newY = shape.bottom()[1] - OFFSET_GUTTER - this.height() / 2;
-        } else {
-            // [0, 0]?
-            return this;
-        }
+    //     let newX = 0, newY = 0;
 
-        this.moveCenter([newX, newY]);
+    //     if (dX > 0) {
+    //         // Put to the right
+    //         newX = shape.right()[0] + OFFSET_GUTTER + this.width() / 2;
+    //     } else if (dX < 0) {
+    //         // Put to the left
+    //         newX = shape.left()[0] - OFFSET_GUTTER - this.width() / 2;
+    //     } else if (dY > 0) {
+    //         // Put above
+    //         newY = shape.top()[1] + OFFSET_GUTTER + this.height() / 2;
+    //     } else if (dY < 0) {
+    //         // Put below
+    //         newY = shape.bottom()[1] - OFFSET_GUTTER - this.height() / 2;
+    //     } else {
+    //         // [0, 0]?
+    //         return this;
+    //     }
 
-        return this;
-    }
+    //     this.moveCenter([newX, newY]);
 
-    center(): Point {
-        const avgX = this.top()[0];
-        const avgY = this.left()[1];
+    //     return this;
+    // }
 
-        return [avgX, avgY];
-    }
+    // center(): Point {
+    //     const avgX = this.top()[0];
+    //     const avgY = this.left()[1];
 
-    moveCenter(newCenter: Point): Shape {
-        const shift = math.subtract(newCenter, this.center()) as Shift;
-        return this.shift(shift);
-    }
+    //     return [avgX, avgY];
+    // }
 
-    top(): Point {
-        const tops = this._els.map(e => e.top());
-        const avgX = math.sum(tops, 0) / tops.length;
+    // moveCenter(newCenter: Point): Shape {
+    //     const shift = math.subtract(newCenter, this.center()) as Shift;
+    //     return this.shift(shift);
+    // }
 
-        return [avgX, math.max(tops, 1)];
-    }
+    // top(): Point {
+    //     const tops = this.shapes.map(e => e.top());
+    //     // const avgX = math.sum(tops, 0) / tops.length;
+    //     let sumX = 0;
+    //     for (const [x, y] of tops) {
+    //         sumX += x;
+    //     }
+    //     const avgX = sumX / tops.length;
 
-    bottom(): Point {
-        const bottoms = this._els.map(e => e.bottom());
-        const avgX = math.sum(bottoms, 0) / bottoms.length;
 
-        return [avgX, math.min(bottoms, 1)];
-    }
+    //     return [avgX, math.max(tops, 1)];
+    // }
 
-    left(): Point {
-        const lefts = this._els.map(e => e.left());
-        const avgY = math.sum(lefts, 1) / lefts.length;
+    // bottom(): Point {
+    //     const bottoms = this._els.map(e => e.bottom());
+    //     const avgX = math.sum(bottoms, 0) / bottoms.length;
 
-        return [math.min(lefts, 0), avgY];
-    }
+    //     return [avgX, math.min(bottoms, 1)];
+    // }
 
-    right(): Point {
-        const rights = this._els.map(e => e.right());
-        const avgY = math.sum(rights, 1) / rights.length;
+    // left(): Point {
+    //     const lefts = this._els.map(e => e.left());
+    //     const avgY = math.sum(lefts, 1) / lefts.length;
 
-        return [math.max(rights, 0), avgY];
-    }
+    //     return [math.min(lefts, 0), avgY];
+    // }
 
-    width(): number {
-        return this.right()[0] - this.left()[0];
-    }
+    // right(): Point {
+    //     const rights = this._els.map(e => e.right());
+    //     const avgY = math.sum(rights, 1) / rights.length;
 
-    height(): number {
-        return this.top()[1] - this.bottom()[1];
-    }
+    //     return [math.max(rights, 0), avgY];
+    // }
 
-    children(): Shape[] {
-        return this._els;
-    }
+    // width(): number {
+    //     return this.right()[0] - this.left()[0];
+    // }
 
-    get angle() {
-        return this._angle;
-    }
+    // height(): number {
+    //     return this.top()[1] - this.bottom()[1];
+    // }
 
-    get currentScale() {
-        return this._currentScale;
-    }
+    // children(): Shape[] {
+    //     return this._els;
+    // }
+
+    // get angle() {
+    //     return this._angle;
+    // }
+
+    // get currentScale() {
+    //     return this._currentScale;
+    // }
 }

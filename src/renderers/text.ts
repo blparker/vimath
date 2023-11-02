@@ -26,6 +26,38 @@ const mjOptions = {
 };
 
 
+class TexImageRenderer {
+    private static imageCache: Map<string, HTMLImageElement> = new Map();
+
+    static async getImage(tex: string, size: number): Promise<HTMLImageElement> {
+        if (this.imageCache.has(tex)) {
+            return this.imageCache.get(tex) as HTMLImageElement;
+        }
+
+        const node = mjDocument.convert(tex, {display: false});
+        const svgNode = node.children[0] as LiteElement;
+        const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
+        const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
+
+        const scaleFactor = 0.415;
+        adaptor.setAttribute(svgNode, 'width', (width * size * scaleFactor) + 'px');
+        adaptor.setAttribute(svgNode, 'height', (height * size * scaleFactor) + 'px');
+
+        const image64 = 'data:image/svg+xml;base64,' + btoa(adaptor.outerHTML(svgNode));
+        const image = new Image();
+
+        return new Promise((resolve, reject) => {
+            image.onload = e => {
+                this.imageCache.set(tex, image);
+                resolve(image)
+            };
+            image.onerror = err => reject(err);
+            image.src = image64;
+        });
+    }
+}
+
+
 export class TextRenderer extends NativeRenderer<Text> {
     async render(shape: Text): Promise<ShapeRenderer<Text>> {
         return shape.tex
@@ -43,25 +75,7 @@ export class TextRenderer extends NativeRenderer<Text> {
     }
 
     private getTextImage(shape: Text): Promise<HTMLImageElement> {
-        const scaleFactor = 0.415;
-        const node = mjDocument.convert(shape.text, {display: false});
-        const svgNode = node.children[0] as LiteElement;
-        const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
-        const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
-
-        adaptor.setAttribute(svgNode, 'width', (width * shape.size * scaleFactor) + 'px');
-        adaptor.setAttribute(svgNode, 'height', (height * shape.size * scaleFactor) + 'px');
-
-        const image64 = 'data:image/svg+xml;base64,' + btoa(adaptor.outerHTML(svgNode));
-        const image = new Image();
-
-        return new Promise((resolve, reject) => {
-            image.onload = e => {
-                resolve(image)
-            };
-            image.onerror = err => reject(err);
-            image.src = image64;
-        });
+        return TexImageRenderer.getImage(shape.text, shape.size);
     }
 
     private renderText(shape: Text) {
