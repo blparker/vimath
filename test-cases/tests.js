@@ -234,15 +234,20 @@ export class VisualTests extends TestSuite {
     testAxesNotFullWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
+                this.add(new GridLines());
                 // const axes = new Axes({ showGridLines: true, xLength: 8, yLength: 4 });
                 // const axes = new Axes2({ xLength: 8, yLength: 4, xRange: [-2, 6] });
                 // this.add(axes);
 
-                // const axes2 = new Axes2({ xLength: 8, yLength: 4, xRange: [-20, 60], yRange: [-2, 2], });
+                this.add(new Axes3({ xLength: 8, yLength: 4, xRange: [-20, 60], yRange: [-2, 2], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 10 }));
+                // this.add(new Axes3({ xLength: 8, yLength: 6, xRange: [-4, 4], yRange: [-1, 5], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 1 }));
+
                 // const axes2 = new Axes2({ /*xLength: 8, yLength: 4,*/ xRange: [-20, 60], yRange: [-10, 10], showAxisTicks: true, showAxisLabels: true, labelSize: 10, xAxisTickStep: 10, yAxisTickStep: 4 });
                 // this.add(axes2.shift([-1, -1]));
                 // this.add(axes2);
-                this.add(new NumberLine({ length: 8, range: [-10, 10], tickStep: 4 }));
+
+                // this.add(new NumberLine({ length: 8, range: [-20, 60], tickStep: 10, showLabels: true, showAxisTicks: true }).shift(DOWN()));
+                // this.add(new NumberLine({ length: 6, showTicks: false, showLabels: false, rotation: Math.PI / 2 }));
 
                 return this;
             }

@@ -1,6 +1,7 @@
 import { Point, X_TICKS, Y_TICKS } from '../src/base';
 import { TextMetrics } from '../src/shapes/text';
 import { HtmlCanvas } from '../src/renderers/renderer';
+import { zip } from '../src/math';
 
 
 export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {
@@ -8,6 +9,18 @@ export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {
     cvs.width = cvsWidth; cvs.height = cvsHeight;
 
     return new HtmlCanvas(cvs);
+}
+
+
+export function expectArraysClose(a1: number[][], a2: number[][]) {
+    if (a1.length !== a2.length) {
+        throw new Error('Must compare arrays of equal length');
+    }
+
+    for (const [p1, p2] of zip(a1, a2)) {
+        expect(p1[0]).toBeCloseTo(p2[0]);
+        expect(p1[1]).toBeCloseTo(p2[1]);
+    }
 }
 
 

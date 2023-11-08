@@ -1,8 +1,9 @@
-import { Point, Range, X_TICKS, Y_TICKS } from "../base";
-import { ComposableShape } from "./composed_shape";
+import { Point, Range, X_TICKS, Y_TICKS } from '../base';
+import { ComposableShape } from './composed_shape';
 import * as math from '../math';
-import { Line, Shape } from "./base_shapes";
-import { CanvasTextMetrics, Text, TextMetrics } from "./text";
+import { Line, Shape } from './base_shapes';
+import { CanvasTextMetrics, Text, TextMetrics } from './text';
+import { NumberLine } from './number_line';
 
 
 export type AxesConfig = {
@@ -45,6 +46,7 @@ const defaultAxesConfig = {
     yAxisTickStep: 1,
     axisTextSize: 20,
     textMetrics: null,
+    tickLabelStandoff: 0.4,
 } as const;
 
 export class Axes extends ComposableShape {
@@ -392,5 +394,79 @@ export class Axes2 extends ComposableShape {
                 this.add(new Text({ text: label.toFixed(numDecimals), x: rY - ht - this.tickLabelStandoff, y, align: 'right', baseline: 'middle', ...labelStyles }));
             }
         }
+    }
+}
+
+
+export class Axes3 extends ComposableShape {
+    private readonly xLength: number;
+    private readonly yLength: number;
+    private readonly xRange: Range;
+    private readonly yRange: Range;
+    private readonly showXAxisTicks: boolean;
+    private readonly showYAxisTicks: boolean;
+    private readonly showXAxisLabels: boolean;
+    private readonly showYAxisLabels: boolean;
+    private readonly tickSize: number;
+    private readonly tickLabelStandoff: number;
+    private readonly labelSize: number;
+    private readonly xAxisTickStep: number;
+    private readonly yAxisTickStep: number;
+
+    constructor({ xLength, yLength, xRange, yRange, showAxisTicks, showXAxisTicks, showYAxisTicks, showAxisLabels, showXAxisLabels, showYAxisLabels, tickSize, tickLabelStandoff, labelSize, xAxisTickStep, yAxisTickStep }: AxesConfig2 = {}) {
+        super();
+
+        this.xLength = xLength ?? defaultAxesConfig.xLength;
+        this.yLength = yLength ?? defaultAxesConfig.yLength;
+        this.xRange = xRange ?? (xLength !== undefined ? [-xLength / 2, xLength / 2] : defaultAxesConfig.xRange);
+        this.yRange = yRange ?? (yLength !== undefined ? [-yLength / 2, yLength / 2] : defaultAxesConfig.yRange);
+        this.showXAxisTicks = showXAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showXAxisTicks;
+        this.showYAxisTicks = showYAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showYAxisTicks;
+        this.showXAxisLabels = showXAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showXAxisLabels;
+        this.showYAxisLabels = showYAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showYAxisLabels;
+        this.tickSize = tickSize ?? defaultAxesConfig.tickSize;
+        this.tickLabelStandoff = tickLabelStandoff ?? defaultAxesConfig.tickLabelStandoff;
+        this.labelSize = labelSize ?? defaultAxesConfig.axisTextSize;
+        this.xAxisTickStep = xAxisTickStep ?? defaultAxesConfig.xAxisTickStep;
+        this.yAxisTickStep = yAxisTickStep ?? defaultAxesConfig.yAxisTickStep;
+    }
+
+    compose(): ComposableShape {
+        const dY = Math.abs(this.xRange[0]) / math.range(this.xRange);
+        const oY = -(this.xLength / 2) + (this.xLength * dY);
+
+        const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
+        const oX = -(this.yLength / 2) + (this.yLength * dX);
+
+        console.log(oX, oY)
+
+        const xAxis = new NumberLine({
+            length: this.xLength,
+            range: this.xRange,
+            showTicks: this.showXAxisTicks,
+            showLabels: this.showXAxisLabels,
+            tickStep: this.xAxisTickStep,
+            tickSize: this.tickSize,
+            tickLabelStandoff: this.tickLabelStandoff,
+            labelSize: this.labelSize,
+            showZero: false,
+        }).shift([0, oX]);
+
+        const yAxis = new NumberLine({
+            length: this.yLength,
+            range: this.yRange,
+            showTicks: this.showYAxisTicks,
+            showLabels: this.showYAxisLabels,
+            tickStep: this.yAxisTickStep,
+            tickSize: this.tickSize,
+            tickLabelStandoff: this.tickLabelStandoff,
+            labelSize: this.labelSize,
+            rotation: Math.PI / 2,
+            showZero: false,
+        }).shift([oY, 0]);
+
+        this.add(xAxis, yAxis);
+
+        return this;
     }
 }

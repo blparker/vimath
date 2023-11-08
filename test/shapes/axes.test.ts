@@ -1,8 +1,8 @@
-import { Axes, Axes2, AxesConfig } from "../../src/shapes/axes";
+import { Axes, Axes2, AxesConfig } from '../../src/shapes/axes';
 import { TestTextMetrics } from '../utils';
 import { Text } from '../../src/shapes/text';
-import { Line, PointShape, Shape } from "../../src/shapes/base_shapes";
-import { X_TICKS, Y_TICKS } from "../../src/base";
+import { Line, PointShape, Shape } from '../../src/shapes/base_shapes';
+import { X_TICKS, Y_TICKS } from '../../src/base';
 
 
 function findLabel({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {

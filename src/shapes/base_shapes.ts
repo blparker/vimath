@@ -315,6 +315,11 @@ export class PointShape implements Shape, Styleable, PointsAware {
         return this._lineWidth;
     }
 
+    changeLineWidth(newLineWidth: number): PointShape {
+        this._lineWidth = newLineWidth;
+        return this;
+    }
+
     copy(): Shape {
         return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
