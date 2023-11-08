@@ -1,4 +1,4 @@
-import { parseColor } from "../src/colors";
+import { parseColor, Colors, } from '../src/colors';
 
 
 describe('colors module', function() {
@@ -31,5 +31,13 @@ describe('colors module', function() {
 
     test('it should return color from HTML color', () => {
         expect(parseColor('blue')).toEqual([0, 0, 255, 1.0]);
+    });
+
+    test('it should return color with alpha', () => {
+        expect(Colors.black({ opacity: 0.5 })).toEqual([26, 26, 26, 0.5]);
+    });
+
+    test('it should allow a color without any config', () => {
+        expect(Colors.black()).toEqual([26, 26, 26, 1.0]);
     });
 });

@@ -2,7 +2,7 @@ import { getHtmlColor, isHtmlColor } from "./html_colors";
 
 export type RGBA = [number, number, number, number];
 
-type ColorStyle = { variant?: number, opacity?: number };
+type ColorStyle = { variant?: number; opacity?: number; };
 type Variant = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
 
@@ -74,18 +74,18 @@ const variantsByColor = {
 //     'teal' | 'cyan' | 'sky' | 'blue' | 'indigo' | 'violet' | 'purple' | 
 //     'fuchsia' | 'pink' | 'rose' | 'transparent';
 type ColorNames = keyof typeof variantsByColor;
-type Colors = { [key in ColorNames]: (variant?: Variant) => RGBA };
+type Colors = { [key in ColorNames]: (config?: ColorStyle) => RGBA };
 
 const defaultColorArgs = { variant: 500, opacity: 1 };
 
 export const Colors = Object.fromEntries(Object.entries(variantsByColor).map(colors => {
     const [colorName, variants] = colors as [ColorNames, string[]];
-    return [colorName, (config: ColorStyle = {}): RGBA => {
+
+    const fn = ({ variant = defaultColorArgs.variant, opacity = defaultColorArgs.opacity }: ColorStyle = {}): RGBA => {
         if (colorName === 'transparent') {
             return [0, 0, 0, 0];
         }
 
-        const { variant, opacity } = { ...defaultColorArgs, ...config };
         let idx;
 
         if (colorName === 'black' || colorName === 'white') {
@@ -102,7 +102,9 @@ export const Colors = Object.fromEntries(Object.entries(variantsByColor).map(col
         rgbColor[3] = opacity;
 
         return rgbColor;
-    }];
+    };
+
+    return [colorName, fn];
 })) as Colors;
 
 
