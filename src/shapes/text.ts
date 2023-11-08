@@ -4,7 +4,7 @@
 import { Colors, RGBA } from '../colors.js';
 import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER, Config, X_TICKS, Y_TICKS, DEFAULT_PADDING } from '../base.js';
 import * as math from '../math.js';
-import { Shape } from './base_shapes.js';
+import { PointsAware, Shape } from './base_shapes.js';
 
 
 export interface TextMetrics {
@@ -69,7 +69,7 @@ export class CanvasTextMetrics implements TextMetrics {
 export type TextBaseline = 'top' | 'middle' | 'bottom';
 
 
-export class Text implements Shape {
+export class Text implements Shape, PointsAware {
     private _text: string;
     private _x: number;
     private _y: number;
@@ -131,66 +131,23 @@ export class Text implements Shape {
         return this;
     }
 
-    nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
-        // const [cX, cY] = shape.center();
-        // let dX = math.add(cX, math.mult(direction[0], shape.width() / 2));
-        // let dY = math.add(cY, math.mult(direction[1], shape.height() / 2));
-
-        // if (direction[0] !== 0) {
-        //     dX += Math.sign(dX) * this._offsetGutter;
-
-        //     if (this.align === 'center') {
-        //         dX += this.width() / 2;
-        //     } else if (this.align === 'left') {
-        //         dX += this.width();
-        //     }
-        // }
-
-        // if (direction[1] !== 0) {
-        //     // dY += Math.sign(dY) * this._offsetGutter;
-        //     // dY -= this.height();
-
-        //     if (this.baseline === 'middle') {
-        //         dY += this.height();
-        //     } else if (this.baseline === 'bottom') {
-        //         dY += this.height();
-        //     }
-        // }
-
-        // this._x = dX;
-        // this._y = dY;
-        const w = this.width();
-        const h = this.height();
-
+    nextTo(shape: Shape | Point, direction: Point = RIGHT()): Shape {
+        const [w, h] = [this.width(), this.height()];
         const [dX, dY] = direction;
 
-        if (dX < 0) {
-            // Left
-            let alignShift = this.align === 'center' ? [-w / 2, 0] : this.align === 'left' ? [-w, 0] : [0, 0];
-            alignShift[0] -= this._offsetGutter;
+        const shapeCenter = Array.isArray(shape) ? shape : shape.center();
+        const [shapeWidth, shapeHeight] = [
+            Array.isArray(shape) ? 0 : shape.width(),
+            Array.isArray(shape) ? 0 : shape.height(),
+        ];
 
-            this.shift(math.add(shape.left(), alignShift) as Shift);
-        } else if (dX > 0) {
-            // Right
-            let alignShift = this.align === 'center' ? [w / 2, 0] : this.align === 'right' ? [w, 0] : [0, 0];
-            alignShift[0] += this._offsetGutter;
+        let align = this.align === 'left' ? -w / 2 : this.align === 'right' ? w / 2 : 0;
+        let baseline = this.baseline === 'top' ? h / 2 : this.baseline === 'bottom' ? -h / 2 : 0;
 
-            this.shift(math.add(shape.right(), alignShift) as Shift);
-        }
+        const nX = shapeCenter[0] + align + (dX * shapeWidth / 2) + (dX * w / 2) + (dX * this._offsetGutter);
+        const nY = shapeCenter[1] + baseline + (dY * shapeHeight / 2) + (dY * h / 2) + (dY * this._offsetGutter);
 
-        if (dY < 0) {
-            // Down
-            let alignShift = this.baseline === 'middle' ? [0, -h / 2] : this.baseline === 'bottom' ? [0, -h] : [0, 0];
-            alignShift[1] -= this._offsetGutter;
-
-            this.shift(math.add(shape.bottom(), alignShift) as Shift);
-        } else if (dY > 0) {
-            // Up
-            let alignShift = this.baseline === 'middle' ? [0, h / 2] : this.baseline === 'top' ? [0, h] : [0, 0];
-            alignShift[1] += this._offsetGutter;
-
-            this.shift(math.add(shape.top(), alignShift) as Shift);
-        }
+        this.moveTo([nX, nY])
 
         return this;
     }
@@ -277,19 +234,23 @@ export class Text implements Shape {
         let rX, rY;
 
         if (this._align === 'left') {
-            rX = this._x + this.width();
+            // rX = this._x + this.width();
+            rX = math.add(this._x, this.width());
         } else if (this._align === 'center') {
-            rX = this._x + this.width() / 2;
+            // rX = this._x + this.width() / 2;
+            rX = math.add(this._x, math.div(this.width(), 2));
         } else {
             rX = this._x;
         }
 
         if (this._baseline === 'top') {
-            rY = this._y - this.height() / 2;
+            // rY = this._y - this.height() / 2;
+            rY = math.subtract(this._y, math.div(this.height(), 2));
         } else if (this._baseline === 'middle') {
             rY = this._y;
         } else {
-            rY = this._y + this.height() / 2;
+            // rY = this._y + this.height() / 2;
+            rY = math.add(this._y, math.div(this.height(), 2));
         }
 
         return [rX, rY] as Point;
@@ -301,6 +262,14 @@ export class Text implements Shape {
 
     height(): number {
         return this._height;
+    }
+
+    copy(): Shape {
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+    }
+
+    points(): Point[] {
+        return [this.top(), this.bottom(), this.left(), this.right()];
     }
 
     get angle(): number {

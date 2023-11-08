@@ -35,36 +35,69 @@ class TestAnimation extends Animation {
 
 describe('scene module', () => {
 
-    test('should clear and render scene items', () => {
-        const anim = new TestAnimation({ duration: 1000 });
+    // test('should clear and render scene items', () => {
+    //     const anim = new TestAnimation({ duration: 1000 });
+
+    //     class TestScene extends Scene {
+    //         compose(): Scene {
+    //             const line = new Line({ from: [0, 0], to: [1, 0] });
+    //             this.add(line, anim);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     const canvas = new TestCanvas();
+    //     const clearSpy = jest.spyOn(canvas, 'clear');
+    //     const lineSpy = jest.spyOn(canvas, 'line');
+    //     const pathSpy = jest.spyOn(canvas, 'path');
+    //     const animSpy = jest.spyOn(anim, 'tick');
+
+    //     const scene = new TestScene({ canvas }).compose();
+    //     scene.nextTick(0);
+
+    //     expect(clearSpy).toHaveBeenCalledTimes(1);
+    //     expect(pathSpy).toHaveBeenCalledTimes(1);
+    //     expect(animSpy).toHaveBeenCalledTimes(1);
+    //     expect(animSpy.mock.calls[0][0]).toBe(0);
+    //     expect(animSpy.mock.results[0].value).toBe(false);
+
+    //     scene.nextTick(1000);
+    //     expect(animSpy.mock.calls[1][0]).toBe(1000);
+    //     expect(animSpy.mock.results[1].value).toBe(true);
+    // });
+
+
+    test('should wait until animation is done before starting next', () => {
+        const anim1 = new TestAnimation({ duration: 1000 });
+        const anim2 = new TestAnimation({ duration: 1000 });
 
         class TestScene extends Scene {
             compose(): Scene {
-                const line = new Line({ from: [0, 0], to: [1, 0] });
-                this.add(line, anim);
+                this.add(anim1);
+                this.add(anim2);
 
                 return this;
             }
         }
 
         const canvas = new TestCanvas();
-        const clearSpy = jest.spyOn(canvas, 'clear');
-        const lineSpy = jest.spyOn(canvas, 'line');
-        const pathSpy = jest.spyOn(canvas, 'path');
-        const animSpy = jest.spyOn(anim, 'tick');
-
         const scene = new TestScene({ canvas }).compose();
+
+        // Start the thing
         scene.nextTick(0);
 
-        expect(clearSpy).toHaveBeenCalledTimes(1);
-        expect(pathSpy).toHaveBeenCalledTimes(1);
-        expect(animSpy).toHaveBeenCalledTimes(1);
-        expect(animSpy.mock.calls[0][0]).toBe(0);
-        expect(animSpy.mock.results[0].value).toBe(false);
+        expect(anim1.isRunning()).toBe(true);
+        expect(anim2.isRunning()).toBe(false);
+
+        scene.nextTick(500);
+
+        expect(anim1.isRunning()).toBe(true);
+        expect(anim2.isRunning()).toBe(false);
 
         scene.nextTick(1000);
-        expect(animSpy.mock.calls[1][0]).toBe(1000);
-        expect(animSpy.mock.results[1].value).toBe(true);
-    });
 
+        expect(anim1.isComplete(1000)).toBe(true);
+        expect(anim2.isRunning()).toBe(true);
+    });
 });

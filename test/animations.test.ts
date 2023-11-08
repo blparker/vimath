@@ -1,9 +1,10 @@
 import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget } from "../src/animations/animations";
 import { LEFT, Point, Shift } from "../src/base";
-import { Square } from "../src/shapes/base_shapes";
+import { Square } from '../src/shapes/base_shapes';
 import { Colors } from "../src/colors";
 import { Easing } from "../src/easing";
-import { zip } from "../src/math";
+import { zip } from '../src/math';
+import { Dot } from '../src/shapes/derived_shapes';
 import structuredClone from '@ungap/structured-clone'
 
 
@@ -152,6 +153,15 @@ describe('move to target animation module', () => {
         expect(target.center()).toEqual([1, 1]);
     });
 
+    test('should move the center of a dot', () => {
+        const target = new Dot();
+
+        const a = new MoveToTarget({ target, destination: [0, 2], duration: 1000 })
+        a.tick(0);
+        a.tick(1000);
+
+        expect(target.center()).toEqual([0, 2]);
+    });
 });
 
 

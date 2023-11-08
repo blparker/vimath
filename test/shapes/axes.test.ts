@@ -1,7 +1,8 @@
-import { Axes, AxesConfig } from "../../src/shapes/axes";
+import { Axes, Axes2, AxesConfig } from "../../src/shapes/axes";
 import { TestTextMetrics } from '../utils';
 import { Text } from '../../src/shapes/text';
 import { Line, PointShape, Shape } from "../../src/shapes/base_shapes";
+import { X_TICKS, Y_TICKS } from "../../src/base";
 
 
 function findLabel({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
@@ -132,5 +133,95 @@ describe('axes module', function() {
 
         // expect(findTick({ cs,  }))
         expect(a.relativeOrigin()).toEqual([-4, -4]);
+    });
+});
+
+
+describe('axes 2', () => {
+    test('should create x and y axes at (0, 0) that are 14 and 8 units long respectively', () => {
+        const axes = new Axes2();
+        axes.compose();
+
+        expect(axes.width()).toEqual(X_TICKS);
+        expect(axes.height()).toEqual(Y_TICKS);
+        expect(axes.center()).toEqual([0, 0]);
+    });
+
+    test('should create x and y axes with specific length', () => {
+        const axes = new Axes2({ xLength: 8, yLength: 4 });
+        axes.compose();
+
+        expect(axes.width()).toEqual(8);
+        expect(axes.height()).toEqual(4);
+        expect(axes.center()).toEqual([0, 0]);
+    });
+
+    test('should not create ticks', () => {
+        const axes = new Axes2({ xLength: 8, yLength: 4, showAxisTicks: false });
+        const cs = axes.composedShapes();
+
+        expect(cs.length).toEqual(2);
+        expect(cs[0]).toBeInstanceOf(Line);
+        expect(cs[1]).toBeInstanceOf(Line);
+        expect((cs[0] as PointShape).computedPoints()).toEqual([[-4, 0], [4, 0]]);
+        expect((cs[1] as PointShape).computedPoints()).toEqual([[0, -2], [0, 2]]);
+    });
+
+    test('should not create labels', () => {
+        // Create a test to ensure that the labels are not created
+        const axes = new Axes2({ xLength: 8, yLength: 4, showAxisLabels: false });
+        const cs = axes.composedShapes();
+
+        expect(cs.length).toEqual(2);
+        expect(cs[0]).toBeInstanceOf(Line);
+        expect(cs[1]).toBeInstanceOf(Line);
+    });
+
+    test('should create ticks', () => {
+        // Create a test to ensure that the ticks are created
+        const axes = new Axes2({ xLength: 8, yLength: 4, showAxisTicks: true });
+        const cs = axes.composedShapes();
+
+        // 2 axes, 8 ticks for X-axis, 4 ticks for Y-axis
+        expect(cs.length).toEqual(14);
+        cs.forEach(e => expect(e).toBeInstanceOf(Line));
+    });
+
+    test('should create ticks and labels', () => {
+        // Create a test to ensure that the ticks are created
+        const axes = new Axes2({ xLength: 8, yLength: 4, showAxisTicks: true, showAxisLabels: true });
+        const cs = axes.composedShapes();
+
+        // 2 axes, 8 ticks for X-axis, 4 ticks for Y-axis, 8 labels for X-axis, 4 labels for Y-axis
+        expect(cs.length).toEqual(26);
+
+        // First 14 are ticks
+        cs.slice(0, 14).forEach(e => expect(e).toBeInstanceOf(Line));
+
+        // Next 12 are labels
+        cs.slice(14).forEach(e => expect(e).toBeInstanceOf(Text));
+
+        expect((cs[14] as Text).text).toEqual('-4');
+        expect((cs[14 + 7] as Text).text).toEqual('4');
+        expect((cs[22] as Text).text).toEqual('-2');
+        expect((cs[25] as Text).text).toEqual('2');
+    });
+
+    test('should create shifted origin if range is skewed', () => {
+        const axes = new Axes2({ xLength: 8, yLength: 4, xRange: [-2, 6] });
+        const cs = axes.composedShapes();
+
+        expect((cs[0] as PointShape).computedPoints()).toEqual([[-4, 0], [4, 0]]);
+        expect((cs[1] as PointShape).computedPoints()).toEqual([[-2, -2], [-2, 2]]);
+    });
+
+    test('should shift axes', () => {
+        const axes = new Axes2({ xLength: 8, yLength: 4 });
+        const cs = axes.composedShapes();
+
+        axes.shift([1, 2]);
+
+        expect((cs[0] as PointShape).computedPoints()).toEqual([[-3, 2], [5, 2]]);
+        expect((cs[1] as PointShape).computedPoints()).toEqual([[1, 0], [1, 4]]);
     });
 });

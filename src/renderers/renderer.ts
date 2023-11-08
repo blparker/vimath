@@ -1,5 +1,5 @@
 import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign } from '../base';
-import { RGBA, rgbaToString } from '../colors';
+import { Colors, RGBA, rgbaToString } from '../colors';
 import { Shape, PointShape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
 import { Text, TextBaseline } from '../shapes/text';
@@ -148,6 +148,12 @@ export class HtmlCanvas implements Canvas {
 
     clear(): void {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.save();
+        this.ctx.fillStyle = rgbaToString(Colors.white());
+        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fill();
+        this.ctx.restore();
     }
 
     private translate(point: Point): Point {

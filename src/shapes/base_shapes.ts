@@ -22,7 +22,7 @@ export interface Shape {
     moveTo(point: Point): Shape;
     scale(factor: number): Shape;
     rotate(angle: number): Shape;
-    nextTo(shape: Shape, direction?: Point): Shape;
+    nextTo(shape: Shape | Point, direction?: Point): Shape;
     center(): Point;
     moveCenter(newCenter: Point): Shape;
     top(): Point;
@@ -31,6 +31,7 @@ export interface Shape {
     right(): Point;
     width(): number;
     height(): number;
+    copy(): Shape;
 }
 
 
@@ -39,6 +40,11 @@ export interface Styleable {
     changeColor(newColor: RGBA): Styleable;
     lineColor(): RGBA;
     changeLineColor(newColor: RGBA): Styleable;
+}
+
+
+export interface PointsAware {
+    points(): Point[];
 }
 
 
@@ -60,7 +66,7 @@ export const defaultStyleArgs = {
 } as const;
 
 
-export class PointShape implements Shape, Styleable {
+export class PointShape implements Shape, Styleable, PointsAware {
     private _points: Point[];
     private _closePath: boolean;
     private _offsetGutter: number;
@@ -164,7 +170,7 @@ export class PointShape implements Shape, Styleable {
         // return this;
     }
 
-    nextTo(shape: Shape, direction: Point = RIGHT()): PointShape {
+    nextTo(shape: Shape | Point, direction: Point = RIGHT()): PointShape {
         let offsetX = 0, offsetY = 0;
         let [dX, dY] = direction;
 
@@ -183,7 +189,7 @@ export class PointShape implements Shape, Styleable {
         dX = math.add(dX, offsetX * Math.sign(dX));
         dY = math.add(dY, offsetY * Math.sign(dY));
 
-        const dest = shape.center();
+        const dest = Array.isArray(shape) ? shape : shape.center();
 
         for (const point of this._points) {
             // point[0] += dest[0] + dX;
@@ -199,7 +205,7 @@ export class PointShape implements Shape, Styleable {
         let minX = Infinity, minY = Infinity;
         let maxX = -Infinity, maxY = -Infinity;
 
-        for (const point of this.points) {
+        for (const point of this.points()) {
             minX = Math.min(point[0], minX);
             minY = Math.min(point[1], minY);
             maxX = Math.max(point[0], maxX);
@@ -250,7 +256,7 @@ export class PointShape implements Shape, Styleable {
         return this.top()[1] - this.bottom()[1];
     }
 
-    public get points(): Point[] {
+    public points(): Point[] {
         return this._points;
     }
 
@@ -308,9 +314,13 @@ export class PointShape implements Shape, Styleable {
     lineWidth(): number {
         return this._lineWidth;
     }
+
+    copy(): Shape {
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+    }
 }
 
-export class CircleArc implements Shape, Styleable {
+export class CircleArc implements Shape, Styleable, PointsAware {
     private _angle: number = 0;
     private _currentScale: number = 1;
     private cX: number;
@@ -346,7 +356,8 @@ export class CircleArc implements Shape, Styleable {
 
     scale(factor: number): Shape {
         this._currentScale = factor;
-        this.radius *= factor;
+        // this.radius = this.radius > 0 ? this.radius * factor : factor;
+
         return this;
     }
 
@@ -355,22 +366,22 @@ export class CircleArc implements Shape, Styleable {
         return this;
     }
 
-    nextTo(shape: Shape, direction: Point = RIGHT()): Shape {
+    nextTo(shape: Shape | Point, direction: Point = RIGHT()): Shape {
         let offsetX = 0, offsetY = 0;
         let [dX, dY] = direction;
 
         if (dX !== 0) {
             // Left or right side
-            offsetX = math.add(this.radius, OFFSET_GUTTER);
+            offsetX = math.add(this.scaledRadius(), OFFSET_GUTTER);
         } else {
             // Top or bottom side
-            offsetY = math.add(this.radius, OFFSET_GUTTER);
+            offsetY = math.add(this.scaledRadius(), OFFSET_GUTTER);
         }
 
         dX = math.add(dX, offsetX * Math.sign(dX));
         dY = math.add(dY, offsetY * Math.sign(dY));
 
-        const dest = shape.center();
+        const dest = Array.isArray(shape) ? shape : shape.center();
         const center = this.center();
 
         const nX = math.add(center[0], math.add(dest[0], dX));
@@ -391,27 +402,27 @@ export class CircleArc implements Shape, Styleable {
     }
 
     top(): Point {
-        return [this.cX, this.cY + this.radius];
+        return [this.cX, this.cY + this.scaledRadius()];
     }
 
     bottom(): Point {
-        return [this.cX, this.cY - this.radius];
+        return [this.cX, this.cY - this.scaledRadius()];
     }
 
     left(): Point {
-        return [this.cX - this.radius, this.cY];
+        return [this.cX - this.scaledRadius(), this.cY];
     }
 
     right(): Point {
-        return [this.cX + this.radius, this.cY];
+        return [this.cX + this.scaledRadius(), this.cY];
     }
 
     width(): number {
-        return this.radius * 2;
+        return this.scaledRadius() * 2;
     }
 
     height(): number {
-        return this.radius * 2;
+        return this.scaledRadius() * 2;
     }
 
     color(): RGBA {
@@ -443,7 +454,32 @@ export class CircleArc implements Shape, Styleable {
     get currentScale() {
         return this._currentScale;
     }
+
+    copy(): Shape {
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+    }
+
+    points(): Point[] {
+        const numPoints = 100;
+        const points = [];
+
+        for (let i = 0; i < numPoints; i++) {
+            const a = (i / numPoints) * Math.PI * 2;
+            const [dx, dy] = [this.cX + Math.cos(a) * this.scaledRadius(), this.cY + Math.sin(a) * this.scaledRadius()];
+
+            points.push([dx, dy]);
+        }
+
+        points.push([this.cX + this.scaledRadius(), this.cY]);
+
+        return points as Point[];
+    }
+
+    private scaledRadius(): number {
+        return this.radius * this.currentScale;
+    }
 }
+
 
 export class Circle extends PointShape {
     constructor({ x = 0, y = 0, radius = 1, numVertices = 100, ...styleArgs }: { x?: number, y?: number, radius?: number, numVertices?: number } & Prettify<StyleArgs> = {}) {

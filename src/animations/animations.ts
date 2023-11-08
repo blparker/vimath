@@ -1,6 +1,6 @@
 // import * as Easing from './easing.js';
 import { Point, Shift } from '../base.js';
-import { Shape, Styleable, isShape } from '../shapes/base_shapes.js';
+import { PointShape, PointsAware, Shape, Styleable, isShape } from '../shapes/base_shapes.js';
 import { RGBA } from '../colors.js';
 import { Easing, EasingFunction } from '../easing.js';
 import { arrLerp, clamp, distance, lerp } from '../math.js';
@@ -17,6 +17,7 @@ export abstract class Animation {
     private _duration: number;
     private _startTime: number | null;
     protected _easing: EasingFunction;
+    private _emittedFinal: boolean = false;
 
     constructor({ duration = 1000, easing = Easing.easeInOutCubic }: AnimationArgs) {
         this._duration = duration;
@@ -38,6 +39,7 @@ export abstract class Animation {
 
     reset(): void {
         this._startTime = null;
+        this._emittedFinal = false;
 
         this.resetState();
     }
@@ -49,8 +51,14 @@ export abstract class Animation {
      */
     tick(time: number): boolean {
         if (this.isComplete(time)) {
+            if (!this._emittedFinal) {
+                this._emittedFinal = true;
+                this.update(1);
+            }
+
             return true;
         } else if (! this.isRunning()) {
+            this.initState();
             this.start(time);
         }
 
@@ -73,7 +81,7 @@ export abstract class Animation {
     isComplete(time: number): boolean {
         if (this._startTime !== null) {
             const pctComplete = Math.min((time - this._startTime) / this._duration, 1);
-            return pctComplete > 1;
+            return pctComplete >= 1;
         } else {
             return false;
         }
@@ -87,12 +95,16 @@ export abstract class Animation {
         } else if (typeof v1 === 'number' && typeof v2 === 'number') {
             return lerp(v1, v2, this._easing(d));
         } else {
-            throw new Error('Unexpected types');
+            throw new Error(`Unexpected types - v1: ${typeof v1}, v2: ${typeof v2}`);
         }
     }
 
-    private start(time: number) {
+    protected start(time: number) {
         this._startTime = time;
+    }
+
+    protected initState() {
+        // Set up any state
     }
 }
 
@@ -121,6 +133,13 @@ export class MoveToTarget extends Animation {
     resetState(): void {
         this.target.moveCenter(this.startLocation);
     }
+
+    // start(time: number) {
+    //     super.start(time);
+
+    //     this.startLocation = this.target.center();
+    //     console.log("### ", this.startLocation)
+    // }
 }
 
 
@@ -225,30 +244,42 @@ export class ChangeLineColor extends Animation {
 }
 
 
-type MoveAlongPathArgs = { target: Shape, path: Point[] } & AnimationArgs;
+type MoveAlongPathArgs = { target: Shape, path: Point[] | PointsAware } & AnimationArgs;
 
 export class MoveAlongPath extends Animation {
     private target: Shape;
-    private path: Point[];
-    private startPoint: Point;
+    private pathObj: Point[] | PointsAware;
+    // private path: Point[];
+    private startPoint?: Point = undefined;
+    private path?: Point[] = undefined;
 
     constructor({ target, path, ...baseConfig }: MoveAlongPathArgs) {
         super(baseConfig);
 
         this.target = target;
-        this.path = path;
-        this.startPoint = target.center();
+        this.pathObj = path;
     }
 
     update(pctComplete: number): void {
+        if (!this.path) {
+            return;
+        }
+
         const idx = Math.floor(this.updateWithEase(0, this.path.length, pctComplete))
         const point = this.path[Math.min(idx, this.path.length - 1)];
 
         this.target.moveCenter(point);
     }
 
+    protected initState(): void {
+        this.path = Array.isArray(this.pathObj) ? this.pathObj : this.pathObj.points();
+        this.startPoint = this.target.center();
+    }
+
     resetState(): void {
-        this.target.moveCenter(this.startPoint);
+        if (this.startPoint) {
+            this.target.moveCenter(this.startPoint);
+        }
     }
 }
 
@@ -258,34 +289,47 @@ type OrbitArgs = { target: Shape, center: Point } & AnimationArgs;
 export class Orbit extends Animation {
     private target: Shape;
     private center: Point;
-    private targetStartPoint: Point;
-    private distance: number;
-    private startAngle: number;
+
+    private startAngle?: number = undefined;
+    private distance?: number = undefined;
+    private targetStartPoint?: Point = undefined;
 
     constructor({ target, center, ...baseConfig }: OrbitArgs) {
         super(baseConfig);
 
         this.target = target;
         this.center = center;
-        this.targetStartPoint = target.center();
+        // this.targetStartPoint = target.center();
 
-        const targetCenter = this.target.center();
-        this.distance = distance(targetCenter, center);
-        this.startAngle = Math.atan2(targetCenter[1] - center[1], targetCenter[0] - center[0]);
+        // const targetCenter = this.target.center();
+        // this.distance = distance(targetCenter, center);
+        // this.startAngle = Math.atan2(targetCenter[1] - center[1], targetCenter[0] - center[0]);
     }
 
     update(pctComplete: number): void {
-        const endAngle = this.startAngle + Math.PI * 2;
-        const updatedVal = this.updateWithEase(this.startAngle, endAngle, pctComplete);
+        if (this.startAngle !== undefined && this.distance !== undefined) {
+            const endAngle = this.startAngle + Math.PI * 2;
+            const updatedVal = this.updateWithEase(this.startAngle, endAngle, pctComplete);
 
-        const x = this.center[0] + Math.cos(updatedVal) * this.distance;
-        const y = this.center[1] + Math.sin(updatedVal) * this.distance;
+            const x = this.center[0] + Math.cos(updatedVal) * this.distance;
+            const y = this.center[1] + Math.sin(updatedVal) * this.distance;
 
-        this.target.moveCenter([x, y]);
+            this.target.moveCenter([x, y]);
+        }
     }
 
     resetState(): void {
-        this.target.moveCenter(this.targetStartPoint);
+        if (this.targetStartPoint) {
+            this.target.moveCenter(this.targetStartPoint);
+        }
+    }
+
+    protected start(time: number): void {
+        super.start(time);
+
+        this.targetStartPoint = this.target.center();
+        this.distance = distance(this.targetStartPoint, this.center);
+        this.startAngle = Math.atan2(this.targetStartPoint[1] - this.center[1], this.targetStartPoint[0] - this.center[0]);
     }
 }
 
@@ -312,5 +356,33 @@ export class Rotate extends Animation {
 
     resetState(): void {
         this.target.rotate(this.startAngle);
+    }
+}
+
+
+
+type GrowArgs = { shape: Shape } & AnimationArgs;
+
+export class Grow extends Animation {
+    private shape: Shape;
+    private initialScale?: number = undefined;
+
+    constructor({ shape, ...baseConfig }: GrowArgs) {
+        super(baseConfig);
+
+        this.shape = shape;
+    }
+
+    update(pctComplete: number): void {
+        const scale = this.updateWithEase(0, this.initialScale ?? 1, pctComplete);
+        this.shape.scale(scale);
+    }
+
+    protected initState(): void {
+        this.initialScale = this.shape.currentScale;
+    }
+
+    resetState(): void {
+        this.shape.scale(this.initialScale ?? 1);
     }
 }
