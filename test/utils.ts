@@ -12,14 +12,14 @@ export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {
 }
 
 
-export function expectArraysClose(a1: number[][], a2: number[][]) {
+export function expectArraysClose(a1: number[][], a2: number[][], delta: number = 5) {
     if (a1.length !== a2.length) {
         throw new Error('Must compare arrays of equal length');
     }
 
     for (const [p1, p2] of zip(a1, a2)) {
-        expect(p1[0]).toBeCloseTo(p2[0]);
-        expect(p1[1]).toBeCloseTo(p2[1]);
+        expect(p1[0]).toBeCloseTo(p2[0], delta);
+        expect(p1[1]).toBeCloseTo(p2[1], delta);
     }
 }
 

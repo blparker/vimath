@@ -1,9 +1,10 @@
 import { Point, Range, X_TICKS, Y_TICKS } from '../base';
 import { ComposableShape } from './composed_shape';
 import * as math from '../math';
-import { Line, Shape } from './base_shapes';
+import { Line, PointShape, Shape, StyleArgs } from './base_shapes';
 import { CanvasTextMetrics, Text, TextMetrics } from './text';
 import { NumberLine } from './number_line';
+import { Colors, colorWithOpacity } from '../colors';
 
 
 export type AxesConfig = {
@@ -36,7 +37,7 @@ const defaultAxesConfig = {
     showAxisTicks: true,
     showXAxisTicks: false,
     showYAxisTicks: false,
-    showAxisLabels: false,
+    showAxisLabels: true,
     showXAxisLabels: false,
     showYAxisLabels: false,
     numXAxisTicks: 10,
@@ -420,10 +421,10 @@ export class Axes3 extends ComposableShape {
         this.yLength = yLength ?? defaultAxesConfig.yLength;
         this.xRange = xRange ?? (xLength !== undefined ? [-xLength / 2, xLength / 2] : defaultAxesConfig.xRange);
         this.yRange = yRange ?? (yLength !== undefined ? [-yLength / 2, yLength / 2] : defaultAxesConfig.yRange);
-        this.showXAxisTicks = showXAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showXAxisTicks;
-        this.showYAxisTicks = showYAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showYAxisTicks;
-        this.showXAxisLabels = showXAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showXAxisLabels;
-        this.showYAxisLabels = showYAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showYAxisLabels;
+        this.showXAxisTicks = showXAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showAxisTicks;
+        this.showYAxisTicks = showYAxisTicks ?? showAxisTicks ?? defaultAxesConfig.showAxisTicks;
+        this.showXAxisLabels = showXAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showAxisLabels;
+        this.showYAxisLabels = showYAxisLabels ?? showAxisLabels ?? defaultAxesConfig.showAxisLabels;
         this.tickSize = tickSize ?? defaultAxesConfig.tickSize;
         this.tickLabelStandoff = tickLabelStandoff ?? defaultAxesConfig.tickLabelStandoff;
         this.labelSize = labelSize ?? defaultAxesConfig.axisTextSize;
@@ -437,8 +438,6 @@ export class Axes3 extends ComposableShape {
 
         const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
         const oX = -(this.yLength / 2) + (this.yLength * dX);
-
-        console.log(oX, oY)
 
         const xAxis = new NumberLine({
             length: this.xLength,
@@ -468,5 +467,74 @@ export class Axes3 extends ComposableShape {
         this.add(xAxis, yAxis);
 
         return this;
+    }
+
+    plot(fn: (x: number) => number, styleArgs: StyleArgs = {}): Shape {
+        const points: Point[] = [];
+
+        const minNumSteps = 200;
+        const stepSize = math.range(this.xRange) / minNumSteps;
+        const [yLow, yHigh] = this.yRange;
+        const origin = this.origin();
+
+        let prevY = fn(this.xRange[0]);
+
+        for (let x = this.xRange[0]; x <= this.xRange[1]; x += stepSize) {
+            // const y = fn(x);
+            const [pX, pY] = math.add([x, fn(x)], origin) as Point;
+
+            if (!Number.isFinite(pY)) {
+                prevY = pY;
+                continue;
+            }
+
+            if (pY >= yLow && pY <= yHigh) {
+                if (prevY > yHigh) {
+                    const tx = ((pX - stepSize) + pX) / 2;
+                    points.push([tx, fn(tx)]);
+                }
+
+                points.push([pX, pY]);
+            } else if (prevY < yHigh) {
+                const tx = ((pX - stepSize) + pX) / 2;
+                points.push([tx, fn(tx)]);
+            }
+
+            prevY = pY;
+        }
+
+        return new PointShape({ points: points, closePath: false, smooth: true, ...styleArgs });
+    }
+
+    area({ plot, xRange, opacity = 0.3 }: { plot: PointShape; xRange?: Range, opacity: number }): PointShape {
+        const [rStart, rEnd] = xRange ?? this.xRange;
+        const points = plot.computedPoints();
+        const origin = this.origin();
+
+        const areaPoints: Point[] = [];
+
+        for (let i = 0; i < points.length; i++) {
+            const [pX, pY] = math.subtract(points[i], origin) as Point;
+
+            if (pX >= rStart && pX <= rEnd) {
+                areaPoints.push([pX, pY]);
+            }
+        }
+
+        // Have all the points along the line, need to draw back to the x-axis
+        areaPoints.push([rEnd, 0], [rStart, 0]);
+        const translatedPoints = areaPoints.map(p => math.add(p, origin) as Point);
+
+        return new PointShape({ points: translatedPoints, closePath: true, smooth: false, lineColor: Colors.transparent(), color: colorWithOpacity(plot.lineColor(), opacity) });
+    }
+
+    private origin(): Point {
+        const dY = Math.abs(this.xRange[0]) / math.range(this.xRange);
+        const oY = -(this.xLength / 2) + (this.xLength * dY);
+
+        const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
+        const oX = -(this.yLength / 2) + (this.yLength * dX);
+
+        return [oY, oX];
     }
 }
