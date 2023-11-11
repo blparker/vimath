@@ -108,6 +108,11 @@ export const Colors = Object.fromEntries(Object.entries(variantsByColor).map(col
 })) as Colors;
 
 
+export function colorWithOpacity(color: RGBA, opacity: number): RGBA {
+    return [...color.slice(0, 3), opacity] as RGBA;
+}
+
+
 function hexToRgb(color: string): RGBA {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(color);
     if (! result) {
