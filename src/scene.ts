@@ -24,7 +24,7 @@ export class SceneRunner {
     run() {
         const loop = (time: number) => {
             this.scene.nextTick(time);
-            // requestAnimationFrame(loop);
+            requestAnimationFrame(loop);
         };
 
         requestAnimationFrame(loop);
@@ -38,7 +38,7 @@ export abstract class Scene {
     private els: Renderable[][];
     private canvas: Canvas;
     private runner: SceneRunner;
-    private runningAnims: Animation[] = [];
+
 
     constructor({ canvas }: { canvas?: Canvas } = {}) {
         this.els = [];
@@ -60,26 +60,12 @@ export abstract class Scene {
     nextTick(time: number): void {
         this.canvas.clear();
 
-        // let hasRunningAnims = false;
-
         for (const els of this.els) {
-            // const hasRunningAnims = els.some(el => isShape(el) ? false : el.isRunning() && !el.isComplete(time));
-            // console.log("### Has running?", hasRunningAnims)
-            // if (hasRunningAnims) {
-            //     continue;
-            // }
-
             for (const el of els) {
-                // console.log("#### ", el, this.runningAnim, el == this.runningAnim)
-
                 if (isShape(el)) {
                     getRenderer(this.canvas, el).render(el);
                 } else {
                     el.tick(time);
-
-                    // if (!this.runningAnim) {
-                    //     this.runningAnim = el;
-                    // }
                 }
             }
 

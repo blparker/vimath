@@ -75,11 +75,13 @@ export class PointShape implements Shape, Styleable, PointsAware {
     private _color: RGBA = Colors.black();
     private _lineColor: RGBA;
     private _lineWidth: number;
+    private _smooth: boolean;
 
-    constructor({ points, closePath = true, offsetGutter = OFFSET_GUTTER, ...styleArgs }: { points: Point[], closePath?: boolean, offsetGutter?: number } & Prettify<StyleArgs>) {
+    constructor({ points, closePath = true, offsetGutter = OFFSET_GUTTER, smooth = false, ...styleArgs }: { points: Point[], closePath?: boolean, offsetGutter?: number, smooth?: boolean } & Prettify<StyleArgs>) {
         this._points = points;
         this._closePath = closePath;
         this._offsetGutter = offsetGutter;
+        this._smooth = smooth;
 
         const a = { ...defaultStyleArgs, ...styleArgs };
         this._color = parseColor(a.color);
@@ -291,6 +293,10 @@ export class PointShape implements Shape, Styleable, PointsAware {
 
     get currentScale() {
         return this._currentScale;
+    }
+
+    get smooth(): boolean {
+        return this._smooth;
     }
 
     color(): RGBA {

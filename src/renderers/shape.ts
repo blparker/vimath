@@ -11,10 +11,17 @@ export class PointShapeRenderer extends NativeRenderer<PointShape> {
             throw new Error('Two or more points required to render PointShape');
         } else if (points.length > 2) {
             // Connect the last point back to the first point
-            points.push(points[0]);
+            // points.push(points[0]);
         }
 
-        this.canvas.path({ points, lineWidth: shape.lineWidth(), lineColor: shape.lineColor(), color: shape.color() });
+        this.canvas.path({
+            points,
+            lineWidth: shape.lineWidth(),
+            lineColor: shape.lineColor(),
+            color: shape.color(),
+            closePath: shape.closePath,
+            smooth: shape.smooth,
+        });
 
         // const line = (p1: Point, p2: Point) => this.canvas.line({ from: p1, to: p2, lineWidth: shape.lineWidth(), color: shape.lineColor() });
 

@@ -8,7 +8,7 @@ import { TextRenderer } from './text';
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
 type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; };
-type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; };
+type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; closePath: boolean; smooth: boolean; };
 type TextArgs = { text: string; x: number; y: number; size: number; color: RGBA; align: HAlign; baseline: TextBaseline; vertical?: boolean };
 type ImageArgs = { image: HTMLImageElement; x: number; y: number; align?: HAlign; verticalAlign?: VAlign };
 
@@ -16,7 +16,7 @@ type ImageArgs = { image: HTMLImageElement; x: number; y: number; align?: HAlign
 export interface Canvas {
     arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void;
     line({ from, to, lineWidth, color }: LineArgs): void;
-    path({ points, lineWidth, lineColor, color }: PathArgs): void;
+    path({ points, lineWidth, lineColor, color, closePath, smooth }: PathArgs): void;
     text({ text, x, y, size, color, align, baseline, vertical }: TextArgs): void;
     image({ image, x, y, align, verticalAlign }: ImageArgs): void;
     clear(): void
@@ -77,7 +77,7 @@ export class HtmlCanvas implements Canvas {
         this.ctx.restore();
     }
 
-    path({ points, lineWidth, lineColor, color }: PathArgs): void {
+    path({ points, lineWidth, lineColor, color, closePath, smooth }: PathArgs): void {
         if (points.length <= 1) {
             throw new Error('Path contains too few points. Expects a path consisting of at least 2 points');
         } else if (points.length === 2) {
@@ -93,17 +93,72 @@ export class HtmlCanvas implements Canvas {
         const path = new Path2D();
         path.moveTo(...math.floor(this.translate(points[0])) as Point);
 
-        for (let i = 1; i < points.length; i++) {
-            const pt = points[i];
-            path.lineTo(...math.floor(this.translate(pt)) as Point);
+        if (smooth) {
+            this.smoothPath(points, path);
+        } else {
+            for (let i = 1; i < points.length; i++) {
+                const pt = points[i];
+                path.lineTo(...math.floor(this.translate(pt)) as Point);
+            }
         }
 
-        path.closePath();
+        if (closePath) {
+            path.closePath();
+        }
 
         this.ctx.fill(path);
         this.ctx.stroke(path);
 
         this.ctx.restore();
+    }
+
+    // https://stackoverflow.com/a/15528789/301302
+    private smoothPath(points: Point[], path: Path2D) {
+        const tension = 0.5;
+        const isClosed = false;
+        const numSegments = 8;
+        const curvePoints: Point[] = [];
+
+        const pts = structuredClone(points);
+        if (isClosed) {
+            pts.unshift(points[points.length - 1]);
+            pts.unshift(points[points.length - 1]);
+            pts.push(points[0]);
+        } else {
+            pts.unshift(points[0]);
+            pts.push(points[points.length - 1]);
+        }
+
+        for (let i = 1; i < pts.length - 2; i++) {
+            for (let t = 0; t < numSegments; t++) {
+                const t1x = (pts[i + 1][0] - pts[i - 1][0]) * tension;
+                const t2x = (pts[i + 2][0] - pts[i][0]) * tension;
+
+                const t1y = (pts[i + 1][1] - pts[i - 1][1]) * tension;
+                const t2y = (pts[i + 2][1] - pts[i][1]) * tension;
+
+                const st = t / numSegments;
+
+                const c1 = 2 * Math.pow(st, 3) - 3 * Math.pow(st, 2) + 1;
+                const c2 = -(2 * Math.pow(st, 3)) + 3 * Math.pow(st, 2);
+                const c3 = Math.pow(st, 3) - 2 * Math.pow(st, 2) + st;
+                const c4 = Math.pow(st, 3) - Math.pow(st, 2);
+
+                const x = c1 * pts[i][0] + c2 * pts[i + 1][0] + c3 * t1x + c4 * t2x;
+                const y = c1 * pts[i][1] + c2 * pts[i + 1][1] + c3 * t1y + c4 * t2y;
+
+                curvePoints.push([x, y]);
+            }
+        }
+
+        path.moveTo(...this.translate(curvePoints[0]));
+
+        for (let i = 1; i < curvePoints.length; i++) {
+            const point = curvePoints[i];
+            path.lineTo(...this.translate(point));
+        }
+
+        return path;
     }
 
     text({ text, x, y, size, color, align, baseline, vertical = false }: TextArgs): void {
