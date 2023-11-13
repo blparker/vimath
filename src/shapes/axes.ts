@@ -489,13 +489,15 @@ export class Axes3 extends ComposableShape {
             }
 
             if (pY >= yLow && pY <= yHigh) {
-                if (prevY > yHigh) {
+                if (prevY > yHigh || prevY < yLow) {
                     const tx = ((pX - stepSize) + pX) / 2;
                     points.push([tx, fn(tx)]);
-                }
+                } 
 
                 points.push([pX, pY]);
-            } else if (prevY < yHigh) {
+            } 
+
+            if ((prevY < yHigh && pY > yHigh) || (prevY > yLow && pY < yLow)) {
                 const tx = ((pX - stepSize) + pX) / 2;
                 points.push([tx, fn(tx)]);
             }

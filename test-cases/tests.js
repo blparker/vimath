@@ -231,33 +231,59 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
-    testAxesNotFullWidth(canvas, done) {
+    // testAxesNotFullWidth(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             // const axes = new Axes({ showGridLines: true, xLength: 8, yLength: 4 });
+    //             // const axes = new Axes2({ xLength: 8, yLength: 4, xRange: [-2, 6] });
+    //             // this.add(axes);
+
+    //             // this.add(new Axes3({ xLength: 8, yLength: 4, xRange: [-20, 60], yRange: [-2, 2], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 10 }));
+    //             // this.add(new Axes3({ xLength: 8, yLength: 4, xRange: [-2, 6], yRange: [-1, 3], showAxisLabels: false, showAxisTicks: false }));
+    //             // this.add(new Axes3({ xLength: 8, yLength: 6, xRange: [-4, 4], yRange: [-1, 5], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 1 }));
+
+    //             // const axes2 = new Axes2({ /*xLength: 8, yLength: 4,*/ xRange: [-20, 60], yRange: [-10, 10], showAxisTicks: true, showAxisLabels: true, labelSize: 10, xAxisTickStep: 10, yAxisTickStep: 4 });
+    //             // this.add(axes2.shift([-1, -1]));
+    //             // this.add(axes2);
+
+    //             // this.add(new NumberLine({ length: 8, range: [-20, 60], tickStep: 10, showLabels: true, showAxisTicks: true }).shift(DOWN()));
+    //             // this.add(new NumberLine({ length: 6, showTicks: false, showLabels: false, rotation: Math.PI / 2 }));
+
+    //             const a = new Axes3({ xLength: 10, yLength: 6, xRange: [-1, 9] });
+    //             this.add(a);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
+    // testAxesPlot(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             const a = new Axes3({ xLength: 10, yLength: 6, xRange: [-1, 9] });
+    //             this.add(a);
+    //             this.add(a.plot(x => Math.log(x), { lineColor: Colors.red() }));
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+    testUpperAndLowerBounds(canvas, done) {
         class TestScene extends Scene {
             compose() {
                 this.add(new GridLines());
-                // const axes = new Axes({ showGridLines: true, xLength: 8, yLength: 4 });
-                // const axes = new Axes2({ xLength: 8, yLength: 4, xRange: [-2, 6] });
-                // this.add(axes);
-
-                // this.add(new Axes3({ xLength: 8, yLength: 4, xRange: [-20, 60], yRange: [-2, 2], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 10 }));
-                // this.add(new Axes3({ xLength: 8, yLength: 4, xRange: [-2, 6], yRange: [-1, 3], showAxisLabels: false, showAxisTicks: false }));
-                // this.add(new Axes3({ xLength: 8, yLength: 6, xRange: [-4, 4], yRange: [-1, 5], showAxisTicks: true, showAxisLabels: true, xAxisTickStep: 1 }));
-
-                // const axes2 = new Axes2({ /*xLength: 8, yLength: 4,*/ xRange: [-20, 60], yRange: [-10, 10], showAxisTicks: true, showAxisLabels: true, labelSize: 10, xAxisTickStep: 10, yAxisTickStep: 4 });
-                // this.add(axes2.shift([-1, -1]));
-                // this.add(axes2);
-
-                // this.add(new NumberLine({ length: 8, range: [-20, 60], tickStep: 10, showLabels: true, showAxisTicks: true }).shift(DOWN()));
-                // this.add(new NumberLine({ length: 6, showTicks: false, showLabels: false, rotation: Math.PI / 2 }));
-
-                const a = new Axes3({ xLength: 10, yLength: 6, xRange: [-1, 9] });
-                // const a = new Axes3();
+                const a = new Axes3({});
                 this.add(a);
-                // this.add(a.plot(x => Math.pow(x, 2)));
-                // this.add(a.plot(x => 1 / x));
-                const plot = a.plot(x => Math.log(x), { lineColor: Colors.red() });
-                const area = a.area({ plot, xRange: [2, 4] })
-                this.add(plot, area);
+                this.add(a.plot(x => Math.pow(x, 2), { lineColor: Colors.red() }));
+                this.add(a.plot(x => -Math.pow(x, 2), { lineColor: Colors.green() }));
 
                 return this;
             }
@@ -266,4 +292,46 @@ export class VisualTests extends TestSuite {
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
 
+
+    // testAxesPlotWithArea(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             const a = new Axes3({ xLength: 10, yLength: 6, xRange: [-1, 9] });
+    //             this.add(a);
+
+    //             const plot = a.plot(x => Math.log(x), { lineColor: Colors.red() });
+    //             const area = a.area({ plot, xRange: [2, 4] })
+    //             this.add(plot, area);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
+    testTangentLine(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+                const a = new Axes3({ xLength: 10, yLength: 6 });
+                this.add(a);
+
+                // const plot = a.plot(x => Math.log(x), { lineColor: Colors.red() });
+                // const area = a.area({ plot, xRange: [2, 4] })
+                // this.add(plot, area);
+                const p = a.plot(x => -Math.pow(x / 1.5 - 1, 2) + 2);
+                this.add(p);
+
+                const tangent = new TangentLine({ shape: p, x: 2 });
+                this.add(tangent);
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }
 }
