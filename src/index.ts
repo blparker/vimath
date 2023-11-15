@@ -11,6 +11,7 @@ export * from './shapes/composed_shape.js';
 export * from './shapes/text.js';
 export * from './shapes/group.js';
 export * from './animations/animations.js';
+export * from './animations/interactivity.js';
 export * from './easing.js';
 export * from './renderers/renderer.js'
 export * from './scene.js'

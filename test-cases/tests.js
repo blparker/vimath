@@ -276,21 +276,21 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
-    testUpperAndLowerBounds(canvas, done) {
-        class TestScene extends Scene {
-            compose() {
-                this.add(new GridLines());
-                const a = new Axes3({});
-                this.add(a);
-                this.add(a.plot(x => Math.pow(x, 2), { lineColor: Colors.red() }));
-                this.add(a.plot(x => -Math.pow(x, 2), { lineColor: Colors.green() }));
+    // testUpperAndLowerBounds(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             const a = new Axes3({});
+    //             this.add(a);
+    //             this.add(a.plot(x => Math.pow(x, 2), { lineColor: Colors.red() }));
+    //             this.add(a.plot(x => -Math.pow(x, 2), { lineColor: Colors.green() }));
 
-                return this;
-            }
-        }
+    //             return this;
+    //         }
+    //     }
 
-        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    }
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 
 
     // testAxesPlotWithArea(canvas, done) {
@@ -312,21 +312,40 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    testTangentLine(canvas, done) {
+    // testTangentLine(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             const a = new Axes3({ xLength: 10, yLength: 6 });
+    //             this.add(a);
+
+    //             // const plot = a.plot(x => Math.log(x), { lineColor: Colors.red() });
+    //             // const area = a.area({ plot, xRange: [2, 4] })
+    //             // this.add(plot, area);
+    //             const p = a.plot(x => -Math.pow(x / 1.5 - 1, 2) + 2);
+    //             this.add(p);
+
+    //             const tangent = new TangentLine({ shape: p, x: 2 });
+    //             this.add(tangent);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
+    testShouldHover(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                this.add(new GridLines());
-                const a = new Axes3({ xLength: 10, yLength: 6 });
-                this.add(a);
-
-                // const plot = a.plot(x => Math.log(x), { lineColor: Colors.red() });
-                // const area = a.area({ plot, xRange: [2, 4] })
-                // this.add(plot, area);
-                const p = a.plot(x => -Math.pow(x / 1.5 - 1, 2) + 2);
-                this.add(p);
-
-                const tangent = new TangentLine({ shape: p, x: 2 });
-                this.add(tangent);
+                const line = new Line({ from: [-2, 0], to: [2, 0] });
+                // const line = new Square({ size: 2 });
+                this.add(line);
+                this.add(new Hoverable({
+                    target: line,
+                    action: new ChangeLineColor({ target: line, toColor: Colors.red(), duration: 500 }),
+                }));
 
                 return this;
             }

@@ -1,9 +1,10 @@
-import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign } from '../base';
+import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
 import { Shape, PointShape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
 import { Text, TextBaseline } from '../shapes/text';
 import { TextRenderer } from './text';
+import { MouseDown, MouseMove, MouseOut, MouseUp, MouseEventType } from '../animations/interactivity';
 
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
@@ -20,6 +21,10 @@ export interface Canvas {
     text({ text, x, y, size, color, align, baseline, vertical }: TextArgs): void;
     image({ image, x, y, align, verticalAlign }: ImageArgs): void;
     clear(): void
+    onMouseMove(listener: (pt: Point) => void): void;
+    onMouseMove(listener: (pt: Point) => void): void;
+    onMouseUp(listener: (pt: Point) => void): void;
+    onMouseOut(listener: () => void): void;
 }
 
 // const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
@@ -29,8 +34,16 @@ export interface Canvas {
 // } as const;
 
 
+
+
 export class HtmlCanvas implements Canvas {
     private readonly canvas: HTMLCanvasElement;
+    private readonly mouseListeners: Record<MouseEventType, ((pt: Point) => void)[]> = {
+        'mousedown': [],
+        'mouseup': [],
+        'mousemove': [],
+        'mouseout': [],
+    };
     public readonly ctx: CanvasRenderingContext2D;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -42,6 +55,19 @@ export class HtmlCanvas implements Canvas {
         }
 
         this.ctx = ctx;
+
+        canvas.addEventListener('mousedown', this.handleMouseEvent.bind(this));
+        canvas.addEventListener('mouseup', this.handleMouseEvent.bind(this));
+        canvas.addEventListener('mousemove', this.handleMouseEvent.bind(this));
+        canvas.addEventListener('mouseout', this.handleMouseEvent.bind(this));
+    }
+
+    handleMouseEvent(e: MouseEvent): void {
+        if (Object.keys(this.mouseListeners).includes(e.type)) {
+            for (const listener of this.mouseListeners[e.type as MouseEventType]) {
+                listener(this.untranslate([e.offsetX, e.offsetY]));
+            }
+        }
     }
 
     arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void {
@@ -110,6 +136,23 @@ export class HtmlCanvas implements Canvas {
         this.ctx.stroke(path);
 
         this.ctx.restore();
+    }
+
+    onMouseMove(listener: (pt: Point) => void): void {
+        // this.mouseMoveListeners.push(listener);
+        this.mouseListeners['mousemove'].push(listener);
+    }
+
+    onMouseDown(listener: (pt: Point) => void): void {
+        this.mouseListeners['mousedown'].push(listener);
+    }
+
+    onMouseUp(listener: (pt: Point) => void): void {
+        this.mouseListeners['mouseup'].push(listener);
+    }
+
+    onMouseOut(listener: () => void): void {
+        this.mouseListeners['mouseout'].push(listener);
     }
 
     // https://stackoverflow.com/a/15528789/301302
@@ -221,6 +264,19 @@ export class HtmlCanvas implements Canvas {
 
         const [oX, oY] = [X_TICKS / 2 * xTicks, Y_TICKS / 2 * yTicks];
         return [padding + oX + point[0] * xTicks, padding + oY - point[1] * yTicks];
+    }
+
+    private untranslate(point: Point): Point {
+        const padding = Config.canvasPadding;
+
+        const [xTicks, yTicks] = [
+            (this.canvas.width - 2 * padding) / X_TICKS,
+            (this.canvas.height - 2 * padding) / Y_TICKS
+        ];
+
+        const [oX, oY] = [X_TICKS / 2 * xTicks, Y_TICKS / 2 * yTicks];
+
+        return [(point[0] - oX - padding) / xTicks, -(point[1] - oY - padding) / yTicks];
     }
 
     public get xIncrements(): number {

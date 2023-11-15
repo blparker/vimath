@@ -1,15 +1,19 @@
-// import * as Easing from './easing.js';
 import { Point, Shift } from '../base.js';
-import { PointShape, PointsAware, Shape, Styleable, isShape } from '../shapes/base_shapes.js';
+import { PointsAware, Shape, Styleable, isShape } from '../shapes/base_shapes.js';
 import { RGBA } from '../colors.js';
 import { Easing, EasingFunction } from '../easing.js';
-import { arrLerp, clamp, distance, lerp } from '../math.js';
+import { arrLerp, distance, lerp } from '../math.js';
 import * as math from '../math.js';
 
 
 export type AnimationArgs = {
     duration: number;
     easing?: EasingFunction;
+}
+
+
+export function isAnimation(o: any): o is Animation {
+    return 'update' in o && 'tick' in o;
 }
 
 

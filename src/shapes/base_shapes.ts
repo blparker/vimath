@@ -53,6 +53,11 @@ export function isShape(o: any): o is Shape {
 }
 
 
+export function isPointsAware(o: any): o is PointsAware {
+    return 'points' in o && typeof o.points === 'function';
+}
+
+
 export type StyleArgs = {
     lineColor?: string | RGBA,
     color?: string | RGBA
@@ -330,6 +335,7 @@ export class PointShape implements Shape, Styleable, PointsAware {
         return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     }
 }
+
 
 export class CircleArc implements Shape, Styleable, PointsAware {
     private _angle: number = 0;

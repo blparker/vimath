@@ -1,8 +1,9 @@
 import { Shape, isShape } from './shapes/base_shapes';
-import { Animation } from './animations/animations';
+import { Animation, isAnimation } from './animations/animations';
 import { Canvas, HtmlCanvas } from './renderers/renderer';
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from './base';
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Point } from './base';
 import { getRenderer } from './renderers/renderer_factory';
+import { Interaction } from './animations/interactivity';
 
 
 export class DOM {
@@ -31,19 +32,49 @@ export class SceneRunner {
     }
 }
 
+type Renderable = Shape | Animation | Interaction;
 
-type Renderable = Shape | Animation;
+
+class Interactivity {
+    private mousePosition?: Point;
+    // private mouseMoveListeners: ((point: Point) => void)[] = [];
+
+    constructor(private canvas: Canvas) {
+        canvas.onMouseMove((point: Point) => {
+            this.mousePosition = point;
+            // this.mouseMoveListeners.forEach(listener => listener(point));
+        });
+
+        canvas.onMouseOut(() => this.mousePosition = undefined);
+    }
+
+    // onMouseMove(listener: (point: Point) => void): void {
+    //     this.mouseMoveListeners.push(listener);
+    // }
+
+    interact(el: Interaction, time: number) {
+        if (!this.mousePosition) {
+            return;
+        }
+
+        // console.log(el, this.mousePosition)
+        el.mouseInteraction(this.mousePosition, time);
+    }
+}
+
 
 export abstract class Scene {
     private els: Renderable[][];
     private canvas: Canvas;
     private runner: SceneRunner;
+    private interactivity: Interactivity;
 
 
     constructor({ canvas }: { canvas?: Canvas } = {}) {
         this.els = [];
         this.canvas = canvas ?? new HtmlCanvas(DOM.createCanvas());
         this.runner = new SceneRunner(this);
+        this.interactivity = new Interactivity(this.canvas);
     }
 
     add(...els: Renderable[]): Scene {
@@ -64,12 +95,14 @@ export abstract class Scene {
             for (const el of els) {
                 if (isShape(el)) {
                     getRenderer(this.canvas, el).render(el);
-                } else {
+                } else if (isAnimation(el)) {
                     el.tick(time);
+                } else {
+                    this.interactivity.interact(el, time);
                 }
             }
 
-            const hasRunningAnims = els.some(el => isShape(el) ? false : el.isRunning() && !el.isComplete(time));
+            const hasRunningAnims = els.some(el => isAnimation(el) ? (el.isRunning() && !el.isComplete(time)) : false);
             if (hasRunningAnims) {
                 break;
             }
