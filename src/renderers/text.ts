@@ -87,7 +87,7 @@ export class TextRenderer extends NativeRenderer<Text> {
             x,
             y,
             size: shape.size,
-            color: shape.color,
+            color: shape.color(),
             align: shape.align,
             baseline: shape.baseline,
             vertical: shape.vertical

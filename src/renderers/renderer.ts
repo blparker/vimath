@@ -4,7 +4,6 @@ import { Shape, PointShape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
 import { Text, TextBaseline } from '../shapes/text';
 import { TextRenderer } from './text';
-import { MouseDown, MouseMove, MouseOut, MouseUp, MouseEventType } from '../animations/interactivity';
 
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
@@ -33,6 +32,8 @@ export interface Canvas {
 //     'bottom': 'bottom',
 // } as const;
 
+
+type MouseEventType = 'mousedown' | 'mouseup' | 'mousemove' | 'mouseout';
 
 
 

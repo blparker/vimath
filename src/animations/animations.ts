@@ -1,6 +1,6 @@
 import { Point, Shift } from '../base.js';
 import { PointsAware, Shape, Styleable, isShape } from '../shapes/base_shapes.js';
-import { RGBA } from '../colors.js';
+import { Colors, RGBA } from '../colors.js';
 import { Easing, EasingFunction } from '../easing.js';
 import { arrLerp, distance, lerp } from '../math.js';
 import * as math from '../math.js';
@@ -9,6 +9,8 @@ import * as math from '../math.js';
 export type AnimationArgs = {
     duration: number;
     easing?: EasingFunction;
+    repeat: boolean;
+    yoyo: boolean;
 }
 
 
@@ -17,24 +19,31 @@ export function isAnimation(o: any): o is Animation {
 }
 
 
+export type Animatable = Shape | Styleable;
+
+
 export abstract class Animation {
     private _duration: number;
-    private _startTime: number | null;
-    protected _easing: EasingFunction;
+    private _easing: EasingFunction;
+    private _startTime: number | null = null;
     private _emittedFinal: boolean = false;
+    protected _reversing: boolean = false;
+    private _repeat: boolean = false;
+    private _yoyo: boolean = false;
+    private _cycle: number = 0;
 
-    constructor({ duration = 1000, easing = Easing.easeInOutCubic }: AnimationArgs) {
+    constructor({ duration = 1000, easing = Easing.easeInOutCubic, repeat = false, yoyo = false }: AnimationArgs) {
         this._duration = duration;
         this._easing = easing;
-
-        this._startTime = null;
+        this._repeat = repeat;
+        this._yoyo = yoyo;
     }
 
     /**
      * Implemented by subclasses to perform animation operations
      * @param delta the percentage complete of the animation (with respect to the start time and duration)
      */
-    abstract update(pctComplete: number): void;
+    abstract update(pctComplete: number, reversing: boolean): Animatable[];
 
     /**
      * Resets the animation to initial state
@@ -44,6 +53,7 @@ export abstract class Animation {
     reset(): void {
         this._startTime = null;
         this._emittedFinal = false;
+        this._reversing = false;
 
         this.resetState();
     }
@@ -51,16 +61,18 @@ export abstract class Animation {
     /**
      * Called for every frame tick of the animation
      * @param time the current time (used for calculating elapsed time)
-     * @returns a flag to indicate whether the animation is complete
+     * @returns a list of shapes that the animation worked on
      */
-    tick(time: number): boolean {
+    tick(time: number): Animatable[] {
+        /*
         if (this.isComplete(time)) {
             if (!this._emittedFinal) {
                 this._emittedFinal = true;
-                this.update(1);
+                // this._reversing ? this.updateReverse(1) : this.update(1);
+                return this.update(1, this._reversing);
             }
 
-            return true;
+            return [];
         } else if (! this.isRunning()) {
             this.initState();
             this.start(time);
@@ -70,11 +82,42 @@ export abstract class Animation {
         const pctComplete = Math.min((time - startTime) / this._duration, 1);
 
         if (pctComplete > 1) {
-            return true;
+            return [];
         }
 
-        this.update(pctComplete);
-        return pctComplete >= 1;
+        return this.update(pctComplete, this._reversing);*/
+
+        // if (this._cycle > 1) {
+        //     return [];
+        // }
+
+
+        if (!this._startTime) {
+            this.initState();
+            this._startTime = time;
+        }
+
+        const pctComplete = math.invlerp(this._startTime, this._startTime + this._duration, time);
+        if (pctComplete >= 1) {
+            if (!this._repeat && this._emittedFinal) {
+                return [];
+            }
+
+            const isReversed = this._reversing;
+
+            if (this._repeat) {
+                this._startTime = time;
+                this._reversing = !this._reversing;
+                this._cycle += 1;
+            } else if (!this._emittedFinal) {
+                this._emittedFinal = true;
+                return;
+            }
+
+            return this.update(1, isReversed);
+        } else {
+            return this.update(pctComplete, this._reversing);
+        }
     }
 
     isRunning(): boolean {
@@ -83,12 +126,13 @@ export abstract class Animation {
     }
 
     isComplete(time: number): boolean {
-        if (this._startTime !== null) {
+        /*if (this._startTime !== null) {
             const pctComplete = Math.min((time - this._startTime) / this._duration, 1);
             return pctComplete >= 1;
         } else {
             return false;
-        }
+        }*/
+        return false;
     }
 
     updateWithEase(v1: number, v2: number, d: number): number;
@@ -103,6 +147,17 @@ export abstract class Animation {
         }
     }
 
+    // updateReverse(pctComplete: number): void {
+    // }
+
+    reverse() {
+        this._startTime = null;
+        this._emittedFinal = false;
+        this._reversing = true;
+
+        this.reverseState();
+    }
+
     protected start(time: number) {
         this._startTime = time;
     }
@@ -110,32 +165,58 @@ export abstract class Animation {
     protected initState() {
         // Set up any state
     }
+
+    protected reverseState() {
+        // Set up any state to reverse
+    }
+}
+
+
+export interface TargetAnimation<T> {
+    target(): T;
+}
+
+
+export function isTargetAnimation<T>(o: any): o is TargetAnimation<T> {
+    return 'target' in o && typeof o.target === 'function';
 }
 
 
 type MoveToTargetArgs = { target: Shape, destination: Shape | Point } & AnimationArgs;
 
-export class MoveToTarget extends Animation {
-    private target: Shape;
+export class MoveToTarget extends Animation implements TargetAnimation<Shape> {
+    private _target: Shape;
     private startLocation: Point
     private endLocation: Point
 
     constructor({ target, destination, ...baseConfig }: MoveToTargetArgs) {
         super(baseConfig);
 
-        this.target = target;
-        this.startLocation = this.target.center();
+        this._target = target;
+        this.startLocation = this._target.center();
         this.endLocation = isShape(destination) ? destination.center() : destination;
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
         // const [nX, nY] = arrLerp(this.startLocation, this.endLocation, this._easing(pctComplete));
-        const [nX, nY] = this.updateWithEase(this.startLocation, this.endLocation, pctComplete);
-        this.target.moveCenter([nX, nY]);
+        const [start, end] = reversing ? [this.endLocation, this.startLocation] : [this.startLocation, this.endLocation];
+
+        const [nX, nY] = this.updateWithEase(start, end, pctComplete);
+        this._target.moveCenter([nX, nY]);
+
+        return [this._target];
+    }
+
+    protected initState(): void {
+        this.startLocation = this._target.center();
     }
 
     resetState(): void {
-        this.target.moveCenter(this.startLocation);
+        this._target.moveCenter(this.startLocation);
+    }
+
+    target(): Shape {
+        return this._target;
     }
 
     // start(time: number) {
@@ -187,9 +268,12 @@ export class Scale extends Animation {
         this.startScale = target.currentScale;
     }
 
-    update(pctComplete: number): void {
-        const newScale = lerp(this.startScale, this.scaleAmount, pctComplete);
+    update(pctComplete: number): Animatable[] {
+        // const newScale = lerp(this.startScale, this.scaleAmount, pctComplete);
+        const newScale = this.updateWithEase(this.startScale, this.scaleAmount, pctComplete);
         this.target.scale(newScale);
+
+        return [this.target];
     }
 
     resetState(): void {
@@ -213,9 +297,11 @@ export class ChangeFillColor extends Animation {
         this.toColor = toColor;
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number): Animatable[] {
         const updatedColor = this.updateWithEase(this.fromColor, this.toColor, pctComplete) as RGBA;
         this.target.changeColor(updatedColor);
+
+        return [this.target];
     }
 
     resetState(): void {
@@ -226,8 +312,9 @@ export class ChangeFillColor extends Animation {
 
 export class ChangeLineColor extends Animation {
     private target: Styleable;
-    private fromColor: RGBA;
     private toColor: RGBA;
+
+    private fromColor?: RGBA;
 
     constructor({ target, toColor, ...baseConfig }: ChangeColorArgs) {
         super(baseConfig);
@@ -237,12 +324,27 @@ export class ChangeLineColor extends Animation {
         this.toColor = toColor;
     }
 
-    update(pctComplete: number): void {
-        const updatedColor = this.updateWithEase(this.fromColor, this.toColor, pctComplete) as RGBA;
+    update(pctComplete: number, reversing: boolean): (Shape | Styleable)[] {
+        if (!this.fromColor) return [];
+
+        const [from, to] = reversing ? [this.toColor, this.fromColor] : [this.fromColor, this.toColor];
+        const updatedColor = this.updateWithEase(from, to, pctComplete) as RGBA;
         this.target.changeLineColor(updatedColor);
+
+        return [this.target];
+    }
+
+    initState() {
+        // this.fromColor = this.target.lineColor();
+    }
+
+    reverseState() {
+        // [this.fromColor, this.toColor] = [this.toColor, this.fromColor];
     }
 
     resetState(): void {
+        if (!this.fromColor) return;
+
         this.target.changeLineColor(this.fromColor);
     }
 }
@@ -264,15 +366,17 @@ export class MoveAlongPath extends Animation {
         this.pathObj = path;
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number): Animatable[] {
         if (!this.path) {
-            return;
+            return [];
         }
 
         const idx = Math.floor(this.updateWithEase(0, this.path.length, pctComplete))
         const point = this.path[Math.min(idx, this.path.length - 1)];
 
         this.target.moveCenter(point);
+
+        return [this.target];
     }
 
     protected initState(): void {
@@ -310,7 +414,7 @@ export class Orbit extends Animation {
         // this.startAngle = Math.atan2(targetCenter[1] - center[1], targetCenter[0] - center[0]);
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number): Animatable[] {
         if (this.startAngle !== undefined && this.distance !== undefined) {
             const endAngle = this.startAngle + Math.PI * 2;
             const updatedVal = this.updateWithEase(this.startAngle, endAngle, pctComplete);
@@ -320,6 +424,8 @@ export class Orbit extends Animation {
 
             this.target.moveCenter([x, y]);
         }
+
+        return [this.target];
     }
 
     resetState(): void {
@@ -353,9 +459,11 @@ export class Rotate extends Animation {
         this.startAngle = target.angle;
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number): Animatable[] {
         const angle = this.updateWithEase(this.startAngle, this.angle, pctComplete);
         this.target.rotate(angle);
+
+        return [this.target];
     }
 
     resetState(): void {
@@ -377,9 +485,11 @@ export class Grow extends Animation {
         this.shape = shape;
     }
 
-    update(pctComplete: number): void {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
         const scale = this.updateWithEase(0, this.initialScale ?? 1, pctComplete);
         this.shape.scale(scale);
+
+        return [this.shape];
     }
 
     protected initState(): void {
@@ -388,5 +498,59 @@ export class Grow extends Animation {
 
     resetState(): void {
         this.shape.scale(this.initialScale ?? 1);
+    }
+}
+
+
+export class FadeIn extends Animation {
+    private _target: Styleable;
+    // private toColor: RGBA;
+
+    private fromColor?: RGBA;
+
+    constructor({ target, ...baseConfig }: { target: Styleable } & AnimationArgs) {
+        super(baseConfig);
+
+        this._target = target;
+        // this.fromColor = target.lineColor();
+        // this.toColor = toColor;
+    }
+
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        if (!this.fromColor) return [];
+
+        const fromColor = [...this.fromColor] as RGBA;
+        const [from, to] = reversing ? [1, 0] : [0, 1];
+
+        const updatedOpacity = this.updateWithEase(from, to, pctComplete) as number;
+        // const updatedColor = this.updateWithEase(fromColor, to, pctComplete) as number;
+        fromColor[3] = updatedOpacity;
+        this._target.changeColor(fromColor);
+        // const fromColor = this._reversing ? this.fromColor : Colors.transparent();
+        // const toColor = this._reversing ? this.fromColor : Colors.transparent();
+        // console.log(this._reversing, fromColor);;
+        // const fromColor = !this._reversing ? Colors.transparent() : this.fromColor;
+        // const fromColor = Colors.transparent();
+        // const toColor = this.fromColor;
+        // console.log(fromColor, toColor)
+
+        // const updatedColor = this.updateWithEase(fromColor, toColor, pctComplete) as RGBA;
+        // // console.log(fromColor, '->', toColor, '->', updatedColor, this._reversing)
+        // this._target.changeColor(updatedColor)
+
+        return [this._target];
+    }
+
+    // target(): Styleable {
+    //     return this._target;
+    // }
+
+    initState() {
+        this.fromColor = this._target.color();
+    }
+
+    resetState(): void {
+        // if (!this.fromColor) return;
+        // this.target.changeLineColor(this.fromColor);
     }
 }

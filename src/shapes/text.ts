@@ -4,7 +4,7 @@
 import { Colors, RGBA } from '../colors.js';
 import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER, Config, X_TICKS, Y_TICKS, DEFAULT_PADDING } from '../base.js';
 import * as math from '../math.js';
-import { PointsAware, Shape } from './base_shapes.js';
+import { PointsAware, Shape, Styleable } from './base_shapes.js';
 
 
 export interface TextMetrics {
@@ -69,7 +69,7 @@ export class CanvasTextMetrics implements TextMetrics {
 export type TextBaseline = 'top' | 'middle' | 'bottom';
 
 
-export class Text implements Shape, PointsAware {
+export class Text implements Shape, PointsAware, Styleable {
     private _text: string;
     private _x: number;
     private _y: number;
@@ -296,9 +296,9 @@ export class Text implements Shape, PointsAware {
         return this._baseline;
     }
 
-    get color(): RGBA {
-        return this._color;
-    }
+    // get color(): RGBA {
+    //     return this._color;
+    // }
 
     get vertical(): boolean {
         return this._vertical;
@@ -310,5 +310,27 @@ export class Text implements Shape, PointsAware {
 
     get location(): Point {
         return [this._x, this._y];
+    }
+
+    color(): RGBA {
+        return this._color;
+    }
+
+    changeColor(newColor: RGBA): Styleable {
+        this._color = newColor;
+        return this;
+    }
+
+    lineColor(): RGBA {
+        return this._color;
+    }
+
+    changeLineColor(newColor: RGBA): Styleable {
+        return this;
+    }
+
+    setText(newText: string): Text {
+        this._text = newText;
+        return this;
     }
 }

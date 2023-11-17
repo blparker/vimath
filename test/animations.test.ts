@@ -1,8 +1,8 @@
-import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget } from "../src/animations/animations";
-import { LEFT, Point, Shift } from "../src/base";
+import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget, Animatable } from '../src/animations/animations';
+import { LEFT, Point, Shift } from '../src/base';
 import { Square } from '../src/shapes/base_shapes';
-import { Colors } from "../src/colors";
-import { Easing } from "../src/easing";
+import { Colors } from '../src/colors';
+import { Easing } from '../src/easing';
 import { zip } from '../src/math';
 import { Dot } from '../src/shapes/derived_shapes';
 import structuredClone from '@ungap/structured-clone'
@@ -28,8 +28,10 @@ class TestAnimation extends Animation {
         super({ duration, })
     }
 
-    update(delta: number): void {
+    update(delta: number, reversing: boolean): Animatable[] {
         this.updateVal = delta;
+
+        return [];
     }
 
     resetState(): void {
@@ -76,11 +78,20 @@ describe('animations module', () => {
     });
 
 
-    test('tick should return whether the animation is still running', () => {
+    test('tick should return array', () => {
         const test = new TestAnimation(1000);
 
-        expect(test.tick(0)).toBeFalsy();
-        expect(test.tick(1001)).toBeTruthy();
+        expect(test.tick(0)).toEqual([]);
+    });
+
+
+    test('should report completition status', () => {
+        const test = new TestAnimation(1000);
+
+        test.tick(0);
+        expect(test.isComplete(0)).toBeFalsy();
+        test.tick(1001);
+        expect(test.isComplete(1001)).toBeTruthy();
     });
 
 

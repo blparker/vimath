@@ -336,16 +336,39 @@ export class VisualTests extends TestSuite {
     // }
 
 
+    // testShouldHover(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             // const line = new Line({ from: [-2, 0], to: [2, 0] });
+    //             const line = new Square({ size: 2 });
+    //             const t = new Text({ text: 'Hello', x: 0, y: 0, color: Colors.black({ opacity: 0 }) });
+    //             // const t = new Text({ text: 'Hello', x: 0, y: 0, color: Colors.transparent() });
+
+    //             this.add(line, t);
+    //             // this.add(new FadeIn({ target: t }))
+    //             this.add(new Hoverable({
+    //                 target: line,
+    //                 actions: [
+    //                     new ChangeLineColor({ target: line, toColor: Colors.red(), duration: 500 }),
+    //                     new FadeIn({ target: t, duration: 500 }),
+    //                 ],
+    //             }));
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
     testShouldHover(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                const line = new Line({ from: [-2, 0], to: [2, 0] });
-                // const line = new Square({ size: 2 });
-                this.add(line);
-                this.add(new Hoverable({
-                    target: line,
-                    action: new ChangeLineColor({ target: line, toColor: Colors.red(), duration: 500 }),
-                }));
+                // const s = new Square({ size: 2 });
+
+                // this.add(s)
+                // this.add(new MoveToTarget({ target: s, destination: [2, 2], repeat: true, }))
 
                 return this;
             }
