@@ -1,5 +1,5 @@
 {
-  "name": "imanim-ts",
+  "name": "vimath",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -7,9 +7,9 @@
     "build": "tsc",
     "test": "npx jest --verbose --config jest.config.js",
     "test-specs": "jasmine-browser-runner runSpecs",
-    "bundle-prod-ts": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=imanim --format=esm",
-    "bundle-prod": "./node_modules/.bin/esbuild ./dist/src/index.js --bundle --sourcemap --outdir=./dist/out --global-name=imanim --format=esm",
-    "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=imanim --watch --format=esm",
+    "bundle-prod-ts": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=vimath --format=esm",
+    "bundle-prod": "./node_modules/.bin/esbuild ./dist/src/index.js --bundle --sourcemap --outdir=./dist/out --global-name=vimath --format=esm",
+    "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=vimath --watch --format=esm",
     "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination ."
   },
   "author": "",

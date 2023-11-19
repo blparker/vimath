@@ -1,5 +1,5 @@
 import { Text } from '../../dist/out/index.js';
-// import { Text } from 'imanim-ts';
+// import { Text } from 'vimath';
 
 describe('test', () => {
     afterEach(() => {

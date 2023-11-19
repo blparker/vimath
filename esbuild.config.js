@@ -2,12 +2,12 @@
 // const glob = require('glob');
 import * as esbuild from 'esbuild'
 
-// ./node_modules/.bin/esbuild src/index.js --bundle --sourcemap --outdir=../dist --global-name=imanim --watch --format=esm
+// ./node_modules/.bin/esbuild src/index.js --bundle --sourcemap --outdir=../dist --global-name=vimath --watch --format=esm
 /*esbuild.build({
     entryPoints: ['./src/index.ts'],
     bundle: true,
     sourcemap: true,
-    globalName: 'imanim',
+    globalName: 'vimath',
     format: 'esm',
     outdir: './dist/out',
     watch: true,
@@ -19,7 +19,7 @@ const context = await esbuild.context({
     entryPoints: ['./src/index.ts'],
     bundle: true,
     sourcemap: true,
-    globalName: 'imanim',
+    globalName: 'vimath',
     format: 'esm',
     outdir: './dist/out',
 });
