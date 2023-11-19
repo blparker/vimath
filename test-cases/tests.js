@@ -336,23 +336,37 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    // testShouldHover(canvas, done) {
+    /*testShouldHover(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                const line = new Square({ size: 2 });
+                const t = new Text({ text: 'Hello', x: 0, y: 0, color: Colors.black({ opacity: 0 }) });
+
+                this.add(line, t);
+                // this.add(new FadeIn({ target: t }))
+                this.add(new Hoverable({
+                    target: line,
+                    actions: [
+                        new ChangeLineColor({ target: line, toColor: Colors.red(), duration: 500 }),
+                        new FadeIn({ target: t, duration: 500 }),
+                    ],
+                }));
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }*/
+
+
+    // testShouldRepeatAnimation(canvas, done) {
     //     class TestScene extends Scene {
     //         compose() {
-    //             // const line = new Line({ from: [-2, 0], to: [2, 0] });
-    //             const line = new Square({ size: 2 });
-    //             const t = new Text({ text: 'Hello', x: 0, y: 0, color: Colors.black({ opacity: 0 }) });
-    //             // const t = new Text({ text: 'Hello', x: 0, y: 0, color: Colors.transparent() });
+    //             const s = new Square({ size: 2 });
 
-    //             this.add(line, t);
-    //             // this.add(new FadeIn({ target: t }))
-    //             this.add(new Hoverable({
-    //                 target: line,
-    //                 actions: [
-    //                     new ChangeLineColor({ target: line, toColor: Colors.red(), duration: 500 }),
-    //                     new FadeIn({ target: t, duration: 500 }),
-    //                 ],
-    //             }));
+    //             this.add(s)
+    //             this.add(new MoveToTarget({ target: s, destination: [2, 2], repeat: true, yoyo: true }))
 
     //             return this;
     //         }
@@ -362,13 +376,29 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    testShouldHover(canvas, done) {
+    testAnimationsShouldRepeat(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                // const s = new Square({ size: 2 });
+                const c1 = new CircleArc({ radius: 1, x: -5, y: 2 });
+                const c2 = new CircleArc({ radius: 1, x: -2, y: 2 });
+                const c3 = new CircleArc({ radius: 1, x: 1, y: 2 });
+                const c7 = new Square({ size: 1, x: 4, y: 2 });
 
-                // this.add(s)
-                // this.add(new MoveToTarget({ target: s, destination: [2, 2], repeat: true, }))
+                const c4 = new CircleArc({ radius: 1, x: -4, y: -2 });
+                const c5 = new CircleArc({ radius: 0.25, x: -1, y: -2 });
+                const c5Path = new CircleArc({ radius: 1, x: -1, y: -2 });
+                const c6 = new CircleArc({ radius: 1, x: 2, y: -2 });
+
+                this.add(c1, c2, c3, c4, c5, c6, c7);
+                this.add(
+                    new ChangeFillColor({ target: c1, toColor: Colors.red(), repeat: true }),
+                    new ShiftTarget({ target: c2, shifts: DOWN(), repeat: true }),
+                    new Scale({ target: c3, scaleAmount: 2, repeat: true }),
+                    new ChangeLineColor({ target: c4, toColor: Colors.red(), repeat: true }),
+                    new MoveAlongPath({ target: c5, path: c5Path, repeat: true, }),
+                    new Grow({ shape: c6, repeat: true, }),
+                    new Rotate({ target: c7, angle: Math.PI / 2, repeat: true, }),
+                );
 
                 return this;
             }
@@ -376,4 +406,23 @@ export class VisualTests extends TestSuite {
 
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
+
+
+    // testShouldPlotThatIsDisjoint(canvas, done) {
+    // }
+
+
+    // testFoo(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             const dot = new Dot();
+
+    //             this.add(new Orbit({ target: dot, center: [1, 0], easing: Easing.linear }));
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 }

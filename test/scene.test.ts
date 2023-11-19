@@ -4,10 +4,22 @@ import { Canvas } from "../src/renderers/renderer";
 import { Scene } from "../src/scene";
 import { TextBaseline } from "../src/shapes/text";
 import { Line } from "../src/shapes/base_shapes";
-import { Animation } from '../src/animations/animations';
+import { Animation, Animatable } from '../src/animations/animations';
 
 
 class TestCanvas implements Canvas {
+    onMouseMove(listener: (pt: Point) => void): void;
+    onMouseMove(listener: (pt: Point) => void): void;
+    onMouseMove(listener: unknown): void {
+        throw new Error("Method not implemented.");
+    }
+    onMouseUp(listener: (pt: Point) => void): void {
+        throw new Error("Method not implemented.");
+    }
+    onMouseOut(listener: () => void): void {
+        throw new Error("Method not implemented.");
+    }
+
     arc({ center, radius, angle, lineWidth, color }: { center: Point; radius: number; angle: number; lineWidth: number; color: RGBA; }): void {}
 
     line({ from, to, lineWidth, color }: { from: Point; to: Point; lineWidth: number; color: RGBA; }): void {}
@@ -23,8 +35,8 @@ class TestCanvas implements Canvas {
 
 
 class TestAnimation extends Animation {
-    update(pctComplete: number): void {
-        
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        return [];
     }
 
     resetState(): void {

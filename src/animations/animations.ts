@@ -9,8 +9,8 @@ import * as math from '../math.js';
 export type AnimationArgs = {
     duration: number;
     easing?: EasingFunction;
-    repeat: boolean;
-    yoyo: boolean;
+    repeat?: boolean;
+    yoyo?: boolean;
 }
 
 
@@ -32,7 +32,7 @@ export abstract class Animation {
     private _yoyo: boolean = false;
     private _cycle: number = 0;
 
-    constructor({ duration = 1000, easing = Easing.easeInOutCubic, repeat = false, yoyo = false }: AnimationArgs) {
+    constructor({ duration = 1000, easing = Easing.easeInOutCubic, repeat = false, yoyo = true }: AnimationArgs) {
         this._duration = duration;
         this._easing = easing;
         this._repeat = repeat;
@@ -92,7 +92,7 @@ export abstract class Animation {
         // }
 
 
-        if (!this._startTime) {
+        if (this._startTime === null) {
             this.initState();
             this._startTime = time;
         }
@@ -107,11 +107,16 @@ export abstract class Animation {
 
             if (this._repeat) {
                 this._startTime = time;
-                this._reversing = !this._reversing;
+
+                if (this._yoyo) {
+                    this._reversing = !this._reversing;
+                } else {
+                    this.resetState();
+                }
+
                 this._cycle += 1;
             } else if (!this._emittedFinal) {
                 this._emittedFinal = true;
-                return;
             }
 
             return this.update(1, isReversed);
@@ -132,7 +137,12 @@ export abstract class Animation {
         } else {
             return false;
         }*/
-        return false;
+        if (this._startTime === null || (this._startTime !== null && this._repeat)) {
+            return false;
+        }
+
+        const pctComplete = math.invlerp(this._startTime, this._startTime + this._duration, time);
+        return pctComplete >= 1;
     }
 
     updateWithEase(v1: number, v2: number, d: number): number;
@@ -236,6 +246,10 @@ export class ShiftTarget extends MoveToTarget {
         super({ target, destination: dest, ...baseConfig });
     }
 
+    // protected initState(): void {
+    //     this.startLocation = this._target.center();
+    // }
+
     private static getDestination(center: Point, shifts: Shift | Shift[]): Point {
         let totalShift: Shift;
 
@@ -268,9 +282,11 @@ export class Scale extends Animation {
         this.startScale = target.currentScale;
     }
 
-    update(pctComplete: number): Animatable[] {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
         // const newScale = lerp(this.startScale, this.scaleAmount, pctComplete);
-        const newScale = this.updateWithEase(this.startScale, this.scaleAmount, pctComplete);
+        const [from, to] = reversing ? [this.scaleAmount, this.startScale] : [this.startScale, this.scaleAmount];
+
+        const newScale = this.updateWithEase(from, to, pctComplete);
         this.target.scale(newScale);
 
         return [this.target];
@@ -297,8 +313,10 @@ export class ChangeFillColor extends Animation {
         this.toColor = toColor;
     }
 
-    update(pctComplete: number): Animatable[] {
-        const updatedColor = this.updateWithEase(this.fromColor, this.toColor, pctComplete) as RGBA;
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        const [from, to] = reversing ? [this.toColor, this.fromColor] : [this.fromColor, this.toColor];
+
+        const updatedColor = this.updateWithEase(from, to, pctComplete) as RGBA;
         this.target.changeColor(updatedColor);
 
         return [this.target];
@@ -366,12 +384,13 @@ export class MoveAlongPath extends Animation {
         this.pathObj = path;
     }
 
-    update(pctComplete: number): Animatable[] {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
         if (!this.path) {
             return [];
         }
 
-        const idx = Math.floor(this.updateWithEase(0, this.path.length, pctComplete))
+        const [from, to] = reversing ? [this.path.length, 0] : [0, this.path.length];
+        const idx = Math.floor(this.updateWithEase(from, to, pctComplete))
         const point = this.path[Math.min(idx, this.path.length - 1)];
 
         this.target.moveCenter(point);
@@ -414,7 +433,7 @@ export class Orbit extends Animation {
         // this.startAngle = Math.atan2(targetCenter[1] - center[1], targetCenter[0] - center[0]);
     }
 
-    update(pctComplete: number): Animatable[] {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
         if (this.startAngle !== undefined && this.distance !== undefined) {
             const endAngle = this.startAngle + Math.PI * 2;
             const updatedVal = this.updateWithEase(this.startAngle, endAngle, pctComplete);
@@ -434,9 +453,7 @@ export class Orbit extends Animation {
         }
     }
 
-    protected start(time: number): void {
-        super.start(time);
-
+    protected initState(): void {
         this.targetStartPoint = this.target.center();
         this.distance = distance(this.targetStartPoint, this.center);
         this.startAngle = Math.atan2(this.targetStartPoint[1] - this.center[1], this.targetStartPoint[0] - this.center[0]);
@@ -459,8 +476,13 @@ export class Rotate extends Animation {
         this.startAngle = target.angle;
     }
 
-    update(pctComplete: number): Animatable[] {
-        const angle = this.updateWithEase(this.startAngle, this.angle, pctComplete);
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        let angle = this.updateWithEase(this.startAngle, this.angle, pctComplete);
+
+        if (reversing) {
+            angle = -angle;
+        }
+
         this.target.rotate(angle);
 
         return [this.target];
@@ -486,7 +508,9 @@ export class Grow extends Animation {
     }
 
     update(pctComplete: number, reversing: boolean): Animatable[] {
-        const scale = this.updateWithEase(0, this.initialScale ?? 1, pctComplete);
+        const [from, to] = reversing ? [this.initialScale ?? 1, 0] : [0, this.initialScale ?? 1];
+
+        const scale = this.updateWithEase(from, to, pctComplete);
         this.shape.scale(scale);
 
         return [this.shape];

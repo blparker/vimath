@@ -71,9 +71,7 @@ describe('renderer module', () => {
         expect(path[3].type).toEqual('lineTo');
         expect(path[3].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[3]));
 
-        // The last call is a line back to the starting point
-        expect(path[4].type).toEqual('lineTo');
-        expect(path[4].props).toEqual(calcAbsPosition(canvas, s.computedPoints()[0]));
+        expect(path[4].type).toEqual('closePath');
     });
 
     test('should render a PointShape with two points correctly', () => {

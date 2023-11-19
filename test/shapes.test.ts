@@ -131,4 +131,11 @@ describe('shape module', function() {
         const triangle = new Triangle();
         const square = new Square();
     });
+
+    test('should set line color to color when color is specified but not line color', () => {
+        const s = new PointShape({ points: [], color: Colors.red() });
+
+        expect(s.color()).toEqual(Colors.red());
+        expect(s.lineColor()).toEqual(Colors.red());
+    });
 });

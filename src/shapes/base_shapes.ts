@@ -89,8 +89,12 @@ export class PointShape implements Shape, Styleable, PointsAware {
         this._smooth = smooth;
 
         const a = { ...defaultStyleArgs, ...styleArgs };
-        this._color = parseColor(a.color);
-        this._lineColor = parseColor(a.lineColor);
+
+        this._color = styleArgs.color !== undefined ? parseColor(styleArgs.color) : defaultStyleArgs.color;
+        this._lineColor = styleArgs.lineColor !== undefined ? parseColor(styleArgs.lineColor) : this._color;
+
+        // this._color = parseColor(a.color);
+        // this._lineColor = parseColor(a.lineColor);
         this._lineWidth = a.lineWidth;
     }
 
