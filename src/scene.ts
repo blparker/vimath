@@ -43,7 +43,7 @@ export class SceneRunner {
 
             const delta = time - then;
 
-            if (delta > interval) {
+            // if (delta > interval) {
                 then = time - (delta % interval);
                 while (times.length > 0 && times[0] <= time - 1000) {
                     times.shift();
@@ -53,7 +53,7 @@ export class SceneRunner {
                 this.actualFps = times.length;
 
                 this.scene.nextTick(time);
-            }
+            // }
         };
 
         requestAnimationFrame(loop);

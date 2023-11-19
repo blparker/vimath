@@ -1,9 +1,8 @@
 import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
-import { Shape, PointShape } from '../shapes/base_shapes.js';
+import { Shape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
-import { Text, TextBaseline } from '../shapes/text';
-import { TextRenderer } from './text';
+import { TextBaseline } from '../shapes/text';
 
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
@@ -242,7 +241,6 @@ export class HtmlCanvas implements Canvas {
         }
 
         this.ctx.drawImage(image, tX, tY);
-        // this.ctx.strokeRect(tX, tY, image.naturalWidth, image.naturalHeight)
     }
 
     clear(): void {

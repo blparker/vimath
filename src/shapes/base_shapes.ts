@@ -2,16 +2,8 @@
 import { Colors, RGBA, parseColor } from '../colors.js';
 import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '../base.js';
 import * as math from '../math.js';
-// import { Decimal } from 'decimal.js';
 
 const DEFAULT_LINE_WIDTH = 3;
-
-
-// class BaseParams {
-//     lineColor: Color | null = null;
-//     fillColor: Color | null = null;
-//     lineWidth: number = DEFAULT_LINE_WIDTH;
-// }
 
 
 export interface Shape {
@@ -91,30 +83,19 @@ export class PointShape implements Shape, Styleable, PointsAware {
         const a = { ...defaultStyleArgs, ...styleArgs };
 
         this._color = styleArgs.color !== undefined ? parseColor(styleArgs.color) : defaultStyleArgs.color;
-        this._lineColor = styleArgs.lineColor !== undefined ? parseColor(styleArgs.lineColor) : this._color;
-
-        // this._color = parseColor(a.color);
-        // this._lineColor = parseColor(a.lineColor);
+        this._lineColor = styleArgs.lineColor !== undefined ? parseColor(styleArgs.lineColor) : (styleArgs.color !== undefined ? this._color : defaultStyleArgs.lineColor);
         this._lineWidth = a.lineWidth;
     }
 
     shift(...shifts: Shift[]): PointShape {
         for (const point of this._points) {
-            // let [pX, pY] = math.toDecimal(point);
             let [pX, pY] = point;
 
             for (const [sX, sY] of shifts) {
-                // pX = pX.add(sX);
-                // pY = pY.add(sY);
                 [pX, pY] = math.add([pX, pY], [sX, sY]);
                 point[0] = pX;
                 point[1] = pY;
-
-                // point[0] += sX;
-                // point[1] += sY;
             }
-
-            // point[0] = pX.
         }
 
         return this;
@@ -146,39 +127,6 @@ export class PointShape implements Shape, Styleable, PointsAware {
     rotate(angle: number): PointShape {
         this._angle = angle;
         return this;
-        // const [cX, cY] = this.center();
-
-        // for (const point of this._points) {
-        //     const [tX, tY] = [point[0] - cX, point[1] - cY];
-
-        //     const nX = tX * Math.cos(angle) - tY * Math.sin(angle);
-        //     const nY = tX * Math.sin(angle) + tY * Math.cos(angle);
-
-        //     point[0] = cX + nX;
-        //     point[1] = cY + nY;
-
-            /*
-            const [tX, tY] = math.subtract(point, [cX, cY]);
-
-            const nX = math.subtract(math.pMultiply(tX, Math.cos(angle)), math.pMultiply(tY, Math.sin(angle)));
-            const nY = math.add(math.pMultiply(tX, Math.sin(angle)), math.pMultiply(tY, Math.cos(angle)));
-
-            console.log(math.add(cX, nX))
-            point[0] = math.add(cX, nX)[0];
-            point[1] = math.add(cY, nY)[0];
-            */
-
-            // const tX = Decimal.sub(point[0], cX);
-            // const tY = Decimal.sub(point[1], cY);
-
-            // const nX = Decimal.sub(Decimal.mul(tX, Decimal.cos(angle)), Decimal.mul(tY, Decimal.sin(angle)));
-            // const nY = Decimal.add(Decimal.mul(tX, Decimal.sin(angle)), Decimal.mul(tY, Decimal.cos(angle)));
-
-            // point[0] = Decimal.add(cX, nX).toNumber();
-            // point[1] = Decimal.add(cY, nY).toNumber();
-        // }
-
-        // return this;
     }
 
     nextTo(shape: Shape | Point, direction: Point = RIGHT()): PointShape {
@@ -187,24 +135,18 @@ export class PointShape implements Shape, Styleable, PointsAware {
 
         if (dX !== 0) {
             // Left or right side
-            // offsetX = this.width() / 2 + offsetGutter;
             offsetX = math.add(math.pDivide(this.width(), 2), this._offsetGutter);
         } else {
             // Top or bottom side
-            // offsetY = this.height() / 2 + offsetGutter;
             offsetY = math.add(math.pDivide(this.height(), 2), this._offsetGutter);
         }
 
-        // dX += offsetX * Math.sign(dX);
-        // dY += offsetY * Math.sign(dY);
         dX = math.add(dX, offsetX * Math.sign(dX));
         dY = math.add(dY, offsetY * Math.sign(dY));
 
         const dest = Array.isArray(shape) ? shape : shape.center();
 
         for (const point of this._points) {
-            // point[0] += dest[0] + dX;
-            // point[1] += dest[1] + dY;
             point[0] = math.add(point[0], math.add(dest[0], dX));
             point[1] = math.add(point[1], math.add(dest[1], dY));
         }
@@ -281,8 +223,6 @@ export class PointShape implements Shape, Styleable, PointsAware {
             const rX = cX + (tX * Math.cos(this._angle) - tY * Math.sin(this._angle));
             const rY = cY + (tX * Math.sin(this._angle) + tY * Math.cos(this._angle));
 
-            // const sX = point[0] + (cX - point[0]) * (1 - this.currentScale);
-            // const sY = point[1] + (cY - point[1]) * (1 - this.currentScale);
             const sX = rX + (cX - rX) * (1 - this.currentScale);
             const sY = rY + (cY - rY) * (1 - this.currentScale);
 
@@ -377,7 +317,6 @@ export class CircleArc implements Shape, Styleable, PointsAware {
 
     scale(factor: number): Shape {
         this._currentScale = factor;
-        // this.radius = this.radius > 0 ? this.radius * factor : factor;
 
         return this;
     }

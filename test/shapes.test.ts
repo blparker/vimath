@@ -137,5 +137,13 @@ describe('shape module', function() {
 
         expect(s.color()).toEqual(Colors.red());
         expect(s.lineColor()).toEqual(Colors.red());
+
+        const s2 = new PointShape({ points: [], color: Colors.red(), lineColor: Colors.blue() });
+        expect(s2.color()).toEqual(Colors.red());
+        expect(s2.lineColor()).toEqual(Colors.blue());
+
+        const s3 = new PointShape({ points: [], lineColor: Colors.blue() });
+        expect(s3.color()).toEqual(Colors.transparent());
+        expect(s3.lineColor()).toEqual(Colors.blue());
     });
 });

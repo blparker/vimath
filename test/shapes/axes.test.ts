@@ -1,4 +1,4 @@
-import { Axes, Axes2, Axes3, AxesConfig } from '../../src/shapes/axes';
+import { Axes, AxesConfig } from '../../src/shapes/axes';
 import { TestTextMetrics, expectArraysClose } from '../utils';
 import { Text } from '../../src/shapes/text';
 import { Line, PointShape, Shape } from '../../src/shapes/base_shapes';
@@ -236,7 +236,7 @@ function findTick({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
 describe('axes module', () => {
 
     it('should create default axes with the origin at (0, 0) and have full width and height', () => {
-        const a = new Axes3();
+        const a = new Axes();
         const cs = a.composedShapes();
 
         expect(cs.length).toEqual(2);
@@ -251,7 +251,7 @@ describe('axes module', () => {
 
 
     it('should create X-axis with length, ticks, and labels', () => {
-        const a = new Axes3({ xLength: 6 });
+        const a = new Axes({ xLength: 6 });
         const cs = (a.composedShapes()[0] as NumberLine).composedShapes();
 
         expect(cs[0]).toBeInstanceOf(Line);
@@ -266,7 +266,7 @@ describe('axes module', () => {
 
 
     it('should create Y-axis with length, ticks, and labels', () => {
-        const a = new Axes3({ yLength: 4 });
+        const a = new Axes({ yLength: 4 });
         const cs = (a.composedShapes()[1] as NumberLine).composedShapes();
 
         expect(cs[0]).toBeInstanceOf(Line);
@@ -281,7 +281,7 @@ describe('axes module', () => {
 
 
     it('should move origin', () => {
-        const a = new Axes3({ xLength: 8, yLength: 4, xRange: [-2, 6], yRange: [-1, 3], showAxisLabels: false, showAxisTicks: false });
+        const a = new Axes({ xLength: 8, yLength: 4, xRange: [-2, 6], yRange: [-1, 3], showAxisLabels: false, showAxisTicks: false });
         const cs = a.composedShapes();
 
         const xShapes = (cs[0] as NumberLine).composedShapes();
