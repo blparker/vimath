@@ -18,6 +18,15 @@ export class DOM {
 
         return cvs;
     }
+
+    static getCanvas(selector: string): HTMLCanvasElement {
+        const el = document.querySelector<HTMLCanvasElement>(selector);
+        if (!el) {
+            throw new Error('Canvas element not found');
+        }
+
+        return el;
+    }
 }
 
 
@@ -77,13 +86,19 @@ export abstract class Scene {
     private fpsText: Text;
 
 
-    constructor({ canvas }: { canvas?: Canvas } = {}) {
+    constructor({ canvas }: { canvas?: Canvas | string } = {}) {
         this.els = [];
-        this.canvas = canvas ?? new HtmlCanvas(DOM.createCanvas());
+
+        if (canvas !== undefined && typeof canvas !== 'string') {
+            this.canvas = canvas;
+        } else if (typeof canvas === 'string') {
+            this.canvas = new HtmlCanvas(DOM.getCanvas(canvas));
+        } else {
+            this.canvas = new HtmlCanvas(DOM.createCanvas());
+        }
+
         this.runner = new SceneRunner(this);
-
         this.fpsText = new Text({ x: 7, y: -4, text: '0', align: 'right', color: Colors.black({ opacity: 0.5 }), size: 14 });
-
         this.els.push([this.fpsText]);
     }
 
