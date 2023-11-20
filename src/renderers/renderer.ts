@@ -244,13 +244,19 @@ export class HtmlCanvas implements Canvas {
     }
 
     clear(): void {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const ctx = this.ctx;
 
-        this.ctx.save();
-        this.ctx.fillStyle = rgbaToString(Colors.white());
-        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fill();
-        this.ctx.restore();
+        // ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // this.ctx.save();
+        ctx.fillStyle = rgbaToString(Colors.white());
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+        // ctx.fill();
+
+        // ctx.fillStyle = fillStyle;
+
+        // this.ctx.restore();
     }
 
     private translate(point: Point): Point {

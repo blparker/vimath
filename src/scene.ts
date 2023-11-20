@@ -1,4 +1,4 @@
-import { Shape, isShape } from './shapes/base_shapes';
+import { PointShape, Shape, isShape } from './shapes/base_shapes';
 import { Text } from './shapes/text';
 import { Animation, isAnimation } from './animations/animations';
 import { Canvas, HtmlCanvas } from './renderers/renderer';
@@ -6,6 +6,8 @@ import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Point } from './base';
 import { getRenderer } from './renderers/renderer_factory';
 import { Interaction, isInteraction } from './animations/interactivity';
 import { Colors } from './colors';
+import { PointShapeRenderer } from './renderers/shape';
+import { TextRenderer } from './renderers/text';
 
 
 export class DOM {
@@ -38,7 +40,6 @@ export class SceneRunner {
 
     run() {
         let times: number[] = [];
-        let fps;
 
         let then: number;
         const interval = 1000 / SceneRunner.requiredFps;
@@ -124,6 +125,16 @@ export abstract class Scene {
         this.canvas.clear();
 
         this.fpsText.setText(this.runner.fps().toString());
+
+        // for (const els of this.els) {
+        //     for (const el of els) {
+        //         if (el instanceof Text) {
+        //             new TextRenderer(this.canvas).render(el);
+        //         } else {
+        //             new PointShapeRenderer(this.canvas).render(el as PointShape);
+        //         }
+        //     }
+        // }
 
         for (const els of this.els) {
             for (const el of els) {
