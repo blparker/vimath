@@ -7,9 +7,10 @@
     "build": "tsc",
     "test": "npx jest --verbose --config jest.config.js",
     "test-specs": "jasmine-browser-runner runSpecs",
-    "bundle-prod-ts": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=vimath --format=esm",
-    "bundle-prod": "./node_modules/.bin/esbuild ./dist/src/index.js --bundle --sourcemap --outdir=./dist/out --global-name=vimath --format=esm",
-    "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=vimath --watch --format=esm",
+    "bundle-prod-ts": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=${npm_package_name} --format=esm",
+    "bundle-dev": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --global-name=${npm_package_name} --outfile=./dist/out/${npm_package_name}.dev.js --format=esm",
+    "bundle-prod": "./node_modules/.bin/esbuild src/index.ts --bundle --minify --global-name=${npm_package_name} --outfile=./dist/out/${npm_package_name}.production.js --format=esm",
+    "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=${npm_package_name} --watch --format=esm",
     "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination ."
   },
   "author": "",
@@ -42,9 +43,7 @@
   "dependencies": {
     "@types/offscreencanvas": "^2019.7.1",
     "decimal.js": "^10.4.3",
-    "mathjax": "^4.0.0-beta.3",
-    "mathjax-full": "^3.2.2",
-    "pmath-js": "^1.0.1"
+    "mathjax-full": "^3.2.2"
   },
   "type": "module"
 }
