@@ -63,6 +63,9 @@ export const defaultStyleArgs = {
 } as const;
 
 
+/**
+ * PointShape is a base class for shapes that are constructed of points and lines (e.g., square)
+ */
 export class PointShape implements Shape, Styleable, PointsAware {
     private _points: Point[];
     private _closePath: boolean;
@@ -74,6 +77,16 @@ export class PointShape implements Shape, Styleable, PointsAware {
     private _lineWidth: number;
     private _smooth: boolean;
 
+    /**
+     * ctor
+     * @param points an array (Point[]) of points that make up this shape
+     * @param closePath a flag indicating whether or not the last point should be connected back to the first point
+     * @param offsetGutter a number indicating the relative closeness of other shapes when placing shapes next to this object
+     * @param smooth a flag indicating whether or not a more sophisticated spline approach should be used to smooth out the lines connecting the points
+     * @param lineColor the color of the line connecting the points
+     * @param lineWidth the widht of hte line connecting the points
+     * @param color for connected shapes, the color of the fill
+     */
     constructor({ points, closePath = true, offsetGutter = OFFSET_GUTTER, smooth = false, ...styleArgs }: { points: Point[], closePath?: boolean, offsetGutter?: number, smooth?: boolean } & Prettify<StyleArgs>) {
         this._points = points;
         this._closePath = closePath;

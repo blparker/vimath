@@ -1,13 +1,11 @@
-import { PointShape, Shape, isShape } from './shapes/base_shapes';
+import { Shape, isShape } from './shapes/base_shapes';
 import { Text } from './shapes/text';
 import { Animation, isAnimation } from './animations/animations';
 import { Canvas, HtmlCanvas } from './renderers/renderer';
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Point } from './base';
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from './base';
 import { getRenderer } from './renderers/renderer_factory';
 import { Interaction, isInteraction } from './animations/interactivity';
 import { Colors } from './colors';
-import { PointShapeRenderer } from './renderers/shape';
-import { TextRenderer } from './renderers/text';
 
 
 export class DOM {
@@ -75,19 +73,25 @@ export class SceneRunner {
 }
 
 type Renderable = Shape | Animation | Interaction;
-
+type SceneArgs = {
+    canvas?: Canvas | string;
+    showFps: boolean;
+};
 
 
 export abstract class Scene {
     private els: Renderable[][];
     private canvas: Canvas;
     private runner: SceneRunner;
-    // private interactivity: Interactivity;
     private added: Set<Shape> = new Set();
-    private fpsText: Text;
+    private fpsText: Text | null = null;
 
-
-    constructor({ canvas }: { canvas?: Canvas | string } = {}) {
+    /**
+     * Create a new scene instance
+     * @param canvas the canvas selector or element to use
+     * @param showFps a flag indicating whether or not to render a FPS (frames per second) on the canvas
+     */
+    constructor({ canvas, showFps }: Prettify<SceneArgs> = { showFps: false }) {
         this.els = [];
 
         if (canvas !== undefined && typeof canvas !== 'string') {
@@ -99,8 +103,11 @@ export abstract class Scene {
         }
 
         this.runner = new SceneRunner(this);
-        this.fpsText = new Text({ x: 7, y: -4, text: '0', align: 'right', color: Colors.black({ opacity: 0.5 }), size: 14 });
-        this.els.push([this.fpsText]);
+
+        if (showFps) {
+            this.fpsText = new Text({ x: 7, y: -4, text: '0', align: 'right', color: Colors.black({ opacity: 0.5 }), size: 14 });
+            this.els.push([this.fpsText]);
+        }
     }
 
     add(...els: Renderable[]): Scene {
@@ -124,17 +131,9 @@ export abstract class Scene {
     nextTick(time: number): void {
         this.canvas.clear();
 
-        this.fpsText.setText(this.runner.fps().toString());
-
-        // for (const els of this.els) {
-        //     for (const el of els) {
-        //         if (el instanceof Text) {
-        //             new TextRenderer(this.canvas).render(el);
-        //         } else {
-        //             new PointShapeRenderer(this.canvas).render(el as PointShape);
-        //         }
-        //     }
-        // }
+        if (this.fpsText) {
+            this.fpsText.setText(this.runner.fps().toString());
+        }
 
         for (const els of this.els) {
             for (const el of els) {
