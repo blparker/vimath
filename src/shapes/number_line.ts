@@ -26,7 +26,7 @@ const defaultNumberLineArgs = {
     showTicks: true,
     showLabels: true,
     tickSize: 0.2,
-    tickLabelStandoff: 0.4,
+    tickLabelStandoff: 0.2,
     labelSize: 20,
     tickStep: 1,
     rotation: 0,
@@ -112,7 +112,11 @@ export class NumberLine extends ComposableShape {
             ticks.push([i, x]);
         }
 
-        const numDecimals = Math.min(math.mode(ticks.map(l => math.numDecimals(l[0]))), 5);
+        // const numDecimals = Math.min(math.mode(ticks.map(l => math.numDecimals(l[0]))), 5);
+        const modes = math.multiMode(ticks.map(l => math.numDecimals(l[0])));
+        let maxDecimals = Math.max(...modes);
+        const numDecimals = Math.min(maxDecimals, 5);
+
         for (const [label, x] of ticks) {
             if (this.showTicks) {
                 this.add(new Line({ from: translate(rotateAboutCenter([x, -ht])), to: translate(rotateAboutCenter([x, ht])) }));
@@ -122,7 +126,7 @@ export class NumberLine extends ComposableShape {
                 let [rX, rY] = translate(rotateAboutCenter([x, 0]));
 
                 let align: HAlign = 'center';
-                let baseline: VAlign = 'middle';
+                let baseline: VAlign = 'top';
                 let tickDirection = 1;
 
                 if (this.rotation > Math.PI / 4 && this.rotation < 3 * Math.PI / 4) {

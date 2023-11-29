@@ -1,4 +1,4 @@
-import { Point, HAlign, X_TICKS, Y_TICKS, DEFAULT_PADDING, FONT_STACK, VAlign, Config } from '../base';
+import { Point, HAlign, X_TICKS, Y_TICKS, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
 import { Shape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
@@ -260,7 +260,7 @@ export class HtmlCanvas implements Canvas {
     }
 
     private translate(point: Point): Point {
-        const padding = 20;
+        const padding = Config.canvasPadding;
 
         const [xTicks, yTicks] = [
             (this.canvas.width - 2 * padding) / X_TICKS,
@@ -285,11 +285,11 @@ export class HtmlCanvas implements Canvas {
     }
 
     public get xIncrements(): number {
-        return (this.canvas.width - 2 * DEFAULT_PADDING) / X_TICKS;
+        return (this.canvas.width - 2 * Config.canvasPadding) / X_TICKS;
     }
 
     public get yIncrements(): number {
-        return (this.canvas.height - 2 * DEFAULT_PADDING) / Y_TICKS;
+        return (this.canvas.height - 2 * Config.canvasPadding) / Y_TICKS;
     }
 }
 

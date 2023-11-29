@@ -66,7 +66,7 @@ const defaultAxesConfig = {
     yAxisTickStep: 1,
     axisTextSize: 20,
     textMetrics: null,
-    tickLabelStandoff: 0.4,
+    tickLabelStandoff: 0.2,
 } as const;
 
 

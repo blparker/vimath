@@ -375,30 +375,17 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
-
-    testAnimationsShouldRepeat(canvas, done) {
+    testAxesWithFullWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                const c1 = new CircleArc({ radius: 1, x: -5, y: 2 });
-                const c2 = new CircleArc({ radius: 1, x: -2, y: 2 });
-                const c3 = new CircleArc({ radius: 1, x: 1, y: 2 });
-                const c7 = new Square({ size: 1, x: 4, y: 2 });
-
-                const c4 = new CircleArc({ radius: 1, x: -4, y: -2 });
-                const c5 = new CircleArc({ radius: 0.25, x: -1, y: -2 });
-                const c5Path = new CircleArc({ radius: 1, x: -1, y: -2 });
-                const c6 = new CircleArc({ radius: 1, x: 2, y: -2 });
-
-                this.add(c1, c2, c3, c4, c5, c6, c7);
-                this.add(
-                    new ChangeFillColor({ target: c1, toColor: Colors.red(), repeat: true }),
-                    new ShiftTarget({ target: c2, shifts: DOWN(), repeat: true }),
-                    new Scale({ target: c3, scaleAmount: 2, repeat: true }),
-                    new ChangeLineColor({ target: c4, toColor: Colors.red(), repeat: true }),
-                    new MoveAlongPath({ target: c5, path: c5Path, repeat: true, }),
-                    new Grow({ shape: c6, repeat: true, }),
-                    new Rotate({ target: c7, angle: Math.PI / 2, repeat: true, }),
-                );
+                this.add(new Axes({
+                    xLength: 12,
+                    yLength: 7,
+                    xRange: [0, 1],
+                    yRange: [0, 50],
+                    xAxisTickStep: 0.25,
+                    yAxisTickStep: 12.5
+                }));
 
                 return this;
             }
@@ -406,6 +393,38 @@ export class VisualTests extends TestSuite {
 
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
+
+
+    // testAnimationsShouldRepeat(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             const c1 = new CircleArc({ radius: 1, x: -5, y: 2 });
+    //             const c2 = new CircleArc({ radius: 1, x: -2, y: 2 });
+    //             const c3 = new CircleArc({ radius: 1, x: 1, y: 2 });
+    //             const c7 = new Square({ size: 1, x: 4, y: 2 });
+
+    //             const c4 = new CircleArc({ radius: 1, x: -4, y: -2 });
+    //             const c5 = new CircleArc({ radius: 0.25, x: -1, y: -2 });
+    //             const c5Path = new CircleArc({ radius: 1, x: -1, y: -2 });
+    //             const c6 = new CircleArc({ radius: 1, x: 2, y: -2 });
+
+    //             this.add(c1, c2, c3, c4, c5, c6, c7);
+    //             this.add(
+    //                 new ChangeFillColor({ target: c1, toColor: Colors.red(), repeat: true }),
+    //                 new ShiftTarget({ target: c2, shifts: DOWN(), repeat: true }),
+    //                 new Scale({ target: c3, scaleAmount: 2, repeat: true }),
+    //                 new ChangeLineColor({ target: c4, toColor: Colors.red(), repeat: true }),
+    //                 new MoveAlongPath({ target: c5, path: c5Path, repeat: true, }),
+    //                 new Grow({ shape: c6, repeat: true, }),
+    //                 new Rotate({ target: c7, angle: Math.PI / 2, repeat: true, }),
+    //             );
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 
 
     // testShouldPlotThatIsDisjoint(canvas, done) {

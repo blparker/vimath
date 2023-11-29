@@ -101,4 +101,8 @@ describe('math module', () => {
         expect(math.min([[0, 1], [3, 2], [-2, 5]], 0)).toEqual(-2);
         expect(math.min([[0, 1], [3, 2], [2, 5]], 1)).toEqual(1);
     });
+
+    test('should get multi mode of array', () => {
+        expect(math.multiMode([1, 1, 1, 2, 3, 2, 4, 2])).toEqual([1, 2]);
+    });
 });

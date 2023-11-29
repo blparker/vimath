@@ -248,6 +248,38 @@ export function mode<T extends number | string | symbol>(arr: T[]): T {
 }
 
 
+export function multiMode<T extends number | string | symbol>(arr: T[]): T[] {
+    if (!Array.isArray(arr)) {
+        throw new Error('Expected parameter to be an array');
+    } else if (arr.length === 0) {
+        throw new Error('Cannot take mode of empty array');
+    }
+
+    const counts = arr.reduce((counts, e) => {
+        if (e in counts) {
+            counts[e] = [e, counts[e][1] + 1];
+        } else {
+            counts[e] = [e, 1];
+        }
+
+        return counts;
+    }, {} as Record<T, [T, number]>);
+
+    let maxCount = -1;
+    let maxVals: T[] = [];
+    for (const [val, count] of Object.values(counts) as [T, number][]) {
+        if (count > maxCount) {
+            maxCount = count;
+            maxVals = [val];
+        } else if (count === maxCount) {
+            maxVals.push(val);
+        }
+    }
+
+    return maxVals;
+}
+
+
 export function numDecimals(val: number): number {
     const vs = val.toString();
     if (!vs.includes('.')) {
