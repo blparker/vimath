@@ -166,6 +166,17 @@ export function scalarMultiply(arr: number[], v: number) {
 }
 
 
+/**
+ * lerp (linear interpolation) produces a value beteween p% between n1 and n2. 
+ * @example
+ * ```
+ * lerp(0, 10, 0.5)  // > returns 5
+ * ```
+ * @param n1 the left side of the range
+ * @param n2 the right side of the range
+ * @param p the percentage to interpolate
+ * @returns the interpolated value between n1 and n2
+ */
 export function lerp(n1: number, n2: number, p: number) {
     return (1 - p) * n1 + p * n2;
 }
@@ -189,8 +200,34 @@ export function clamp(v: number, min: number = 0, max: number = 1) {
 }
 
 
+/**
+ * invlerp (inverse linear interpolation) produces the percentage of v between n1 and n2.
+ * @example
+ * ```
+ * invlerp(0, 10, 5)  // > returns 0.5
+ * ```
+ * @param n1 the left side of the range
+ * @param n2 the right side of the range
+ * @param v the value to find the percentage of
+ * @returns the percentage of v between n1 and n2
+ */
 export function invlerp(n1: number, n2: number, v: number) {
     return clamp((v - n1) / (n2 - n1));
+}
+
+
+/**
+ * Converts a value from one range to another.
+ * @param oFrom the left side of the original range
+ * @param oTo the right side of the original range
+ * @param tFrom the left side of the target range
+ * @param tTo the right side of the target range
+ * @param v the value to convert
+ * @returns the value converted from the original range to the target range
+ */
+export function remap(oFrom: number, oTo: number, tFrom: number, tTo: number, v: number) {
+    const rel = invlerp(oFrom, oTo, v);
+    return lerp(tFrom, tTo, rel);
 }
 
 
