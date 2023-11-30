@@ -140,3 +140,23 @@ export class Group extends ComposableShape {
     //     return this._currentScale;
     // }
 }
+
+
+export class HGroup extends ComposableShape {
+    constructor(...els: Shape[]) {
+        super();
+        this.add(...els);
+    }
+
+    compose(): ComposableShape {
+        this.composed = true;
+
+        for (let i = 1; i < this.shapes.length; i++) {
+            this.shapes[i].nextTo(this.shapes[i - 1], RIGHT());
+        }
+
+        this.moveTo([0, 0]);
+
+        return this;
+    }
+}
