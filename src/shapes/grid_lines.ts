@@ -1,14 +1,20 @@
-import { X_TICKS, Y_TICKS, Range, Point, VAlign, HAlign } from "../base";
+import { X_TICKS, Y_TICKS } from "../base";
 import { ComposableShape } from "./composed_shape";
-import * as math from '../math';
 import { Line } from "./base_shapes";
-import { Text } from "./text";
-import { Colors } from "../colors";
+import { Colors, RGBA, colorWithOpacity } from "../colors";
 
 
 export class GridLines extends ComposableShape {
+    private lineColor: RGBA;
+
+    constructor({ lineColor }: { lineColor: RGBA } = { lineColor: Colors.gray({ opacity: 0.2 })}) {
+        super();
+        this.lineColor = lineColor;
+    }
+
     compose(): ComposableShape {
-        const lineStyles = { lineWidth: 1, lineColor: Colors.gray({ opacity: 0.2 }) };
+        const lineStyles = { lineWidth: 1, lineColor: this.lineColor };
+        const axisColor = colorWithOpacity(this.lineColor, this.lineColor[3] + 0.1);
 
         for (let i = 0; i <= X_TICKS; i++) {
             const x = i - X_TICKS / 2;
@@ -16,7 +22,7 @@ export class GridLines extends ComposableShape {
 
             if (i === X_TICKS / 2) {
                 line.changeLineWidth(2);
-                line.changeLineColor(Colors.gray({ opacity: 0.3 }));
+                line.changeLineColor(axisColor);
             }
 
             this.add(line);
@@ -28,7 +34,7 @@ export class GridLines extends ComposableShape {
 
             if (i === Y_TICKS / 2) {
                 line.changeLineWidth(2);
-                line.changeLineColor(Colors.gray({ opacity: 0.3 }));
+                line.changeLineColor(axisColor);
             }
 
             this.add(line);

@@ -134,10 +134,6 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
     }
 
     center(): Point {
-        // return [
-        //     (this.maxRight + this.maxLeft) / 2,
-        //     (this.maxTop + this.maxBottom) / 2
-        // ];
         const avgX = this.top()[0];
         const avgY = this.left()[1];
 
