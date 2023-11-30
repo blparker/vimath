@@ -10,13 +10,13 @@ export interface Composable extends Shape {
 
 
 export abstract class ComposableShape implements Shape, Composable, PointsAware {
-    private composed: boolean = false;
     private maxTop: number = -Infinity;
     private maxBottom: number = Infinity;
     private maxLeft: number = Infinity;
     private maxRight: number = -Infinity;
     private _angle: number = 0;
     private _currentScale: number = 1;
+    protected composed: boolean = false;
     protected shapes: Shape[] = [];
 
     abstract compose(): ComposableShape;
