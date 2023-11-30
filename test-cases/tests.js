@@ -378,15 +378,91 @@ export class VisualTests extends TestSuite {
     testAxesWithFullWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                this.add(new Axes({
-                    xLength: 12,
-                    yLength: 7,
+                this.add(new GridLines({ lineColor: Colors.blue({ opacity: 0.3 }) }));
+
+                const axes1 = new Axes({
+                    xLength: 5,
+                    yLength: 5,
                     xRange: [0, 1],
                     yRange: [0, 50],
                     xAxisTickStep: 0.25,
                     yAxisTickStep: 12.5
-                }));
+                });
 
+                const plot1 = axes1.plot(x => 50 * x);
+
+                const axes2 = new Axes({
+                    xLength: 5,
+                    yLength: 5,
+                    xRange: [0, 1],
+                    yRange: [0, 50],
+                    xAxisTickStep: 0.25,
+                    yAxisTickStep: 12.5
+                });
+
+                const plot2 = axes1.plot(x => 25 * x * x);
+
+                // const axes = new Axes({ 
+                //     xRange: [-1, 20],
+                //     xAxisTickStep: 2,
+                //     yRange: [-1, 20],
+                //     yAxisTickStep: 2,
+                //     showGridLines: true,
+                // })
+                // const axes = new Axes({ 
+                //     xLength: 8,
+                //     yLength: 6,
+                //     xRange: [-2, 10],
+                //     xAxisTickStep: 2,
+                //     yRange: [-2, 10],
+                //     yAxisTickStep: 2,
+                //     showGridLines: true,
+                // })
+
+                // const plot = axes.plot(x => x);
+
+                // this.add(axes1, plot1);
+                this.add(new HGroup(
+                    new Group(axes1),
+                    new Group(axes2),
+                ));
+                // this.add(axes1);
+
+                // console.log('Center:', axes1.center());
+                // console.log('Left:', axes1.left());
+                // console.log('Right:', axes1.right());
+                // console.log('Top:', axes1.top());
+                // console.log('Bottom:', axes1.bottom());
+                // // console.log('Height:', axes1.height());
+                // // console.log('Width:', axes1.width());
+                // const [cX, cY] = axes1.center();
+                // const [lX, lY] = axes1.left();
+                // const [tX, tY] = axes1.top();
+                // const [bX, bY] = axes1.bottom();
+                // const [rX, rY] = axes1.right();
+
+                // this.add(new Dot({ x: cX, y: cY }))
+                // this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
+                // this.add(new Dot({ x: tX, y: tY, color: Colors.blue() }))
+                // this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
+                // this.add(new Dot({ x: bX, y: bY, color: Colors.blue() }))
+
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }
+
+    testHGroup(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new HGroup(
+                    new Square({ size: 2 }),
+                    new Square({ size: 2 }),
+                    new Square({ size: 2 }),
+                ));
                 return this;
             }
         }
