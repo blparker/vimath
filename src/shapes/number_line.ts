@@ -17,6 +17,7 @@ type NumberLineArgs = {
     rotation?: number;
     center?: Point;
     showZero?: boolean;
+    axisLabel?: string;
 };
 
 
@@ -32,6 +33,7 @@ const defaultNumberLineArgs = {
     rotation: 0,
     center: [0, 0] as Point,
     showZero: true,
+    axisLabel: undefined,
 } as const;
 
 
@@ -47,9 +49,10 @@ export class NumberLine extends ComposableShape {
     private readonly rotation: number;
     private readonly centerPoint: Point;
     private readonly showZero: boolean;
+    private readonly axisLabel?: string;
 
 
-    constructor({ length, range, showTicks, showLabels, tickSize, tickLabelStandoff, labelSize, tickStep, rotation, center, showZero }: NumberLineArgs = {}) {
+    constructor({ length, range, showTicks, showLabels, tickSize, tickLabelStandoff, labelSize, tickStep, rotation, center, showZero, axisLabel }: NumberLineArgs = {}) {
         super();
 
         this.length = length ?? defaultNumberLineArgs.length;
@@ -63,6 +66,7 @@ export class NumberLine extends ComposableShape {
         this.rotation = rotation ?? defaultNumberLineArgs.rotation;
         this.centerPoint = center ?? defaultNumberLineArgs.center;
         this.showZero = showZero ?? defaultNumberLineArgs.showZero;
+        this.axisLabel = axisLabel ?? defaultNumberLineArgs.axisLabel;
     }
 
     compose(): ComposableShape {
@@ -83,6 +87,21 @@ export class NumberLine extends ComposableShape {
             from: translate(rotateAboutCenter([-this.length / 2, 0])),
             to: translate(rotateAboutCenter([this.length / 2, 0])),
         }));
+
+        if (this.axisLabel) {
+            const [lX, lY] = translate(rotateAboutCenter([this.length / 2, 0]));
+            let xOffset = 0, yOffset = 0;
+
+            if (this.rotation > Math.PI / 4 && this.rotation < 3 * Math.PI / 4) {
+                xOffset = 0.2;
+                yOffset = 0.2;
+            } else {
+                yOffset = 0.4;
+            }
+
+
+            this.add(new Text({ text: this.axisLabel, x: lX + xOffset, y: lY + yOffset, align: 'left' }));
+        }
 
         if (!this.showTicks && !this.showLabels) {
             return this;
@@ -150,5 +169,12 @@ export class NumberLine extends ComposableShape {
         }
 
         return this;
+    }
+
+    pointAlongLine(x: number): Point {
+        // const p = math.invlerp(this.range[0], this.range[1], x);
+        // return math.lerp(-this.length / 2, this.length / 2, p);
+        const p = math.distance(this.range[0], x) / math.range(this.range);
+        return [math.lerp(-this.length / 2, this.length / 2, p), 0];
     }
 }
