@@ -237,6 +237,13 @@ export class Axes extends ComposableShape {
         return new PointShape({ points: translatedPoints, closePath: false, smooth: true, ...styleArgs });
     }
 
+    relativePoint(p: Point): Point {
+        return [
+            math.remap(this.xRange[0], this.xRange[1], -this.xLength / 2, this.xLength / 2, p[0]),
+            math.remap(this.yRange[0], this.yRange[1], -this.yLength / 2, this.yLength / 2, p[1])
+        ] as Point;
+    }
+
     area({ plot, xRange, opacity = 0.3 }: { plot: PointShape; xRange?: Range, opacity: number }): PointShape {
         const [rStart, rEnd] = xRange ?? this.xRange;
         const points = plot.computedPoints();
