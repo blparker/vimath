@@ -2,7 +2,7 @@ import { Point, Range, X_TICKS, Y_TICKS } from '../base';
 import { ComposableShape } from './composed_shape';
 import * as math from '../math';
 import { Line, PointShape, Shape, StyleArgs } from './base_shapes';
-import { TextMetrics } from './text';
+import { TextMetrics } from './text_metrics';
 import { NumberLine } from './number_line';
 import { Colors, colorWithOpacity } from '../colors';
 import { Group } from './group';
@@ -262,41 +262,38 @@ export class Axes extends ComposableShape {
     top(): Point {
         this.composedShapes();
 
-        const lX = this.xAxis!.left()[0];
-        const rX = this.xAxis!.right()[0];
-        const tY = this.yAxis!.top()[1];
-
-        return [(lX + rX) / 2, tY];
+        const { left, right, top } = this.limits2();
+        return [(left + right) / 2, top];
     }
 
     bottom(): Point {
         this.composedShapes();
 
-        const lX = this.xAxis!.left()[0];
-        const rX = this.xAxis!.right()[0];
-        const tY = this.yAxis!.bottom()[1];
-
-        return [(lX + rX) / 2, tY];
+        const { left, right, bottom } = this.limits2();
+        return [(left + right) / 2, bottom];
     }
 
     left(): Point {
         this.composedShapes();
 
-        const lX = this.xAxis!.left()[0];
-        const tY = this.yAxis!.top()[1];
-        const bY = this.yAxis!.bottom()[1];
-
-        return [lX, (tY + bY) / 2];
+        const { left, top, bottom } = this.limits2();
+        return [left, (top + bottom) / 2];
     }
 
     right(): Point {
         this.composedShapes();
 
-        const rX = this.xAxis!.right()[0];
-        const tY = this.yAxis!.top()[1];
-        const bY = this.yAxis!.bottom()[1];
+        const { right, top, bottom } = this.limits2();
+        return [right, (top + bottom) / 2];
+    }
 
-        return [rX, (tY + bY) / 2];
+    private limits2(): { top: number; right: number; bottom: number; left: number; } {
+        return {
+            top: Math.max(this.xAxis!.top()[1], this.yAxis!.top()[1]),
+            right: Math.max(this.xAxis!.right()[0], this.yAxis!.right()[0]),
+            bottom: Math.min(this.xAxis!.bottom()[1], this.yAxis!.bottom()[1]),
+            left: Math.min(this.xAxis!.left()[0], this.yAxis!.left()[0]),
+        };
     }
 
     private origin(): Point {

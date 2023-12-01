@@ -2,68 +2,12 @@
 
 
 import { Colors, RGBA } from '../colors.js';
-import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER, Config, X_TICKS, Y_TICKS, DEFAULT_PADDING } from '../base.js';
+import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER, DEFAULT_PADDING } from '../base.js';
 import * as math from '../math.js';
 import { PointsAware, Shape, Styleable } from './base_shapes.js';
-
-
-export interface TextMetrics {
-    measureText(text: string, size: number): [number, number];
-}
-
-
-export class CanvasTextMetrics implements TextMetrics {
-    private canvas: OffscreenCanvas;
-
-    constructor() {
-        this.canvas = new OffscreenCanvas(Config.canvasWidth, Config.canvasHeight);
-    }
-
-    measureText(text: string, size: number): [number, number] {
-        const ctx = this.canvas.getContext('2d');
-
-        if (ctx === null) {
-            throw new Error('Context of offscreen canvas is null');
-        }
-
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        ctx.font = `${size}px Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol`;
-
-        const metrics = ctx.measureText(text);
-        const dimensions = [
-            metrics.width,
-            metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
-        ] as Point;
-
-        const origin = this.untranslate([0, 0]);
-        return math.abs(math.subtract(origin, this.untranslate(dimensions))) as Point;
-    }
-
-    private translate(point: Point): Point {
-        const padding = Config.canvasPadding;
-
-        const [xTicks, yTicks] = [
-            (this.canvas.width - 2 * padding) / X_TICKS,
-            (this.canvas.height - 2 * padding) / Y_TICKS
-        ];
-
-        const [oX, oY] = [X_TICKS / 2 * xTicks, Y_TICKS / 2 * yTicks];
-        return [padding + oX + point[0] * xTicks, padding + oY - point[1] * yTicks];
-    }
-
-    private untranslate(point: Point): Point {
-        const padding = Config.canvasPadding;
-
-        const [xTicks, yTicks] = [
-            (this.canvas.width - 2 * padding) / X_TICKS,
-            (this.canvas.height - 2 * padding) / Y_TICKS
-        ];
-
-        const [oX, oY] = [X_TICKS / 2 * xTicks, Y_TICKS / 2 * yTicks];
-
-        return [(point[0] - oX - padding) / xTicks, -(point[1] - oY - padding) / yTicks];
-    }
-}
+import { TexTextMetrics } from './text_metrics.js';
+import { TextMetrics } from './text_metrics.js';
+import { CanvasTextMetrics } from './text_metrics.js';
 
 
 export type TextBaseline = 'top' | 'middle' | 'bottom';
@@ -99,7 +43,7 @@ export class Text implements Shape, PointsAware, Styleable {
         this._vertical = vertical;
         this._offsetGutter = offsetGutter;
 
-        this._textMetrics = textMetrics ?? new CanvasTextMetrics();
+        this._textMetrics = textMetrics ?? (tex ? new TexTextMetrics() : new CanvasTextMetrics());
         [this._width, this._height] = this._textMetrics.measureText(text, size);
     }
 

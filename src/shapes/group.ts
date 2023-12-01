@@ -1,4 +1,4 @@
-import { OFFSET_GUTTER, Point, RIGHT, Shift } from '../base';
+import { OFFSET_GUTTER, ORIGIN, Point, RIGHT, Shift } from '../base';
 import { Shape } from './base_shapes';
 import * as math from '../math';
 import { Composable, ComposableShape } from './composed_shape';
@@ -152,10 +152,11 @@ export class HGroup extends ComposableShape {
         this.composed = true;
 
         for (let i = 1; i < this.shapes.length; i++) {
+            console.log('Moving:', this.shapes[i].constructor.name)
             this.shapes[i].nextTo(this.shapes[i - 1], RIGHT());
         }
 
-        this.moveTo([0, 0]);
+        this.moveTo(ORIGIN);
 
         return this;
     }

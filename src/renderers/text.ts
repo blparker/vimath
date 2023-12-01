@@ -1,5 +1,6 @@
 import { NativeRenderer, ShapeRenderer } from './renderer';
-import { Text, TextBaseline } from '../shapes/text';
+import { Text } from '../shapes/text';
+import { TextMetrics } from '../shapes/text_metrics';
 
 import { mathjax } from 'mathjax-full/js/mathjax';
 import { TeX } from 'mathjax-full/js/input/tex';
@@ -9,10 +10,10 @@ import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
 import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 
 
-const adaptor = liteAdaptor()
+export const adaptor = liteAdaptor()
 RegisterHTMLHandler(adaptor);
 
-const mjDocument = mathjax.document('', {
+export const mjDocument = mathjax.document('', {
     InputJax: new TeX(),
     OutputJax: new SVG({ fontCache: 'local' })
 });

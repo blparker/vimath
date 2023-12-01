@@ -88,32 +88,7 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
     }
 
     nextTo(shape: Shape | Point, direction?: Point | undefined): Shape {
-        // let offsetX = 0, offsetY = 0;
         let [dX, dY] = direction ?? RIGHT();
-        // const offsetGutter = OFFSET_GUTTER;
-
-        // if (dX !== 0) {
-        //     // Left or right side
-        //     offsetX = math.add(math.pDivide(this.width(), 2), offsetGutter);
-        // } else {
-        //     // Top or bottom side
-        //     offsetY = math.add(math.pDivide(this.height(), 2), offsetGutter);
-        // }
-
-        // dX = math.add(dX, offsetX * Math.sign(dX));
-        // dY = math.add(dY, offsetY * Math.sign(dY));
-
-        // const dest = Array.isArray(shape) ? shape : shape.center();
-        // const [cX, cY] = this.center();
-
-        // console.log(dest, dX, dY)
-
-        // this.moveTo([
-        //     math.add(cX, math.add(dest[0], dX)),
-        //     math.add(cY, math.add(dest[1], dY))
-        // ]);
-        // const [sCx, sCy] = Array.isArray(shape) ? shape : shape.center();
-        // const w = Array.isArray(shape) ? 0 : shape.width();
 
         const shapeCenter = Array.isArray(shape) ? shape : shape.center();
         const [shapeWidth, shapeHeight] = [
@@ -124,10 +99,15 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
         const width = this.width();
         const height = this.height();
 
-        const nX = dX * (shapeCenter[0] + shapeWidth / 2) + (dX * width / 2) + (dX * OFFSET_GUTTER);
-        const nY = dY * (shapeCenter[1] + shapeHeight / 2) + (dY * height / 2) + (dY * OFFSET_GUTTER);
+        // const nX = dX * (shapeCenter[0] + shapeWidth / 2) + (dX * width / 2) + (dX * OFFSET_GUTTER);
+        // const nY = dY * (shapeCenter[1] + shapeHeight / 2) + (dY * height / 2) + (dY * OFFSET_GUTTER);
 
-        this.moveTo([nX, nY]);
+        // this.moveTo([nX, nY]);
+        // this.moveTo((shape as Shape).right());
+        const nX = dX * (shapeWidth / 2) + (dX * width / 2) + (dX * OFFSET_GUTTER);
+        const nY = dY * (shapeHeight / 2) + (dY * height / 2) + (dY * OFFSET_GUTTER);
+
+        this.moveTo(math.add(shapeCenter, [nX, nY]) as Point)
 
         this._setMaxes();
         return this;
@@ -146,39 +126,51 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
     }
 
     top(): Point {
-        // return [(this.maxRight + this.maxLeft) / 2, this.maxTop];
-        const tops = this.composedShapes().map(e => e.top());
-        const avgX = math.sum(tops, 0) / tops.length;
-
-        return [avgX, math.max(tops, 1)];
+        const { minLeft, maxRight, maxTop } = this.limits();
+        return [(minLeft + maxRight) / 2, maxTop];
     }
 
     bottom(): Point {
-        // return [(this.maxRight + this.maxLeft) / 2, this.maxBottom];
-        const bottoms = this.composedShapes().map(e => e.bottom());
-        const avgX = math.sum(bottoms, 0) / bottoms.length;
-
-        return [avgX, math.min(bottoms, 1)];
+        const { minBottom, minLeft, maxRight } = this.limits();
+        return [(minLeft + maxRight) / 2, minBottom];
     }
 
     left(): Point {
-        // return [this.maxLeft, (this.maxTop + this.maxBottom) / 2];
-        const lefts = this.composedShapes().map(e => e.left());
-        const avgY = math.sum(lefts, 1) / lefts.length;
-
-        return [math.min(lefts, 0), avgY];
+        const { maxTop, minBottom, minLeft } = this.limits();
+        console.trace(this.limits())
+        return [minLeft, (maxTop + minBottom) / 2];
     }
 
     right(): Point {
-        // return [this.maxRight, (this.maxTop + this.maxBottom) / 2];
-        const rights = this.composedShapes().map(e => e.right());
-        const avgY = math.sum(rights, 1) / rights.length;
+        const { maxTop, minBottom, maxRight } = this.limits();
+        return [maxRight, (maxTop + minBottom) / 2];
+    }
 
-        return [math.max(rights, 0), avgY];
+    private limits(): { maxTop: number; minBottom: number; minLeft: number; maxRight: number; } {
+        let maxTop = -Infinity;
+        let minBottom = Infinity;
+        let minLeft = Infinity;
+        let maxRight = -Infinity;
+
+        for (const shape of this.composedShapes()) {
+            console.log(`this: ${shape.constructor.name}, left: ${shape.left()}`)
+            maxTop = Math.max(maxTop, shape.top()[1]);
+            minBottom = Math.min(minBottom, shape.bottom()[1]);
+            minLeft = Math.min(minLeft, shape.left()[0]);
+            maxRight = Math.max(maxRight, shape.right()[0]);
+        }
+
+        return {
+            maxTop,
+            minBottom,
+            minLeft,
+            maxRight
+        }
     }
 
     width(): number {
-        return this.maxRight - this.maxLeft;
+        const { minLeft, maxRight } = this.limits();
+        return maxRight - minLeft;
     }
 
     height(): number {
