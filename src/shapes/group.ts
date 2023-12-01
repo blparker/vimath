@@ -152,7 +152,7 @@ export class HGroup extends ComposableShape {
         this.composed = true;
 
         for (let i = 1; i < this.shapes.length; i++) {
-            console.log('Moving:', this.shapes[i].constructor.name)
+            // console.log('Moving:', this.shapes[i].constructor.name)
             this.shapes[i].nextTo(this.shapes[i - 1], RIGHT());
         }
 

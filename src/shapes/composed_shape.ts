@@ -137,7 +137,6 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
 
     left(): Point {
         const { maxTop, minBottom, minLeft } = this.limits();
-        console.trace(this.limits())
         return [minLeft, (maxTop + minBottom) / 2];
     }
 
@@ -153,7 +152,7 @@ export abstract class ComposableShape implements Shape, Composable, PointsAware 
         let maxRight = -Infinity;
 
         for (const shape of this.composedShapes()) {
-            console.log(`this: ${shape.constructor.name}, left: ${shape.left()}`)
+            // console.log(`this: ${shape.constructor.name}, left: ${shape.left()}`)
             maxTop = Math.max(maxTop, shape.top()[1]);
             minBottom = Math.min(minBottom, shape.bottom()[1]);
             minLeft = Math.min(minLeft, shape.left()[0]);

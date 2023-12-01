@@ -1,7 +1,7 @@
 import { Point, X_TICKS, Y_TICKS } from '../src/base';
-import { TextMetrics } from '../src/shapes/text';
 import { HtmlCanvas } from '../src/renderers/renderer';
 import { zip } from '../src/math';
+import { TextMetrics } from '../src/shapes/text_metrics';
 
 
 export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {

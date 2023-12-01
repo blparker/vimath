@@ -75,7 +75,7 @@ export class SceneRunner {
 type Renderable = Shape | Animation | Interaction;
 type SceneArgs = {
     canvas?: Canvas | string;
-    showFps: boolean;
+    showFps?: boolean;
 };
 
 
@@ -104,7 +104,7 @@ export abstract class Scene {
 
         this.runner = new SceneRunner(this);
 
-        if (showFps) {
+        if (showFps !== undefined && showFps) {
             this.fpsText = new Text({ x: 7, y: -4, text: '0', align: 'right', color: Colors.black({ opacity: 0.5 }), size: 14 });
             this.els.push([this.fpsText]);
         }

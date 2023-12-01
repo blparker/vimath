@@ -11,11 +11,13 @@ export class VisualTests extends TestSuite {
     //             this.add(new Line({ from: [0, 4], to: [0, -4], lineColor: Colors.gray({ opacity: 0.3 }), lineWidth: 2 }));
 
     //             const text = new Text({ text: String.raw`\mathbb{M}`, color: '#343434', size: 200, tex: true }).shift(LEFT(2.25), UP(1.5));
+    //             // const text = new Square({ size: 2, }).shift(LEFT(2.25), UP(1.5));
     //             const circle = new CircleArc({ color: '#87c2a5', lineColor: '#87c2a5' }).shift(LEFT(1))
     //             const square = new Square({ color: '#525893', lineColor: '#525893' }).shift(UP(1));
     //             const triangle = new Triangle({ color: '#e07a5f', lineColor: '#e07a5f' }).shift(RIGHT(1));
 
     //             const logo = new Group(triangle, square, circle, text);
+    //             // const logo = new Group(text);
     //             logo.moveTo(ORIGIN);
 
     //             this.add(logo);
@@ -452,22 +454,22 @@ export class VisualTests extends TestSuite {
                 // // console.log('Bottom:', axes1.bottom());
                 // // // console.log('Height:', axes1.height());
                 // // // console.log('Width:', axes1.width());
-                const [cX, cY] = g.center();
-                const [lX, lY] = axes1.left();
+                // const [cX, cY] = g.center();
+                // const [lX, lY] = axes1.left();
                 // const [tX, tY] = g.top();
                 // const [bX, bY] = g.bottom();
-                const [rX, rY] = g.right();
+                // const [rX, rY] = g.right();
 
-                const [c1X, c1Y] = axes1.center();
+                // const [c1X, c1Y] = axes1.center();
                 // const [c2X, c2Y] = axes2.center();
 
-                this.add(new Dot({ x: c1X, y: c1Y, color: Colors.red() }))
+                // this.add(new Dot({ x: c1X, y: c1Y, color: Colors.red() }))
                 // this.add(new Dot({ x: c2X, y: c2Y, color: Colors.blue() }))
 
-                this.add(new Dot({ x: cX, y: cY }))
-                this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
+                // this.add(new Dot({ x: cX, y: cY }))
+                // this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
                 // this.add(new Dot({ x: tX, y: tY, color: Colors.blue() }))
-                this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
+                // this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
                 // this.add(new Dot({ x: bX, y: bY, color: Colors.blue() }))
 
                 // this.add(new Dot({ x: cX, y: cY }))
@@ -526,25 +528,4 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
-
-    // testShouldPlotThatIsDisjoint(canvas, done) {
-    // }
-
-
-    // testFoo(canvas, done) {
-    //     class TestScene extends Scene {
-    //         compose() {
-    //             // const dot = new Dot();
-    //             // this.add(new Orbit({ target: dot, center: [1, 0], easing: Easing.linear }));
-
-    //             const s = new Square({ size: 2 });
-    //             this.add(s);
-    //             // this.add(new Scale({ target: s, scaleAmount: 2, repeat: true }));
-
-    //             return this;
-    //         }
-    //     }
-
-    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    // }
 }
