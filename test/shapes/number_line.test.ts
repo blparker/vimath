@@ -88,10 +88,11 @@ describe('number line module', function() {
     });
 
 
-    test('shoudl rotate by specified angle', () => {
+    test('should rotate by specified angle', () => {
         const n = new NumberLine({ rotation: Math.PI / 2, length: 6, showTicks: false, showLabels: false });
         const cs = n.composedShapes();
 
         expectArraysClose((cs[0] as Line).points(), [[0, -3], [0, 3]]);
     });
+
 });

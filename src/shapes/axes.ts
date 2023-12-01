@@ -46,6 +46,9 @@ export type AxesConfig = {
     xAxisTickStep?: number;
     yAxisTickStep?: number;
     axisTextSize?: number;
+    showGridLines?: boolean;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
 };
 
 const defaultAxesConfig = {
@@ -53,7 +56,6 @@ const defaultAxesConfig = {
     yRange: [-Y_TICKS / 2, Y_TICKS / 2] as Range,
     xLength: X_TICKS,
     yLength: Y_TICKS,
-    showGridLines: false,
     showAxisTicks: true,
     showXAxisTicks: false,
     showYAxisTicks: false,
@@ -68,6 +70,9 @@ const defaultAxesConfig = {
     axisTextSize: 20,
     textMetrics: null,
     tickLabelStandoff: 0.2,
+    showGridLines: false,
+    xAxisLabel: undefined,
+    yAxisLabel: undefined,
 } as const;
 
 
@@ -86,11 +91,13 @@ export class Axes extends ComposableShape {
     private readonly xAxisTickStep: number;
     private readonly yAxisTickStep: number;
     private readonly showGridLines: boolean;
+    private readonly xAxisLabel?: string;
+    private readonly yAxisLabel?: string;
 
     private xAxis?: NumberLine = undefined;
     private yAxis?: NumberLine = undefined;
 
-    constructor({ xLength, yLength, xRange, yRange, showAxisTicks, showXAxisTicks, showYAxisTicks, showAxisLabels, showXAxisLabels, showYAxisLabels, tickSize, tickLabelStandoff, labelSize, xAxisTickStep, yAxisTickStep, showGridLines }: AxesConfig = {}) {
+    constructor({ xLength, yLength, xRange, yRange, showAxisTicks, showXAxisTicks, showYAxisTicks, showAxisLabels, showXAxisLabels, showYAxisLabels, tickSize, tickLabelStandoff, labelSize, xAxisTickStep, yAxisTickStep, showGridLines, xAxisLabel, yAxisLabel }: AxesConfig = {}) {
         super();
 
         this.xLength = xLength ?? defaultAxesConfig.xLength;
@@ -107,6 +114,8 @@ export class Axes extends ComposableShape {
         this.xAxisTickStep = xAxisTickStep ?? defaultAxesConfig.xAxisTickStep;
         this.yAxisTickStep = yAxisTickStep ?? defaultAxesConfig.yAxisTickStep;
         this.showGridLines = showGridLines ?? defaultAxesConfig.showGridLines;
+        this.xAxisLabel = xAxisLabel ?? defaultAxesConfig.xAxisLabel;
+        this.yAxisLabel = yAxisLabel ?? defaultAxesConfig.yAxisLabel;
     }
 
     compose(): ComposableShape {
@@ -122,7 +131,7 @@ export class Axes extends ComposableShape {
             tickLabelStandoff: this.tickLabelStandoff,
             labelSize: this.labelSize,
             showZero: false,
-            axisLabel: 'X-axis'
+            axisLabel: this.xAxisLabel,
         }).shift([0, oX]) as NumberLine;
 
         this.yAxis = new NumberLine({
@@ -136,7 +145,7 @@ export class Axes extends ComposableShape {
             labelSize: this.labelSize,
             rotation: Math.PI / 2,
             showZero: false,
-            // axisLabel: 'Y-axis'
+            axisLabel: this.yAxisLabel,
         }).shift([oY, 0]) as NumberLine;
 
         if (this.showGridLines) {

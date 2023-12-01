@@ -18,6 +18,7 @@ type NumberLineArgs = {
     center?: Point;
     showZero?: boolean;
     axisLabel?: string;
+    axisLabelSize?: number;
 };
 
 
@@ -34,6 +35,7 @@ const defaultNumberLineArgs = {
     center: [0, 0] as Point,
     showZero: true,
     axisLabel: undefined,
+    axisLabelSize: 20,
 } as const;
 
 
@@ -50,9 +52,10 @@ export class NumberLine extends ComposableShape {
     private readonly centerPoint: Point;
     private readonly showZero: boolean;
     private readonly axisLabel?: string;
+    private readonly axisLabelSize?: number;
 
 
-    constructor({ length, range, showTicks, showLabels, tickSize, tickLabelStandoff, labelSize, tickStep, rotation, center, showZero, axisLabel }: NumberLineArgs = {}) {
+    constructor({ length, range, showTicks, showLabels, tickSize, tickLabelStandoff, labelSize, tickStep, rotation, center, showZero, axisLabel, axisLabelSize }: NumberLineArgs = {}) {
         super();
 
         this.length = length ?? defaultNumberLineArgs.length;
@@ -67,6 +70,7 @@ export class NumberLine extends ComposableShape {
         this.centerPoint = center ?? defaultNumberLineArgs.center;
         this.showZero = showZero ?? defaultNumberLineArgs.showZero;
         this.axisLabel = axisLabel ?? defaultNumberLineArgs.axisLabel;
+        this.axisLabelSize = axisLabelSize ?? defaultNumberLineArgs.axisLabelSize;
     }
 
     compose(): ComposableShape {
@@ -99,8 +103,7 @@ export class NumberLine extends ComposableShape {
                 yOffset = 0.4;
             }
 
-
-            this.add(new Text({ text: this.axisLabel, x: lX + xOffset, y: lY + yOffset, align: 'left' }));
+            this.add(new Text({ text: this.axisLabel, x: lX + xOffset, y: lY + yOffset, align: 'left', size: this.axisLabelSize }));
         }
 
         if (!this.showTicks && !this.showLabels) {

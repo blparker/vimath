@@ -386,7 +386,9 @@ export class VisualTests extends TestSuite {
                     xRange: [0, 1],
                     yRange: [0, 50],
                     xAxisTickStep: 0.25,
-                    yAxisTickStep: 12.5
+                    yAxisTickStep: 12.5,
+                    xAxisLabel: 'time (h)',
+                    yAxisLabel: 'mph',
                 });
 
                 const plot1 = axes1.plot(x => 50 * x);
@@ -397,7 +399,9 @@ export class VisualTests extends TestSuite {
                     xRange: [0, 1],
                     yRange: [0, 50],
                     xAxisTickStep: 0.25,
-                    yAxisTickStep: 12.5
+                    yAxisTickStep: 12.5,
+                    xAxisLabel: 'time (h)',
+                    yAxisLabel: 'miles',
                 });
 
                 const plot2 = axes1.plot(x => 25 * x * x);
@@ -422,31 +426,51 @@ export class VisualTests extends TestSuite {
                 // const plot = axes.plot(x => x);
 
                 // this.add(axes1, plot1);
-                this.add(new HGroup(
-                    new Group(axes1),
-                    new Group(axes2),
-                ));
+                // const g = new HGroup(new Group(axes2, plot2))
+                // this.add(g);
+                const g = new HGroup(
+                    new Group(axes1, plot1),
+                    new Group(axes2, plot2),
+                );
+                // const g = axes1;
+
+                this.add(g);
                 // this.add(axes1);
+                // console.log("#### CALLING TOP 1");
+                // axes1.top();
+                // console.log('Axes1 top:', axes1.top());
+                // console.log("#### CALLING TOP 2");
+                // axes2.top();
+                // console.log('*#*#*#*')
+
+                // console.log('Axes2 top:', axes2.top());
 
                 // console.log('Center:', axes1.center());
-                // console.log('Left:', axes1.left());
-                // console.log('Right:', axes1.right());
-                // console.log('Top:', axes1.top());
-                // console.log('Bottom:', axes1.bottom());
-                // // console.log('Height:', axes1.height());
-                // // console.log('Width:', axes1.width());
-                // const [cX, cY] = axes1.center();
-                // const [lX, lY] = axes1.left();
-                // const [tX, tY] = axes1.top();
-                // const [bX, bY] = axes1.bottom();
-                // const [rX, rY] = axes1.right();
+                // // console.log('Left:', axes1.left());
+                // // console.log('Right:', axes1.right());
+                // // console.log('Top:', axes1.top());
+                // // console.log('Bottom:', axes1.bottom());
+                // // // console.log('Height:', axes1.height());
+                // // // console.log('Width:', axes1.width());
+                const [cX, cY] = g.center();
+                const [lX, lY] = axes1.left();
+                // const [tX, tY] = g.top();
+                // const [bX, bY] = g.bottom();
+                const [rX, rY] = g.right();
 
-                // this.add(new Dot({ x: cX, y: cY }))
-                // this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
+                const [c1X, c1Y] = axes1.center();
+                // const [c2X, c2Y] = axes2.center();
+
+                this.add(new Dot({ x: c1X, y: c1Y, color: Colors.red() }))
+                // this.add(new Dot({ x: c2X, y: c2Y, color: Colors.blue() }))
+
+                this.add(new Dot({ x: cX, y: cY }))
+                this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
                 // this.add(new Dot({ x: tX, y: tY, color: Colors.blue() }))
-                // this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
+                this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
                 // this.add(new Dot({ x: bX, y: bY, color: Colors.blue() }))
 
+                // this.add(new Dot({ x: cX, y: cY }))
 
                 return this;
             }
@@ -455,20 +479,20 @@ export class VisualTests extends TestSuite {
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
 
-    testHGroup(canvas, done) {
-        class TestScene extends Scene {
-            compose() {
-                this.add(new HGroup(
-                    new Square({ size: 2 }),
-                    new Square({ size: 2 }),
-                    new Square({ size: 2 }),
-                ));
-                return this;
-            }
-        }
+    // testHGroup(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new HGroup(
+    //                 new Square({ size: 2 }),
+    //                 new Square({ size: 2 }),
+    //                 new Square({ size: 2 }),
+    //             ));
+    //             return this;
+    //         }
+    //     }
 
-        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    }
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 
 
     // testAnimationsShouldRepeat(canvas, done) {
