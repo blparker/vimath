@@ -377,109 +377,109 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
-    testAxesWithFullWidth(canvas, done) {
-        class TestScene extends Scene {
-            compose() {
-                this.add(new GridLines({ lineColor: Colors.blue({ opacity: 0.3 }) }));
+    // testAxesWithFullWidth(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines({ lineColor: Colors.blue({ opacity: 0.3 }) }));
 
-                const axes1 = new Axes({
-                    xLength: 5,
-                    yLength: 5,
-                    xRange: [0, 1],
-                    yRange: [0, 50],
-                    xAxisTickStep: 0.25,
-                    yAxisTickStep: 12.5,
-                    xAxisLabel: 'time (h)',
-                    yAxisLabel: 'mph',
-                });
+    //             const axes1 = new Axes({
+    //                 xLength: 5,
+    //                 yLength: 5,
+    //                 xRange: [0, 1],
+    //                 yRange: [0, 50],
+    //                 xAxisTickStep: 0.25,
+    //                 yAxisTickStep: 12.5,
+    //                 xAxisLabel: 'time (h)',
+    //                 yAxisLabel: 'mph',
+    //             });
 
-                const plot1 = axes1.plot(x => 50 * x);
+    //             const plot1 = axes1.plot(x => 50 * x);
 
-                const axes2 = new Axes({
-                    xLength: 5,
-                    yLength: 5,
-                    xRange: [0, 1],
-                    yRange: [0, 50],
-                    xAxisTickStep: 0.25,
-                    yAxisTickStep: 12.5,
-                    xAxisLabel: 'time (h)',
-                    yAxisLabel: 'miles',
-                });
+    //             const axes2 = new Axes({
+    //                 xLength: 5,
+    //                 yLength: 5,
+    //                 xRange: [0, 1],
+    //                 yRange: [0, 50],
+    //                 xAxisTickStep: 0.25,
+    //                 yAxisTickStep: 12.5,
+    //                 xAxisLabel: 'time (h)',
+    //                 yAxisLabel: 'miles',
+    //             });
 
-                const plot2 = axes1.plot(x => 25 * x * x);
+    //             const plot2 = axes1.plot(x => 25 * x * x);
 
-                // const axes = new Axes({ 
-                //     xRange: [-1, 20],
-                //     xAxisTickStep: 2,
-                //     yRange: [-1, 20],
-                //     yAxisTickStep: 2,
-                //     showGridLines: true,
-                // })
-                // const axes = new Axes({ 
-                //     xLength: 8,
-                //     yLength: 6,
-                //     xRange: [-2, 10],
-                //     xAxisTickStep: 2,
-                //     yRange: [-2, 10],
-                //     yAxisTickStep: 2,
-                //     showGridLines: true,
-                // })
+    //             // const axes = new Axes({ 
+    //             //     xRange: [-1, 20],
+    //             //     xAxisTickStep: 2,
+    //             //     yRange: [-1, 20],
+    //             //     yAxisTickStep: 2,
+    //             //     showGridLines: true,
+    //             // })
+    //             // const axes = new Axes({ 
+    //             //     xLength: 8,
+    //             //     yLength: 6,
+    //             //     xRange: [-2, 10],
+    //             //     xAxisTickStep: 2,
+    //             //     yRange: [-2, 10],
+    //             //     yAxisTickStep: 2,
+    //             //     showGridLines: true,
+    //             // })
 
-                // const plot = axes.plot(x => x);
+    //             // const plot = axes.plot(x => x);
 
-                // this.add(axes1, plot1);
-                // const g = new HGroup(new Group(axes2, plot2))
-                // this.add(g);
-                const g = new HGroup(
-                    new Group(axes1, plot1),
-                    new Group(axes2, plot2),
-                );
-                // const g = axes1;
+    //             // this.add(axes1, plot1);
+    //             // const g = new HGroup(new Group(axes2, plot2))
+    //             // this.add(g);
+    //             const g = new HGroup(
+    //                 new Group(axes1, plot1),
+    //                 new Group(axes2, plot2),
+    //             );
+    //             // const g = axes1;
 
-                this.add(g);
-                // this.add(axes1);
-                // console.log("#### CALLING TOP 1");
-                // axes1.top();
-                // console.log('Axes1 top:', axes1.top());
-                // console.log("#### CALLING TOP 2");
-                // axes2.top();
-                // console.log('*#*#*#*')
+    //             this.add(g);
+    //             // this.add(axes1);
+    //             // console.log("#### CALLING TOP 1");
+    //             // axes1.top();
+    //             // console.log('Axes1 top:', axes1.top());
+    //             // console.log("#### CALLING TOP 2");
+    //             // axes2.top();
+    //             // console.log('*#*#*#*')
 
-                // console.log('Axes2 top:', axes2.top());
+    //             // console.log('Axes2 top:', axes2.top());
 
-                // console.log('Center:', axes1.center());
-                // // console.log('Left:', axes1.left());
-                // // console.log('Right:', axes1.right());
-                // // console.log('Top:', axes1.top());
-                // // console.log('Bottom:', axes1.bottom());
-                // // // console.log('Height:', axes1.height());
-                // // // console.log('Width:', axes1.width());
-                // const [cX, cY] = g.center();
-                // const [lX, lY] = axes1.left();
-                // const [tX, tY] = g.top();
-                // const [bX, bY] = g.bottom();
-                // const [rX, rY] = g.right();
+    //             // console.log('Center:', axes1.center());
+    //             // // console.log('Left:', axes1.left());
+    //             // // console.log('Right:', axes1.right());
+    //             // // console.log('Top:', axes1.top());
+    //             // // console.log('Bottom:', axes1.bottom());
+    //             // // // console.log('Height:', axes1.height());
+    //             // // // console.log('Width:', axes1.width());
+    //             // const [cX, cY] = g.center();
+    //             // const [lX, lY] = axes1.left();
+    //             // const [tX, tY] = g.top();
+    //             // const [bX, bY] = g.bottom();
+    //             // const [rX, rY] = g.right();
 
-                // const [c1X, c1Y] = axes1.center();
-                // const [c2X, c2Y] = axes2.center();
+    //             // const [c1X, c1Y] = axes1.center();
+    //             // const [c2X, c2Y] = axes2.center();
 
-                // this.add(new Dot({ x: c1X, y: c1Y, color: Colors.red() }))
-                // this.add(new Dot({ x: c2X, y: c2Y, color: Colors.blue() }))
+    //             // this.add(new Dot({ x: c1X, y: c1Y, color: Colors.red() }))
+    //             // this.add(new Dot({ x: c2X, y: c2Y, color: Colors.blue() }))
 
-                // this.add(new Dot({ x: cX, y: cY }))
-                // this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
-                // this.add(new Dot({ x: tX, y: tY, color: Colors.blue() }))
-                // this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
-                // this.add(new Dot({ x: bX, y: bY, color: Colors.blue() }))
+    //             // this.add(new Dot({ x: cX, y: cY }))
+    //             // this.add(new Dot({ x: lX, y: lY, color: Colors.red() }))
+    //             // this.add(new Dot({ x: tX, y: tY, color: Colors.blue() }))
+    //             // this.add(new Dot({ x: rX, y: rY, color: Colors.red() }))
+    //             // this.add(new Dot({ x: bX, y: bY, color: Colors.blue() }))
 
-                // this.add(new Dot({ x: cX, y: cY }))
+    //             // this.add(new Dot({ x: cX, y: cY }))
 
-                return this;
-            }
-        }
+    //             return this;
+    //         }
+    //     }
 
-        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    }
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 
     // testHGroup(canvas, done) {
     //     class TestScene extends Scene {
@@ -528,4 +528,81 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     // }
 
+    // testAxes(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             const axes = new Axes({
+    //                 xLength: 10,
+    //                 yLength: 6,
+    //                 xRange: [0, 1],
+    //                 xAxisTickStep: 0.25,
+    //                 yRange: [0, 50],
+    //                 yAxisTickStep: 5,
+    //                 xAxisLabel: 'time',
+    //                 yAxisLabel: 'distance (miles)'
+    //             });
+
+    //             const p = axes.plot(x => 50 * x, { lineColor: Colors.green() });
+
+    //             this.add(axes, p);
+
+    //             const p1 = axes.relativePoint([0.25, 12.5]);
+    //             const p2 = axes.relativePoint([0.5, 25]);
+    //             const p3 = axes.relativePoint([0.75, 37.5]);
+    //             const p4 = axes.relativePoint([1, 50]);
+
+    //             this.add(
+    //                 new Dot({ x: p1[0], y: p1[1], color: Colors.green() }),
+    //                 new Dot({ x: p2[0], y: p2[1], color: Colors.green() }),
+    //                 new Dot({ x: p3[0], y: p3[1], color: Colors.green() }),
+    //                 new Dot({ x: p4[0], y: p4[1], color: Colors.green() }),
+    //             );
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
+    testRelativeArea(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+                const axes = new Axes({
+                    xLength: 10,
+                    yLength: 6,
+                    xRange: [0, 1],
+                    xAxisTickStep: 0.25,
+                    yRange: [0, 60],
+                    yAxisTickStep: 5,
+                    xAxisLabel: 'time (h)',
+                    yAxisLabel: 'speed (mph)'
+                });
+                
+                const p = axes.plot(x => 50, { lineColor: Colors.red() });
+
+                this.add(axes, p);
+
+                const p1 = axes.relativePoint([0.25, 50]);
+                const p2 = axes.relativePoint([0.5, 50]);
+                const p3 = axes.relativePoint([0.75, 50]);
+                const p4 = axes.relativePoint([1, 50]);
+
+                this.add(
+                    new Dot({ x: p1[0], y: p1[1], color: Colors.red() }),
+                    new Dot({ x: p2[0], y: p2[1], color: Colors.red() }),
+                    new Dot({ x: p3[0], y: p3[1], color: Colors.red() }),
+                    new Dot({ x: p4[0], y: p4[1], color: Colors.red() }),
+                    //new Square({ color: Colors.red({ opacity: 0.2 }) })
+                    axes.area({ plot: p, xRange: [0.25, 0.5] })
+                );
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true, }).compose().render();
+    }
 }

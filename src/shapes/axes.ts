@@ -245,25 +245,47 @@ export class Axes extends ComposableShape {
     }
 
     area({ plot, xRange, opacity = 0.3 }: { plot: PointShape; xRange?: Range, opacity: number }): PointShape {
-        const [rStart, rEnd] = xRange ?? this.xRange;
-        const points = plot.computedPoints();
-        const origin = this.origin();
+        const [rS, rE] = xRange ?? this.xRange;
+        const rStart = this.relativePoint([rS, 0])[0];
+        const rEnd = this.relativePoint([rE, 0])[0];
 
+        const points = plot.computedPoints();
         const areaPoints: Point[] = [];
 
+        let startIdx: number | undefined = undefined, endIdx: number | undefined = undefined;
         for (let i = 0; i < points.length; i++) {
-            const [pX, pY] = math.subtract(points[i], origin) as Point;
+            // const [pX, pY] = math.subtract(points[i], origin) as Point;
+            const [pX, pY] = points[i];
 
             if (pX >= rStart && pX <= rEnd) {
                 areaPoints.push([pX, pY]);
+
+                if (startIdx === undefined) {
+                    startIdx = i;
+                } else if (endIdx === undefined) {
+                    endIdx = i;
+                } else {
+                    endIdx += 1;
+                }
             }
         }
 
-        // Have all the points along the line, need to draw back to the x-axis
-        areaPoints.push([rEnd, 0], [rStart, 0]);
-        const translatedPoints = areaPoints.map(p => math.add(p, origin) as Point);
+        // Ensure the endpoints are represented in area
+        if (startIdx !== undefined && startIdx > 0) {
+            const pStart = math.invlerp(points[startIdx! - 1][0], points[startIdx!][0], rStart);
+            areaPoints.unshift(math.arrLerp(points[startIdx! - 1], points[startIdx!], pStart) as Point)
+        }
 
-        return new PointShape({ points: translatedPoints, closePath: true, smooth: false, lineColor: Colors.transparent(), color: colorWithOpacity(plot.lineColor(), opacity) });
+        if (endIdx !== undefined && endIdx < points.length - 2) {
+            const pEnd = math.invlerp(points[endIdx!][0], points[endIdx! + 1][0], rEnd);
+            areaPoints.push(math.arrLerp(points[endIdx!], points[endIdx! + 1], pEnd) as Point);
+        }
+
+        // Have all the points along the line, need to draw back to the x-axis
+        const y0 = this.relativePoint([0, 0])[1];
+        areaPoints.push([rEnd, y0], [rStart, y0]);
+
+        return new PointShape({ points: areaPoints, closePath: true, smooth: false, lineColor: Colors.transparent(), color: colorWithOpacity(plot.lineColor(), opacity) });
     }
 
     top(): Point {

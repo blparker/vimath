@@ -76,6 +76,7 @@ type Renderable = Shape | Animation | Interaction;
 type SceneArgs = {
     canvas?: Canvas | string;
     showFps?: boolean;
+    staticScene?: boolean;
 };
 
 
@@ -85,13 +86,14 @@ export abstract class Scene {
     private runner: SceneRunner;
     private added: Set<Shape> = new Set();
     private fpsText: Text | null = null;
+    private staticScene: boolean;
 
     /**
      * Create a new scene instance
      * @param canvas the canvas selector or element to use
      * @param showFps a flag indicating whether or not to render a FPS (frames per second) on the canvas
      */
-    constructor({ canvas, showFps }: Prettify<SceneArgs> = { showFps: false }) {
+    constructor({ canvas, showFps, staticScene }: Prettify<SceneArgs> = { showFps: false, staticScene: false }) {
         this.els = [];
 
         if (canvas !== undefined && typeof canvas !== 'string') {
@@ -108,6 +110,8 @@ export abstract class Scene {
             this.fpsText = new Text({ x: 7, y: -4, text: '0', align: 'right', color: Colors.black({ opacity: 0.5 }), size: 14 });
             this.els.push([this.fpsText]);
         }
+
+        this.staticScene = staticScene ?? false;
     }
 
     add(...els: Renderable[]): Scene {
@@ -123,7 +127,7 @@ export abstract class Scene {
     }
 
     render(): Scene {
-        this.runner.run();
+        this.staticScene ? this.nextTick(0) : this.runner.run();
 
         return this;
     }
