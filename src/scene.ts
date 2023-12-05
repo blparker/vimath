@@ -1,11 +1,12 @@
 import { Shape, isShape } from './shapes/base_shapes';
 import { Text } from './shapes/text';
-import { Animation, isAnimation } from './animations/animations';
+import { Animation, isAnimation, Animatable } from './animations/animations';
 import { Canvas, HtmlCanvas } from './renderers/renderer';
 import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from './base';
 import { getRenderer } from './renderers/renderer_factory';
 import { Interaction, isInteraction } from './animations/interactivity';
 import { Colors } from './colors';
+import { Easing } from './easing';
 
 
 export class DOM {
@@ -80,6 +81,37 @@ type SceneArgs = {
 };
 
 
+class Wait extends Animation {
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        return [];
+    }
+
+    resetState(): void {}
+}
+
+
+class RemoveElement extends Animation {
+    constructor(private els: Renderable[][], private toRemove: Renderable[]) {
+        super({ duration: 0, easing: Easing.linear });
+    }
+
+    update(pctComplete: number, reversing: boolean): Animatable[] {
+        for (const layer of this.els) {
+            for (const el of this.toRemove) {
+                const idx = layer.indexOf(el);
+                if (idx !== -1) {
+                    layer.splice(idx, 1);
+                }
+            }
+        }
+
+        return [];
+    }
+
+    resetState(): void {}
+}
+
+
 export abstract class Scene {
     private els: Renderable[][];
     private canvas: Canvas;
@@ -123,6 +155,16 @@ export abstract class Scene {
             }
         }
 
+        return this;
+    }
+
+    remove(...els: Renderable[]): Scene {
+        this.els.push([new RemoveElement(this.els, els)])
+        return this;
+    }
+
+    wait(time: number): Scene {
+        this.els.push([new Wait({ duration: time, easing: Easing.linear })])
         return this;
     }
 

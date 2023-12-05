@@ -119,8 +119,8 @@ export class NumberLine extends ComposableShape {
             const newRange = (numTicks - 2) * this.tickStep;
             const diff = math.range(this.range) - newRange;
 
-            start += diff / 2;
-            end -= diff / 2;
+            // start += diff / 2;
+            // end -= diff / 2;
         }
 
         for (let i = start; i <= end; i += this.tickStep) {

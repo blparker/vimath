@@ -566,7 +566,7 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    testRelativeArea(canvas, done) {
+    /*testRelativeArea(canvas, done) {
         class TestScene extends Scene {
             compose() {
                 this.add(new GridLines());
@@ -604,5 +604,92 @@ export class VisualTests extends TestSuite {
         }
 
         new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true, }).compose().render();
+    }*/
+
+
+    /*testTest(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+
+                const axes = new Axes({
+                    xLength: 10,
+                    yLength: 6,
+                    xRange: [0.45, 0.55],
+                    xAxisTickStep: 0.01,
+                    yRange: [0, 10],
+                    yAxisTickStep: 2,
+                    xAxisLabel: 'time (h)',
+                    yAxisLabel: 'distance (miles)'
+                });
+
+                const fn = x => 25 * x * x;
+                const p = axes.plot(x => fn(x), { lineColor: Colors.green() });
+
+                this.add(axes, p);
+
+                const p1 = axes.relativePoint([0.5, 6.25]);
+                const p2 = axes.relativePoint([31 / 60, fn(31 / 60)]);
+
+                let dot = new Dot({ x: p2[0], y: p2[1], color: Colors.blue() });
+
+                this.add(new Dot({ x: p1[0], y: p1[1], color: Colors.green() }));
+                this.add(dot);
+                this.wait(2000);
+
+                this.remove(dot);
+
+                const p3 = axes.relativePoint([30.6 / 60, fn(30.6 / 60)]);
+
+                dot = new Dot({ x: p3[0], y: p3[1], color: Colors.blue() });
+                this.add(dot);
+
+                // this.add(new LineThroughPoints({ p1: p1, p2: p2, length: 3, color: Colors.blue() }))
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }*/
+
+    testTest(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+
+                const axes = new Axes({
+                    xLength: 8,
+                    yLength: 6,
+                    xRange: [0, 3],
+                    xAxisTickStep: 0.5,
+                    yRange: [0, 5],
+                    yAxisTickStep: 0.5,
+                });
+
+                const p = axes.plot(x => 0.5 * x * x, { lineWidth: 2, });
+                const p1 = axes.relativePoint([1, 0.5]);
+                const p2 = axes.relativePoint([2.5, 3.125]);
+                const p3 = axes.relativePoint([2, 2]);
+                const p4 = axes.relativePoint([1.5, 1.125]);
+
+                this.add(axes, p);
+
+                this.add(new LineThroughPoints({ p1: p1, p2: p2, length: 9, color: Colors.pink(), lineWidth: 2, }))
+                this.add(new LineThroughPoints({ p1: p1, p2: p3, length: 6, color: Colors.blue(), lineWidth: 2, }))
+                this.add(new LineThroughPoints({ p1: p1, p2: p4, length: 6, color: Colors.green(), lineWidth: 2, }))
+                this.add(new TangentLine({ shape: p, x: p1[0], length: 6, color: Colors.orange(), lineWidth: 2, }));
+                this.add(new Dot({ x: p1[0], y: p1[1] }));
+                this.add(new Dot({ x: p2[0], y: p2[1] }));
+                this.add(new Dot({ x: p3[0], y: p3[1] }));
+                this.add(new Dot({ x: p4[0], y: p4[1] }));
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
+
+
 }

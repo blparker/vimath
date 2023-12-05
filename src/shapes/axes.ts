@@ -181,21 +181,8 @@ export class Axes extends ComposableShape {
 
         let prevY = fn(this.xRange[0]);
 
-        function pointAlongLine(x: number, range: Range, length: number): number {
-            const p = math.distance(range[0], x) / math.range(range);
-            return math.lerp(-length / 2, length / 2, p);
-        }
-
         for (let x = this.xRange[0]; x <= this.xRange[1]; x += stepSize) {
             let [pX, pY] = [x, fn(x)];
-
-            // pX = math.remap(this.xRange[0], this.xRange[1], -this.xLength / 2, this.xLength / 2, x);
-            // pY = math.remap(this.yRange[0], this.yRange[1], -this.yLength / 2, this.yLength / 2, fn(x));
-
-            // let [pX, pY] = math.add([x, fn(x)], origin) as Point;
-            // pX = pointAlongLine(pX, this.xRange, this.xLength);
-            // pY = pointAlongLine(pY, this.yRange, this.yLength);
-            // console.log(x, fn(x), '->', pX, pY, this.xAxis!.pointAlongLine(pX))
 
             if (!Number.isFinite(pY)) {
                 prevY = pY;
@@ -326,12 +313,17 @@ export class Axes extends ComposableShape {
     }
 
     private origin(): Point {
-        const dY = Math.abs(this.xRange[0]) / math.range(this.xRange);
+        /*
+        Need to figure this out... the origin looks correct when the range starts at 0, but if the range starts at non-zero, things get weird.
+        Explicitly checking for 0 is a hack, but it works for now.
+         */
+        const dY = this.xRange[0] !== 0 ? 0 : (Math.abs(this.xRange[0]) / math.range(this.xRange));
         const oY = -(this.xLength / 2) + (this.xLength * dY);
 
         const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
         const oX = -(this.yLength / 2) + (this.yLength * dX);
 
+        console.log(oX, oY)
         return [oY, oX];
     }
 }
