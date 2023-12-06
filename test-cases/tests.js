@@ -653,7 +653,7 @@ export class VisualTests extends TestSuite {
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }*/
 
-    testTest(canvas, done) {
+    /*testTest(canvas, done) {
         class TestScene extends Scene {
             compose() {
                 this.add(new GridLines());
@@ -689,7 +689,21 @@ export class VisualTests extends TestSuite {
         }
 
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    }*/
+
+    testDashedLine(canvas, done) {
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+
+                this.add(new Line({ from: [-2, 2], to: [2, 2], lineStyle: 'solid' }));
+                this.add(new Line({ from: [-2, 0], to: [2, 0], lineStyle: 'dashed' }));
+                this.add(new Line({ from: [-2, -2], to: [2, -2], lineStyle: 'dotted' }));
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
-
-
 }

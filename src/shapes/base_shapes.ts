@@ -50,16 +50,20 @@ export function isPointsAware(o: any): o is PointsAware {
 }
 
 
+export type LineStyle = 'solid' | 'dashed' | 'dotted';
+
 export type StyleArgs = {
-    lineColor?: string | RGBA,
-    color?: string | RGBA
-    lineWidth?: number,
+    lineColor?: string | RGBA;
+    color?: string | RGBA;
+    lineWidth?: number;
+    lineStyle?: LineStyle;
 };
 
 export const defaultStyleArgs = {
     lineColor: Colors.black(),
     lineWidth: DEFAULT_LINE_WIDTH,
     color: Colors.transparent(),
+    lineStyle: 'solid',
 } as const;
 
 
@@ -75,6 +79,7 @@ export class PointShape implements Shape, Styleable, PointsAware {
     private _color: RGBA = Colors.black();
     private _lineColor: RGBA;
     private _lineWidth: number;
+    private _lineStyle: LineStyle;
     private _smooth: boolean;
 
     /**
@@ -98,6 +103,7 @@ export class PointShape implements Shape, Styleable, PointsAware {
         this._color = styleArgs.color !== undefined ? parseColor(styleArgs.color) : defaultStyleArgs.color;
         this._lineColor = styleArgs.lineColor !== undefined ? parseColor(styleArgs.lineColor) : (styleArgs.color !== undefined ? this._color : defaultStyleArgs.lineColor);
         this._lineWidth = a.lineWidth;
+        this._lineStyle = a.lineStyle;
     }
 
     shift(...shifts: Shift[]): PointShape {
@@ -281,6 +287,10 @@ export class PointShape implements Shape, Styleable, PointsAware {
 
     lineWidth(): number {
         return this._lineWidth;
+    }
+
+    lineStyle(): LineStyle {
+        return this._lineStyle;
     }
 
     changeLineWidth(newLineWidth: number): PointShape {

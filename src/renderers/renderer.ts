@@ -1,21 +1,21 @@
 import { Point, HAlign, X_TICKS, Y_TICKS, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
-import { Shape } from '../shapes/base_shapes.js';
+import { LineStyle, Shape } from '../shapes/base_shapes.js';
 import * as math from '../math.js';
 import { TextBaseline } from '../shapes/text';
 
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };
-type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; };
-type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; color: RGBA; closePath: boolean; smooth: boolean; };
+type LineArgs = { from: Point; to: Point; lineWidth: number; color: RGBA; lineStyle: LineStyle };
+type PathArgs = { points: Point[]; lineWidth: number; lineColor: RGBA; lineStyle: LineStyle; color: RGBA; closePath: boolean; smooth: boolean; };
 type TextArgs = { text: string; x: number; y: number; size: number; color: RGBA; align: HAlign; baseline: TextBaseline; vertical?: boolean };
 type ImageArgs = { image: HTMLImageElement; x: number; y: number; align?: HAlign; verticalAlign?: VAlign };
 
 
 export interface Canvas {
     arc({ center, radius, angle, lineWidth, lineColor, color }: ArcArgs): void;
-    line({ from, to, lineWidth, color }: LineArgs): void;
-    path({ points, lineWidth, lineColor, color, closePath, smooth }: PathArgs): void;
+    line({ from, to, lineWidth, color, lineStyle }: LineArgs): void;
+    path({ points, lineWidth, lineColor, lineStyle, color, closePath, smooth }: PathArgs): void;
     text({ text, x, y, size, color, align, baseline, vertical }: TextArgs): void;
     image({ image, x, y, align, verticalAlign }: ImageArgs): void;
     clear(): void
@@ -88,11 +88,17 @@ export class HtmlCanvas implements Canvas {
         this.ctx.restore();
     }
 
-    line({ from, to, lineWidth, color }: LineArgs): void {
+    line({ from, to, lineWidth, color, lineStyle }: LineArgs): void {
         this.ctx.save();
 
         this.ctx.strokeStyle = rgbaToString(color);
         this.ctx.lineWidth = lineWidth;
+
+        if (lineStyle === 'dashed') {
+            this.ctx.setLineDash([5, 5]);
+        } else if (lineStyle == 'dotted') {
+            this.ctx.setLineDash([1, 5]);
+        }
 
         const path = new Path2D();
         path.moveTo(...math.floor(this.translate(from)) as Point);
@@ -103,11 +109,11 @@ export class HtmlCanvas implements Canvas {
         this.ctx.restore();
     }
 
-    path({ points, lineWidth, lineColor, color, closePath, smooth }: PathArgs): void {
+    path({ points, lineWidth, lineColor, lineStyle, color, closePath, smooth }: PathArgs): void {
         if (points.length <= 1) {
             throw new Error('Path contains too few points. Expects a path consisting of at least 2 points');
         } else if (points.length === 2) {
-            this.line({ from: points[0], to: points[1], lineWidth, color: lineColor });
+            this.line({ from: points[0], to: points[1], lineWidth, color: lineColor, lineStyle });
             return;
         }
 

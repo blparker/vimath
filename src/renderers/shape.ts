@@ -18,6 +18,7 @@ export class PointShapeRenderer extends NativeRenderer<PointShape> {
             points,
             lineWidth: shape.lineWidth(),
             lineColor: shape.lineColor(),
+            lineStyle: shape.lineStyle(),
             color: shape.color(),
             closePath: shape.closePath,
             smooth: shape.smooth,
