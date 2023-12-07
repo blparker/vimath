@@ -32,6 +32,7 @@ export interface Styleable {
     changeColor(newColor: RGBA): Styleable;
     lineColor(): RGBA;
     changeLineColor(newColor: RGBA): Styleable;
+    lineWidth(): number;
 }
 
 

@@ -1,6 +1,7 @@
 import { Point, HAlign, X_TICKS, Y_TICKS, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
 import { LineStyle, Shape } from '../shapes/base_shapes.js';
+import { SvgCommand } from '../shapes/brace';
 import * as math from '../math.js';
 import { TextBaseline } from '../shapes/text';
 
@@ -18,6 +19,7 @@ export interface Canvas {
     path({ points, lineWidth, lineColor, lineStyle, color, closePath, smooth }: PathArgs): void;
     text({ text, x, y, size, color, align, baseline, vertical }: TextArgs): void;
     image({ image, x, y, align, verticalAlign }: ImageArgs): void;
+    svgPath({ path, lineWidth }: { path: SvgCommand[]; lineWidth: number; }): void;
     clear(): void
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseMove(listener: (pt: Point) => void): void;
@@ -247,6 +249,52 @@ export class HtmlCanvas implements Canvas {
         }
 
         this.ctx.drawImage(image, tX, tY);
+    }
+
+    svgPath({ path, lineWidth }: { path: SvgCommand[]; lineWidth: number }): void {
+        const translated = [];
+
+        // const translate = (x: string, y: string): string => {
+        //     console.log(x, y, '->', this.translate([parseFloat(x), parseFloat(y)]))
+        //     return this.translate([parseFloat(x), parseFloat(y)]).join(' ');
+        // };
+        const translate = (x: number, y: number): string => {
+            return this.translate([x, y]).join(' ');
+        };
+
+        // for (const part of path) {
+        //     if (part.startsWith('M') || part.startsWith('T')) {
+        //         const re = /^(M|T) (-?\d+\.?\d*) (-?\d+\.?\d*)$/g;
+
+        //         const matches = re.exec(part);
+        //         const [_, type, x, y] = matches ?? [];
+
+        //         translated.push(`${type} ${translate(x, y)}`);
+        //     } else if (part.startsWith('Q')) {
+        //         const re = /^Q (-?\d+\.?\d*) (-?\d+\.?\d*) (-?\d+\.?\d*) (-?\d+\.?\d*)$/g;
+
+        //         const matches = re.exec(part);
+        //         const [_, x1, y1, x2, y2] = matches ?? [];
+
+        //         translated.push(`Q ${translate(x1, y1)} ${translate(x2, y2)}`);
+        //     }
+        // }
+
+        for (const [type, ...vals] of path) {
+            if (type === 'M' || type === 'T') {
+                const [x, y] = vals;
+                translated.push(`${type} ${translate(x, y)}`);
+            } else if (type === 'Q') {
+                const [x1, y1, x2, y2] = vals;
+                translated.push(`Q ${translate(x1, y1)} ${translate(x2, y2)}`);
+            }
+            // console.log(type, vals, '  -> ', translated[translated.length - 1])
+        }
+
+        // console.log(translated.join(' '))
+        const p = new Path2D(translated.join(' '));
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.stroke(p);
     }
 
     clear(): void {

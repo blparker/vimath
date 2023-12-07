@@ -323,7 +323,6 @@ export class Axes extends ComposableShape {
         const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
         const oX = -(this.yLength / 2) + (this.yLength * dX);
 
-        console.log(oX, oY)
         return [oY, oX];
     }
 }

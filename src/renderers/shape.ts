@@ -1,5 +1,6 @@
 import { Point } from '../base';
 import { Circle, CircleArc, PointShape } from '../shapes/base_shapes';
+import { SvgShape } from '../shapes/brace';
 import { NativeRenderer, ShapeRenderer } from './renderer';
 
 
@@ -47,6 +48,14 @@ export class CircleRenderer extends NativeRenderer<CircleArc> {
     async render(shape: CircleArc): Promise<ShapeRenderer<CircleArc>> {
         this.canvas.arc({ center: shape.center(), radius: shape.width() / 2, angle: Math.PI * 2, lineWidth: shape.lineWidth(), lineColor: shape.lineColor(), color: shape.color() });
 
+        return this;
+    }
+}
+
+
+export class SvgShapeRenderer extends NativeRenderer<SvgShape> {
+    async render(shape: SvgShape): Promise<ShapeRenderer<SvgShape>> {
+        this.canvas.svgPath({ path: shape.svgPath(), lineWidth: shape.lineWidth() });
         return this;
     }
 }

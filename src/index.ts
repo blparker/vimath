@@ -10,6 +10,7 @@ export * from './shapes/derived_shapes.js';
 export * from './shapes/composed_shape.js';
 export * from './shapes/text.js';
 export * from './shapes/group.js';
+export * from './shapes/brace.js';
 export * from './animations/animations.js';
 export * from './animations/interactivity.js';
 export * from './easing.js';
