@@ -36,14 +36,14 @@ export class TangentLine extends Line {
     private static startingIndex(shape: PointsAware, x?: number, alpha?: number): number {
         const points = shape.points();
 
-        if (x) {
+        if (x !== undefined) {
             for (let i = 0; i < points.length; i++) {
                 if (points[i][0] >= x) {
                     return i;
                 }
             }
             throw new Error('Could not find point to the right of x');
-        } else if (alpha) {
+        } else if (alpha !== undefined) {
             if (alpha < 0 || alpha > 1) {
                 throw new Error('alpha must be between 0 and 1');
             }
