@@ -326,9 +326,12 @@ export class Axes extends ComposableShape {
         // const oX = -(this.yLength / 2) + (this.yLength * dX);
 
         // return [oY, oX];
+
+        // Find where 0 is along the x-axis range. Zero along the x-axis determines where the y-axis is placed
         const pY = math.invlerp(this.xRange[0], this.xRange[1], 0);
         const yAxisPos = math.lerp(-this.xLength / 2, this.xLength / 2, pY);
 
+        // Find where 0 is along the y-axis range. Zero along the y-axis determines where the x-axis is placed
         const pX = math.invlerp(this.yRange[0], this.yRange[1], 0);
         const xAxisPos = math.lerp(-this.yLength / 2, this.yLength / 2, pX);
 
