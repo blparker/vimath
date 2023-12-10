@@ -317,12 +317,21 @@ export class Axes extends ComposableShape {
         Need to figure this out... the origin looks correct when the range starts at 0, but if the range starts at non-zero, things get weird.
         Explicitly checking for 0 is a hack, but it works for now.
          */
-        const dY = this.xRange[0] !== 0 ? 0 : (Math.abs(this.xRange[0]) / math.range(this.xRange));
-        const oY = -(this.xLength / 2) + (this.xLength * dY);
+        // const dY = this.xRange[0] !== 0 ? 0 : (Math.abs(this.xRange[0]) / math.range(this.xRange));
 
-        const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
-        const oX = -(this.yLength / 2) + (this.yLength * dX);
+        // const dY = Math.abs(this.xRange[0]) / math.range(this.xRange);
+        // const oY = -(this.xLength / 2) + (this.xLength * dY);
 
-        return [oY, oX];
+        // const dX = Math.abs(this.yRange[0]) / math.range(this.yRange);
+        // const oX = -(this.yLength / 2) + (this.yLength * dX);
+
+        // return [oY, oX];
+        const pY = math.invlerp(this.xRange[0], this.xRange[1], 0);
+        const yAxisPos = math.lerp(-this.xLength / 2, this.xLength / 2, pY);
+
+        const pX = math.invlerp(this.yRange[0], this.yRange[1], 0);
+        const xAxisPos = math.lerp(-this.yLength / 2, this.yLength / 2, pX);
+
+        return [yAxisPos, xAxisPos];
     }
 }

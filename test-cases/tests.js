@@ -607,7 +607,7 @@ export class VisualTests extends TestSuite {
     }*/
 
 
-    /*testTest(canvas, done) {
+    testTest(canvas, done) {
         class TestScene extends Scene {
             compose() {
                 this.add(new GridLines());
@@ -651,7 +651,7 @@ export class VisualTests extends TestSuite {
         }
 
         new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    }*/
+    }
 
     /*testTest(canvas, done) {
         class TestScene extends Scene {
@@ -708,80 +708,102 @@ export class VisualTests extends TestSuite {
     // }
 
 
+    // testBrace(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+
+    //             const s = new Square({ size: 2 });
+    //             this.add(s);
+
+    //             this.add(new Brace({ shape: s, direction: UP() }));
+    //             this.add(new Brace({ shape: s, direction: RIGHT() }));
+    //             this.add(new Brace({ shape: s, direction: DOWN() }));
+    //             this.add(new Brace({ shape: s, direction: LEFT() }));
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    // }
+
+
+    // testScene(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+
+    //             // const s = new Square({ size: 2 });
+    //             // this.add(s);
+
+    //             // this.add(new Brace({ shape: s, direction: UP() }));
+    //             // this.add(new Brace({ shape: s, direction: RIGHT() }));
+    //             // this.add(new Brace({ shape: s, direction: DOWN() }));
+    //             // this.add(new Brace({ shape: s, direction: LEFT() }));
+
+    //             const axes = new Axes({
+    //                 xLength: 8,
+    //                 yLength: 6,
+    //                 xRange: [0, 3],
+    //                 xAxisTickStep: 0.5,
+    //                 yRange: [0, 2],
+    //                 yAxisTickStep: 0.5,
+    //             });
+
+    //             const fn = x => -Math.pow((x - 1.5), 2) + 1;
+    //             const p = axes.plot(x => x < 2 ? fn(x) : null);
+
+    //             const p1 = axes.relativePoint([0.75, fn(0.75)]);
+    //             const p10 = axes.relativePoint([0.75, 0]);
+    //             const p2 = axes.relativePoint([1.75, fn(1.75)]);
+    //             const p20 = axes.relativePoint([1.75, 0]);
+
+    //             const t1 = new Text({ text: '(a, f(a))', x: p1[0] - 0.2, y: p1[1] + 0.2, align: 'right' });
+    //             const t2 = new Text({ text: '(b, f(b))', x: p2[0] + 0.5, y: p2[1], align: 'left' });
+
+    //             const xBrace = new Brace({ p1: p1, p2: [p2[0], p1[1]], direction: DOWN(), lineWidth: 2, });
+    //             const yBrace = new Brace({ p1: p2, p2: [p2[0], p1[1]], direction: RIGHT(), lineWidth: 2, });
+
+    //             this.add(
+    //                 axes,
+    //                 p,
+    //                 new LineThroughPoints({ p1, p2, length: 5, color: Colors.blue() }),
+    //                 new Dot({ x: p1[0], y: p1[1] }),
+    //                 new Dot({ x: p2[0], y: p2[1] }),
+    //                 t1, t2,
+    //                 new Line({ from: p10, to: p1, lineStyle: 'dashed', lineWidth: 2, }),
+    //                 new Line({ from: p20, to: p2, lineStyle: 'dashed', lineWidth: 2, }),
+    //                 new Text({ text: 'a', x: p10[0], y: p10[1] - 0.1, baseline: 'top' }),
+    //                 new Text({ text: 'b', x: p20[0], y: p20[1] - 0.1, baseline: 'top' }),
+    //                 xBrace,
+    //                 yBrace,
+    //                 new Text({ text: 'x - a', baseline: 'top' }).nextTo(xBrace, DOWN()),
+    //                 new Text({ text: 'f(x) - f(a)', align: 'left' }).nextTo(yBrace, RIGHT(1.1)),
+    //             );
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    // }
+
+
     testBrace(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                this.add(new GridLines());
-
-                const s = new Square({ size: 2 });
-                this.add(s);
-
-                this.add(new Brace({ shape: s, direction: UP() }));
-                this.add(new Brace({ shape: s, direction: RIGHT() }));
-                this.add(new Brace({ shape: s, direction: DOWN() }));
-                this.add(new Brace({ shape: s, direction: LEFT() }));
-
-                return this;
-            }
-        }
-
-        new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
-    }
-
-
-    testScene(canvas, done) {
-        class TestScene extends Scene {
-            compose() {
-                this.add(new GridLines());
-
-                // const s = new Square({ size: 2 });
-                // this.add(s);
-
-                // this.add(new Brace({ shape: s, direction: UP() }));
-                // this.add(new Brace({ shape: s, direction: RIGHT() }));
-                // this.add(new Brace({ shape: s, direction: DOWN() }));
-                // this.add(new Brace({ shape: s, direction: LEFT() }));
-
                 const axes = new Axes({
-                    xLength: 8,
+                    xRange: [-10, 10],
+                    yRange: [0, 20],
+                    xLength: 12,
                     yLength: 6,
-                    xRange: [0, 3],
-                    xAxisTickStep: 0.5,
-                    yRange: [0, 2],
-                    yAxisTickStep: 0.5,
+                    yAxisTickStep: 2,
                 });
 
-                const fn = x => -Math.pow((x - 1.5), 2) + 1;
-                const p = axes.plot(x => x < 2 ? fn(x) : null);
+                const p = axes.plot(x => x * x);
 
-                const p1 = axes.relativePoint([0.75, fn(0.75)]);
-                const p10 = axes.relativePoint([0.75, 0]);
-                const p2 = axes.relativePoint([1.75, fn(1.75)]);
-                const p20 = axes.relativePoint([1.75, 0]);
-
-                const t1 = new Text({ text: '(a, f(a))', x: p1[0] - 0.2, y: p1[1] + 0.2, align: 'right' });
-                const t2 = new Text({ text: '(b, f(b))', x: p2[0] + 0.5, y: p2[1], align: 'left' });
-
-                const xBrace = new Brace({ p1: p1, p2: [p2[0], p1[1]], direction: DOWN(), lineWidth: 2, });
-                const yBrace = new Brace({ p1: p2, p2: [p2[0], p1[1]], direction: RIGHT(), lineWidth: 2, });
-
-                this.add(
-                    axes,
-                    p,
-                    new LineThroughPoints({ p1, p2, length: 5, color: Colors.blue() }),
-                    new Dot({ x: p1[0], y: p1[1] }),
-                    new Dot({ x: p2[0], y: p2[1] }),
-                    t1, t2,
-                    new Line({ from: p10, to: p1, lineStyle: 'dashed', lineWidth: 2, }),
-                    new Line({ from: p20, to: p2, lineStyle: 'dashed', lineWidth: 2, }),
-                    new Text({ text: 'a', x: p10[0], y: p10[1] - 0.1, baseline: 'top' }),
-                    new Text({ text: 'b', x: p20[0], y: p20[1] - 0.1, baseline: 'top' }),
-                    xBrace,
-                    yBrace,
-                    new Text({ text: 'x - a', baseline: 'top' }).nextTo(xBrace, DOWN()),
-                    new Text({ text: 'f(x) - f(a)', align: 'left' }).nextTo(yBrace, RIGHT(1.1)),
-                );
-
+                this.add(axes, p);
 
                 return this;
             }
