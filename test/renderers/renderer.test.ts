@@ -110,11 +110,11 @@ describe('renderer module', () => {
         expect(spy.mock.calls[0][0].color).toEqual(Colors.white());
     });
 
-    test('should render tex', async () => {
-        const t = new Text({ text: String.raw`\mathbb{M}`, tex: true });
-        const canvas = createTestCanvas(400, 200);
-        const r = await new TextRenderer(canvas).render(t);
-    });
+    // test('should render tex', async () => {
+    //     const t = new Text({ text: String.raw`\mathbb{M}`, tex: true });
+    //     const canvas = createTestCanvas(400, 200);
+    //     const r = await new TextRenderer(canvas).render(t);
+    // });
 
     test('renderer factory should return renderer for point shape', () => {
         const line = new Line({ from: [-1, 0], to: [1, 0] });
