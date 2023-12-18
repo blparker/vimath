@@ -290,4 +290,28 @@ describe('axes module', () => {
         expectArraysClose((xShapes[0] as Line).computedPoints(), [[-4, -1], [4, -1]], 0);
         expectArraysClose((yShapes[0] as Line).computedPoints(), [[-2, -2], [-2, 2]], 0);
     });
+
+
+    it('should determine origin being offset', () => {
+        const a = new Axes({ xLength: 8, yLength: 4, xRange: [0, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
+        const cs = a.composedShapes();
+
+        const xShapes = (cs[0] as NumberLine).composedShapes();
+        const yShapes = (cs[1] as NumberLine).composedShapes();
+
+        expectArraysClose((xShapes[0] as Line).computedPoints(), [[-4, -2], [4, -2]], 0);
+        expectArraysClose((yShapes[0] as Line).computedPoints(), [[-4, -2], [-4, 2]], 0);
+    });
+
+
+    it('should determine origin being offset when start of range is is not 0', () => {
+        const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
+        const cs = a.composedShapes();
+
+        const xShapes = (cs[0] as NumberLine).composedShapes();
+        const yShapes = (cs[1] as NumberLine).composedShapes();
+
+        expectArraysClose((xShapes[0] as Line).computedPoints(), [[-4, -2], [4, -2]], 0);
+        expectArraysClose((yShapes[0] as Line).computedPoints(), [[-4, -2], [-4, 2]], 0);
+    });
 });

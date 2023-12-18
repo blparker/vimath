@@ -5,6 +5,7 @@ import { Scene } from "../src/scene";
 import { TextBaseline } from "../src/shapes/text";
 import { Line } from "../src/shapes/base_shapes";
 import { Animation, Animatable } from '../src/animations/animations';
+import { SvgCommand } from '../src/shapes/brace';
 
 
 class TestCanvas implements Canvas {
@@ -29,6 +30,8 @@ class TestCanvas implements Canvas {
     text({ text, x, y, size, color, align, baseline, vertical }: { text: string; x: number; y: number; size: number; color: RGBA; align: HAlign; baseline: TextBaseline; vertical?: boolean | undefined; }): void {}
 
     image({ image, x, y, align }: { image: HTMLImageElement; x: number; y: number; align: HAlign; }): void {}
+
+    svgPath({ path, lineWidth }: { path: SvgCommand[]; lineWidth: number; }): void {}
 
     clear(): void {}
 }

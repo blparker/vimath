@@ -273,6 +273,10 @@ export class Text implements Shape, PointsAware, Styleable {
         return this;
     }
 
+    lineWidth(): number {
+        return 0;
+    }
+
     setText(newText: string): Text {
         this._text = newText;
         return this;

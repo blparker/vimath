@@ -96,10 +96,11 @@ export class VisualTests extends TestSuite {
     //             const dot = new Dot({ x: 0, y: 0 });
     //             const dot2 = new Dot({ x: 2, y: 2, color: Colors.red() });
     //             const arrow = new Arrow({ from: ORIGIN, to: [2, 2] });
+    //             const arrow2 = new Arrow({ from: [-1, 1], to: [-3, -2] });
     //             const axes = new Axes({ showGridLines: true });
     //             const oText = new Text({ text: '(0, 0)', size: 28, baseline: 'bottom' }).nextTo(dot, DOWN());
     //             const tText = new Text({ text: '(2, 2)', size: 28, baseline: 'middle' }).nextTo(arrow.to, RIGHT());
-    //             this.add(axes, dot, dot2, arrow, oText, tText);
+    //             this.add(axes, dot, dot2, arrow, arrow2, oText, tText);
     //             // this.add(axes, dot, dot2, arrow);
 
     //             return this;
@@ -810,5 +811,44 @@ export class VisualTests extends TestSuite {
         }
 
         new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    }
+
+    testArrows(canvas) {
+        // https://docs.manim.community/en/stable/examples.html#vectorarrow
+        class TestScene extends Scene {
+            compose() {
+                this.add(new GridLines());
+                this.add(new Arrow({ from: [0, 0], to: [2, 0] }));
+                this.add(new Arrow({ from: [0, 0], to: [2, 2] }));
+                this.add(new Arrow({ from: [0, 0], to: [0, 2] }));
+
+                this.add(new Arrow({ from: [0, 0], to: [-2, 2] }));
+                this.add(new Arrow({ from: [0, 0], to: [-2, 0] }));
+
+                this.add(new Arrow({ from: [0, 0], to: [-2, -2] }));
+                this.add(new Arrow({ from: [0, 0], to: [0, -2] }));
+
+                this.add(new Arrow({ from: [0, 0], to: [2, -2] }));
+
+                this.add(new Arrow({ from: [5, 2], to: [1, 0.5] }));
+
+                this.add(new Arrow({ from: [-5, 4], to: [-5, 0 ]}));
+                this.add(new Arrow({ from: [-5, -3], to: [-1, -3 ]}));
+                this.add(new Arrow({ from: [-3, -1], to: [-4, 1 ]}));
+
+
+                // const arrow = new Arrow({ from: ORIGIN, to: [2, 2] });
+                // const arrow2 = new Arrow({ from: [-1, 1], to: [-3, -2] });
+                // const axes = new Axes({ showGridLines: true });
+                // const oText = new Text({ text: '(0, 0)', size: 28, baseline: 'bottom' }).nextTo(dot, DOWN());
+                // const tText = new Text({ text: '(2, 2)', size: 28, baseline: 'middle' }).nextTo(arrow.to, RIGHT());
+                // this.add(axes, dot, dot2, arrow, arrow2, oText, tText);
+                // // this.add(axes, dot, dot2, arrow);
+
+                return this;
+            }
+        }
+
+        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
 }

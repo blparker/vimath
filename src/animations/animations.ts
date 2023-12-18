@@ -40,7 +40,7 @@ export abstract class Animation {
     }
 
     /**
-     * Implemented by subclasses to perform animation operations
+     * Implemented by subclasses to perform animation operations.
      * @param delta the percentage complete of the animation (with respect to the start time and duration)
      */
     abstract update(pctComplete: number, reversing: boolean): Animatable[];

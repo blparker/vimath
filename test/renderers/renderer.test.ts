@@ -133,7 +133,7 @@ describe('renderer module', () => {
 describe('html canvas module', () => {
     test('it should translate from relative points to absolute', () => {
         const canvas = createTestCanvas(400, 200);
-        canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: [0, 0, 0, 0] })
+        canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: [0, 0, 0, 0], lineStyle: 'solid' })
 
         const drawCalls = canvas.ctx.__getDrawCalls();
         expect(drawCalls.length).toEqual(1);
@@ -144,7 +144,7 @@ describe('html canvas module', () => {
 
     test('it should pass line color', () => {
         const canvas = createTestCanvas(400, 200);
-        canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: Colors.blue() });
+        canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: Colors.blue(), lineStyle: 'solid' });
 
         const drawCalls = canvas.ctx.__getDrawCalls();
         // console.log(canvas.ctx.__getEvents())
