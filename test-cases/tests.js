@@ -834,7 +834,7 @@ export class VisualTests extends TestSuite {
 
                 this.add(new Arrow({ from: [-5, 4], to: [-5, 0 ]}));
                 this.add(new Arrow({ from: [-5, -3], to: [-1, -3 ]}));
-                this.add(new Arrow({ from: [-3, -1], to: [-4, 1 ]}));
+                this.add(new Arrow({ from: [-3, -1], to: [-4, 1 ], color: Colors.red() }));
 
 
                 // const arrow = new Arrow({ from: ORIGIN, to: [2, 2] });

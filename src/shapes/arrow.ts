@@ -22,7 +22,7 @@ export class Arrow extends ComposableShape {
     }
 
     compose(): ComposableShape {
-        const line = new Line({ from: this.from, to: this.to });
+        const line = new Line({ from: this.from, to: this.to, color: this.color });
         // console.log(this.from, this.to, math.subtract(ORIGIN, this.from), math.subtract(ORIGIN, this.to));
         // const shift = math.subtract(ORIGIN, this.from);
         // const [tX, tY] = math.add(this.to, shift);
@@ -62,8 +62,8 @@ export class Arrow extends ComposableShape {
         const [sX, sY] = math.add(this.to, shift);
         const theta = -Math.PI / 2 + Math.atan2(sY, sX);
 
-        const tipCenterX = this.to[0] - this.tipSize / 2 * Math.cos(Math.atan2(sY, sX));
-        const tipCenterY = this.to[1] - this.tipSize / 2 * Math.sin(Math.atan2(sY, sX));
+        const tipCenterX = this.to[0] - (this.tipSize / 2 + 0.0) * Math.cos(Math.atan2(sY, sX));
+        const tipCenterY = this.to[1] - (this.tipSize / 2) * Math.sin(Math.atan2(sY, sX));
         const tip = new Triangle({ x: tipCenterX, y: tipCenterY, height: this.tipSize, color: this.color }).rotate(theta);
 
         this.add(line, tip);
