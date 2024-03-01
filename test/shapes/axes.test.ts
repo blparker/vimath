@@ -4,6 +4,7 @@ import { Text } from '../../src/shapes/text';
 import { Line, PointShape, Shape } from '../../src/shapes/base_shapes';
 import { X_TICKS, Y_TICKS } from '../../src/base';
 import { NumberLine } from '../../src/shapes/number_line';
+import { Colors } from '../../src/colors';
 
 
 function findLabel({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
@@ -313,5 +314,14 @@ describe('axes module', () => {
 
         expectArraysClose((xShapes[0] as Line).computedPoints(), [[-4, -2], [4, -2]], 0);
         expectArraysClose((yShapes[0] as Line).computedPoints(), [[-4, -2], [-4, 2]], 0);
+    });
+
+
+    it('should test axes area', () => {
+        const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
+        const p = a.plot(x => 2, { color: Colors.red() }) as PointShape;
+        const area = a.area({ plot: p, xRange: [1, 3], color: Colors.blue({ opacity: 0.5 }) });
+
+        expect(area.color()).toEqual(Colors.blue({ opacity: 0.5 }));
     });
 });

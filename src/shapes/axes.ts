@@ -1,4 +1,4 @@
-import { Point, Range, X_TICKS, Y_TICKS } from '../base';
+import { Point, Prettify, Range, X_TICKS, Y_TICKS } from '../base';
 import { ComposableShape } from './composed_shape';
 import * as math from '../math';
 import { Line, PointShape, Shape, StyleArgs } from './base_shapes';
@@ -231,7 +231,7 @@ export class Axes extends ComposableShape {
         ] as Point;
     }
 
-    area({ plot, xRange, opacity = 0.3 }: { plot: PointShape; xRange?: Range, opacity: number }): PointShape {
+    area({ plot, xRange, opacity = 0.3, ...styleArgs }: { plot: PointShape; xRange?: Range, opacity?: number } & Prettify<StyleArgs>): PointShape {
         const [rS, rE] = xRange ?? this.xRange;
         const rStart = this.relativePoint([rS, 0])[0];
         const rEnd = this.relativePoint([rE, 0])[0];
@@ -272,7 +272,14 @@ export class Axes extends ComposableShape {
         const y0 = this.relativePoint([0, 0])[1];
         areaPoints.push([rEnd, y0], [rStart, y0]);
 
-        return new PointShape({ points: areaPoints, closePath: true, smooth: false, lineColor: Colors.transparent(), color: colorWithOpacity(plot.lineColor(), opacity) });
+        if (!styleArgs) {
+            styleArgs = {
+                lineColor: Colors.transparent(),
+                color: colorWithOpacity(plot.lineColor(), opacity)
+            };
+        }
+
+        return new PointShape({ points: areaPoints, closePath: true, smooth: false, ...styleArgs });
     }
 
     top(): Point {
