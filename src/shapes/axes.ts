@@ -272,12 +272,8 @@ export class Axes extends ComposableShape {
         const y0 = this.relativePoint([0, 0])[1];
         areaPoints.push([rEnd, y0], [rStart, y0]);
 
-        if (!styleArgs) {
-            styleArgs = {
-                lineColor: Colors.transparent(),
-                color: colorWithOpacity(plot.lineColor(), opacity)
-            };
-        }
+        styleArgs.lineColor = styleArgs.lineColor ?? Colors.transparent();
+        styleArgs.color = styleArgs.color ?? colorWithOpacity(plot.lineColor(), opacity);
 
         return new PointShape({ points: areaPoints, closePath: true, smooth: false, ...styleArgs });
     }

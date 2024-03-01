@@ -317,11 +317,20 @@ describe('axes module', () => {
     });
 
 
-    it('should test axes area', () => {
+    it('should use provided color for area under axes', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
         const p = a.plot(x => 2, { color: Colors.red() }) as PointShape;
         const area = a.area({ plot: p, xRange: [1, 3], color: Colors.blue({ opacity: 0.5 }) });
 
         expect(area.color()).toEqual(Colors.blue({ opacity: 0.5 }));
+    });
+
+
+    it('should use plot color for area under axes', () => {
+        const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
+        const p = a.plot(x => 2, { color: Colors.red() }) as PointShape;
+        const area = a.area({ plot: p, xRange: [1, 3] });
+
+        expect(area.color()).toEqual(Colors.red({ opacity: 0.3 }));
     });
 });
