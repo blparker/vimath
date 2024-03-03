@@ -14,7 +14,7 @@
     "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination .",
     "publish-to-npm": "rm -rf dist && npm run bundle-dev && npm run bundle-prod && cp package.json dist && npm version patch && npm publish --access public"
   },
-  "author": "",
+  "author": "Bryan Parker",
   "license": "ISC",
   "devDependencies": {
     "@blparker/canvas-test": "^1.0.15",

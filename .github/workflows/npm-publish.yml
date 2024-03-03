@@ -14,6 +14,10 @@ jobs:
         with:
           node-version: '21' # Set this to your Node.js version
           registry-url: 'https://registry.npmjs.org/'
+      - name: Set up Git identity
+        run: |
+          git config --local user.email "bryan@bryanp.xyz"
+          git config --local user.name "Bryan Parker"
       - run: npm ci
       - run: npm run publish-to-npm
         env:
