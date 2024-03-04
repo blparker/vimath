@@ -608,51 +608,51 @@ export class VisualTests extends TestSuite {
     }*/
 
 
-    testTest(canvas, done) {
-        class TestScene extends Scene {
-            compose() {
-                this.add(new GridLines());
+    // testTest(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
 
-                const axes = new Axes({
-                    xLength: 10,
-                    yLength: 6,
-                    xRange: [0.45, 0.55],
-                    xAxisTickStep: 0.01,
-                    yRange: [0, 10],
-                    yAxisTickStep: 2,
-                    xAxisLabel: 'time (h)',
-                    yAxisLabel: 'distance (miles)'
-                });
+    //             const axes = new Axes({
+    //                 xLength: 10,
+    //                 yLength: 6,
+    //                 xRange: [0.45, 0.55],
+    //                 xAxisTickStep: 0.01,
+    //                 yRange: [0, 10],
+    //                 yAxisTickStep: 2,
+    //                 xAxisLabel: 'time (h)',
+    //                 yAxisLabel: 'distance (miles)'
+    //             });
 
-                const fn = x => 25 * x * x;
-                const p = axes.plot(x => fn(x), { lineColor: Colors.green() });
+    //             const fn = x => 25 * x * x;
+    //             const p = axes.plot(x => fn(x), { lineColor: Colors.green() });
 
-                this.add(axes, p);
+    //             this.add(axes, p);
 
-                const p1 = axes.relativePoint([0.5, 6.25]);
-                const p2 = axes.relativePoint([31 / 60, fn(31 / 60)]);
+    //             const p1 = axes.relativePoint([0.5, 6.25]);
+    //             const p2 = axes.relativePoint([31 / 60, fn(31 / 60)]);
 
-                let dot = new Dot({ x: p2[0], y: p2[1], color: Colors.blue() });
+    //             let dot = new Dot({ x: p2[0], y: p2[1], color: Colors.blue() });
 
-                this.add(new Dot({ x: p1[0], y: p1[1], color: Colors.green() }));
-                this.add(dot);
-                this.wait(2000);
+    //             this.add(new Dot({ x: p1[0], y: p1[1], color: Colors.green() }));
+    //             this.add(dot);
+    //             this.wait(2000);
 
-                this.remove(dot);
+    //             this.remove(dot);
 
-                const p3 = axes.relativePoint([30.6 / 60, fn(30.6 / 60)]);
+    //             const p3 = axes.relativePoint([30.6 / 60, fn(30.6 / 60)]);
 
-                dot = new Dot({ x: p3[0], y: p3[1], color: Colors.blue() });
-                this.add(dot);
+    //             dot = new Dot({ x: p3[0], y: p3[1], color: Colors.blue() });
+    //             this.add(dot);
 
-                // this.add(new LineThroughPoints({ p1: p1, p2: p2, length: 3, color: Colors.blue() }))
+    //             // this.add(new LineThroughPoints({ p1: p1, p2: p2, length: 3, color: Colors.blue() }))
 
-                return this;
-            }
-        }
+    //             return this;
+    //         }
+    //     }
 
-        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
-    }
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
 
     /*testTest(canvas, done) {
         class TestScene extends Scene {
@@ -791,64 +791,81 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    testBrace(canvas, done) {
+    // testBrace(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             const axes = new Axes({
+    //                 xRange: [-10, 10],
+    //                 yRange: [0, 20],
+    //                 xLength: 12,
+    //                 yLength: 6,
+    //                 yAxisTickStep: 2,
+    //             });
+
+    //             const p = axes.plot(x => x * x);
+
+    //             this.add(axes, p);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    // }
+
+    // testArrows(canvas) {
+    //     // https://docs.manim.community/en/stable/examples.html#vectorarrow
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             this.add(new GridLines());
+    //             this.add(new Arrow({ from: [0, 0], to: [2, 0] }));
+    //             this.add(new Arrow({ from: [0, 0], to: [2, 2] }));
+    //             this.add(new Arrow({ from: [0, 0], to: [0, 2] }));
+
+    //             this.add(new Arrow({ from: [0, 0], to: [-2, 2] }));
+    //             this.add(new Arrow({ from: [0, 0], to: [-2, 0] }));
+
+    //             this.add(new Arrow({ from: [0, 0], to: [-2, -2] }));
+    //             this.add(new Arrow({ from: [0, 0], to: [0, -2] }));
+
+    //             this.add(new Arrow({ from: [0, 0], to: [2, -2] }));
+
+    //             this.add(new Arrow({ from: [5, 2], to: [1, 0.5] }));
+
+    //             this.add(new Arrow({ from: [-5, 4], to: [-5, 0 ]}));
+    //             this.add(new Arrow({ from: [-5, -3], to: [-1, -3 ]}));
+    //             this.add(new Arrow({ from: [-3, -1], to: [-4, 1 ], color: Colors.red() }));
+
+
+    //             // const arrow = new Arrow({ from: ORIGIN, to: [2, 2] });
+    //             // const arrow2 = new Arrow({ from: [-1, 1], to: [-3, -2] });
+    //             // const axes = new Axes({ showGridLines: true });
+    //             // const oText = new Text({ text: '(0, 0)', size: 28, baseline: 'bottom' }).nextTo(dot, DOWN());
+    //             // const tText = new Text({ text: '(2, 2)', size: 28, baseline: 'middle' }).nextTo(arrow.to, RIGHT());
+    //             // this.add(axes, dot, dot2, arrow, arrow2, oText, tText);
+    //             // // this.add(axes, dot, dot2, arrow);
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
+    // }
+
+
+    testLineWithWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                const axes = new Axes({
-                    xRange: [-10, 10],
-                    yRange: [0, 20],
-                    xLength: 12,
-                    yLength: 6,
-                    yAxisTickStep: 2,
-                });
+                const a = new Dot({ x: -2, y: 2 });
+                const b = new Dot({ x: 2, y: -1 });
 
-                const p = axes.plot(x => x * x);
-
-                this.add(axes, p);
+                const l = new Line({ from: a, to: b, length: 8 });
+                this.add(a, b, l);
 
                 return this;
             }
         }
 
         new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
-    }
-
-    testArrows(canvas) {
-        // https://docs.manim.community/en/stable/examples.html#vectorarrow
-        class TestScene extends Scene {
-            compose() {
-                this.add(new GridLines());
-                this.add(new Arrow({ from: [0, 0], to: [2, 0] }));
-                this.add(new Arrow({ from: [0, 0], to: [2, 2] }));
-                this.add(new Arrow({ from: [0, 0], to: [0, 2] }));
-
-                this.add(new Arrow({ from: [0, 0], to: [-2, 2] }));
-                this.add(new Arrow({ from: [0, 0], to: [-2, 0] }));
-
-                this.add(new Arrow({ from: [0, 0], to: [-2, -2] }));
-                this.add(new Arrow({ from: [0, 0], to: [0, -2] }));
-
-                this.add(new Arrow({ from: [0, 0], to: [2, -2] }));
-
-                this.add(new Arrow({ from: [5, 2], to: [1, 0.5] }));
-
-                this.add(new Arrow({ from: [-5, 4], to: [-5, 0 ]}));
-                this.add(new Arrow({ from: [-5, -3], to: [-1, -3 ]}));
-                this.add(new Arrow({ from: [-3, -1], to: [-4, 1 ], color: Colors.red() }));
-
-
-                // const arrow = new Arrow({ from: ORIGIN, to: [2, 2] });
-                // const arrow2 = new Arrow({ from: [-1, 1], to: [-3, -2] });
-                // const axes = new Axes({ showGridLines: true });
-                // const oText = new Text({ text: '(0, 0)', size: 28, baseline: 'bottom' }).nextTo(dot, DOWN());
-                // const tText = new Text({ text: '(2, 2)', size: 28, baseline: 'middle' }).nextTo(arrow.to, RIGHT());
-                // this.add(axes, dot, dot2, arrow, arrow2, oText, tText);
-                // // this.add(axes, dot, dot2, arrow);
-
-                return this;
-            }
-        }
-
-        new TestScene({ canvas: new HtmlCanvas(canvas) }).compose().render();
     }
 }

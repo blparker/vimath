@@ -12,7 +12,8 @@
     "bundle-prod": "./node_modules/.bin/esbuild src/index.ts --bundle --minify --global-name=${npm_package_name} --outfile=./dist/out/${npm_package_name}.production.js --format=esm",
     "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=${npm_package_name} --watch --format=esm",
     "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination .",
-    "publish-to-npm": "rm -rf dist && npm run bundle-dev && npm run bundle-prod && cp package.json dist && npm version patch && npm publish --access public"
+    "publish-to-npm": "rm -rf dist && npm run bundle-dev && npm run bundle-prod && cp package.json dist && npm version patch && npm publish --access public",
+    "launch-visual-tests": "canvas-test --port 8001"
   },
   "author": "Bryan Parker",
   "license": "ISC",

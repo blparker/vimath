@@ -402,3 +402,7 @@ export function min(arrs: unknown, idx?: number): number {
         return Math.min(...arrs);
     }
 }
+
+export function polarToRect(n: number, angle: number) {
+    return [n * Math.cos(angle), n * Math.sin(angle)];
+}
