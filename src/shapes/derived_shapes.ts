@@ -1,5 +1,7 @@
 import { Point, Prettify } from '../base';
-import { CircleArc, Line, PointsAware, StyleArgs, defaultStyleArgs } from './base_shapes';
+import { PointsAware, StyleArgs, defaultStyleArgs } from './shape';
+import { Line } from './primitives/line';
+import { CircleArc } from './primitives/circle_arc';
 import * as math from '../math';
 
 

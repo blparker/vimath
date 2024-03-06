@@ -1,6 +1,10 @@
 // import { describe, expect, test } from '@jest/globals';
 // import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
-import { PointShape, Line, Triangle, Square, Circle, } from '../src/shapes/base_shapes';
+import { PointShape } from '../src/shapes/primitives/point_shape';
+import { Line } from '../src/shapes/primitives/line';
+import { Circle } from '../src/shapes/primitives/circle';
+import { Square } from '../src/shapes/primitives/square';
+import { Triangle } from '../src/shapes/primitives/triangle';
 import { Point } from '../src/base';
 import { zip } from '../src/math';
 import structuredClone from '@ungap/structured-clone'
@@ -90,7 +94,7 @@ describe('shape module', function() {
         const square2 = new PointShape({ points: structuredClone(square) }).nextTo(square1);
 
         // Account for the 0.2 offset
-        const expectedPoints = [[1.2, 1], [3.2, 1], [3.2, -1], [1.2, -1]];
+        const expectedPoints = [[1.2, 1], [3.2, 1], [3.2, -1], [1.2, -1]] as Point[];
 
         expect(square2.points()).toEqual(expectedPoints);
     });

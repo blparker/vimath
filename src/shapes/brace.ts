@@ -1,5 +1,5 @@
 import { Shift, Point, Prettify } from '../base';
-import { Shape, StyleArgs, Styleable } from './base_shapes';
+import { Shape, StyleArgs, Styleable } from './shape';
 import * as math from '../math';
 import { RGBA } from '../colors';
 

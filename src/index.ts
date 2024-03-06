@@ -8,7 +8,7 @@ export * from './shapes/grid_lines.js';
 export * from './shapes/base_shapes.js';
 export * from './shapes/derived_shapes.js';
 export * from './shapes/composed_shape.js';
-export * from './shapes/text.js';
+export * from './shapes/primitives/text.js';
 export * from './shapes/group.js';
 export * from './shapes/brace.js';
 export * from './animations/animations.js';

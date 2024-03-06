@@ -1,5 +1,5 @@
 import { OFFSET_GUTTER, ORIGIN, Point, RIGHT, Shift } from '../base';
-import { Shape } from './base_shapes';
+import { Shape } from './shape';
 import * as math from '../math';
 import { Composable, ComposableShape } from './composed_shape';
 

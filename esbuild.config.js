@@ -22,6 +22,9 @@ const context = await esbuild.context({
     globalName: 'vimath',
     format: 'esm',
     outdir: './dist/out',
+    alias: {
+        '@': path.resolve(__dirname, 'src'),
+    }
 });
 
 // Manually do an incremental build

@@ -1,12 +1,16 @@
 // import { createCanvas, Canvas as NodeCanvas } from '../../node_modules/canvas/index';
-import { Circle, Colors, DEFAULT_PADDING, Group, Line, Point, PointShape, RGBA, Square, X_TICKS, Y_TICKS } from '../../src/index';
 import { Canvas, HtmlCanvas } from '../../src/renderers/renderer';
 import { TextRenderer } from '../../src/renderers/text';
 import { PointShapeRenderer } from '../../src/renderers/shape';
 // import { TextRenderer } from '../../src/renderers/text';
-import { Text } from '../../src/shapes/text';
 import { TestTextMetrics } from '../utils';
 import { getRenderer } from '../../src/renderers/renderer_factory';
+import { DEFAULT_PADDING, Point, X_TICKS, Y_TICKS } from '../../src/base';
+import { Square } from '../../src/shapes/primitives/square';
+import { Line } from '../../src/shapes/primitives/line';
+import { Text } from '../../src/shapes/primitives/text';
+import { Colors } from '../../src/colors';
+
 // import { JSDOM } from '../../node_modules/jsdom/lib/api.js';
 // import { JSDOM } from 'jsdom';
 // import { setupJestCanvasMock } from '../../node_modules/jest-canvas-mock/lib/index';

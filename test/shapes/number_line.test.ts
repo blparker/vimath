@@ -1,6 +1,6 @@
 import { X_TICKS } from '../../src/base';
-import { Line } from '../../src/shapes/base_shapes';
-import { Text } from '../../src/shapes/text';
+import { Line } from '../../src/shapes/primitives/line';
+import { Text } from '../../src/shapes/primitives/text';
 import { NumberLine } from '../../src/shapes/number_line';
 import { expectArraysClose } from '../utils';
 

@@ -1,5 +1,5 @@
 import { NativeRenderer, ShapeRenderer } from './renderer';
-import { Text } from '../shapes/text';
+import { Text } from '../shapes/primitives/text';
 import { TextMetrics } from '../shapes/text_metrics';
 
 import { mathjax } from 'mathjax-full/js/mathjax';

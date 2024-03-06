@@ -1,6 +1,6 @@
 import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget, Animatable } from '../src/animations/animations';
 import { LEFT, Point, Shift } from '../src/base';
-import { Square } from '../src/shapes/base_shapes';
+import { Square } from '../src/shapes/primitives/square';
 import { Colors } from '../src/colors';
 import { Easing } from '../src/easing';
 import { zip } from '../src/math';

@@ -1,6 +1,8 @@
-import { CircleArc, PointShape, Shape } from '../shapes/base_shapes';
+import { CircleArc } from '../shapes/primitives/circle_arc';
+import { PointShape } from '../shapes/primitives/point_shape';
+import { Shape } from '../shapes/shape';
 import { isSvgShape } from '../shapes/brace';
-import { Text } from '../shapes/text';
+import { Text } from '../shapes/primitives/text';
 import { ComposableRenderer } from './composable_renderer';
 import { Canvas, ShapeRenderer } from './renderer';
 import { CircleRenderer, PointShapeRenderer, SvgShapeRenderer } from './shape';

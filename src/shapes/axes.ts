@@ -1,11 +1,11 @@
 import { Point, Prettify, Range, X_TICKS, Y_TICKS } from '../base';
 import { ComposableShape } from './composed_shape';
 import * as math from '../math';
-import { Line, PointShape, Shape, StyleArgs } from './base_shapes';
-import { TextMetrics } from './text_metrics';
+import { Shape, StyleArgs } from './shape.js';
+import { Line } from './primitives/line';
+import { PointShape } from './primitives/point_shape';
 import { NumberLine } from './number_line';
 import { Colors, colorWithOpacity } from '../colors';
-import { Group } from './group';
 
 
 // export type AxesConfig = {

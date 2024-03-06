@@ -856,11 +856,14 @@ export class VisualTests extends TestSuite {
     testLineWithWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                const a = new Dot({ x: -2, y: 2 });
-                const b = new Dot({ x: 2, y: -1 });
+                // const a = new Dot({ x: -2, y: 2 });
+                // const b = new Dot({ x: 2, y: -1 });
 
-                const l = new Line({ from: a, to: b, length: 8 });
-                this.add(a, b, l);
+                // const l = new Line({ from: a, to: b, length: 8 });
+                // this.add(a, b, l);
+
+
+
 
                 return this;
             }

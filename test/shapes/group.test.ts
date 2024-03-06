@@ -1,4 +1,4 @@
-import { Square } from '../../src/shapes/base_shapes';
+import { Square } from '../../src/shapes/primitives/square';
 import { Group } from '../../src/shapes/group';
 import { LEFT, OFFSET_GUTTER, RIGHT, UP, DOWN } from '../../src/base';
 

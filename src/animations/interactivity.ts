@@ -1,5 +1,6 @@
 import { Point } from '../base';
-import { Shape, isPointsAware } from '../shapes/base_shapes';
+import { isPointsAware } from '../shapes/shape';
+import { Shape } from '../shapes/shape';
 import { Animation } from './animations';
 import * as math from '../math';
 import { Canvas } from '../renderers/renderer';

@@ -1,5 +1,7 @@
 import { Point } from '../base';
-import { Circle, CircleArc, PointShape } from '../shapes/base_shapes';
+import { Circle } from '../shapes/primitives/circle';
+import { CircleArc } from '../shapes/primitives/circle_arc';
+import { PointShape } from '../shapes/primitives/point_shape';
 import { SvgShape } from '../shapes/brace';
 import { NativeRenderer, ShapeRenderer } from './renderer';
 

@@ -1,9 +1,8 @@
-import { Point, HAlign } from "../src/base";
-import { RGBA } from "../src/colors";
-import { Canvas } from "../src/renderers/renderer";
-import { Scene } from "../src/scene";
-import { TextBaseline } from "../src/shapes/text";
-import { Line } from "../src/shapes/base_shapes";
+import { Point, HAlign } from '../src/base';
+import { RGBA } from '../src/colors';
+import { Canvas } from '../src/renderers/renderer';
+import { Scene } from '../src/scene';
+import { TextBaseline } from '../src/shapes/primitives/text';
 import { Animation, Animatable } from '../src/animations/animations';
 import { SvgCommand } from '../src/shapes/brace';
 
@@ -12,13 +11,13 @@ class TestCanvas implements Canvas {
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseMove(listener: unknown): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
     onMouseUp(listener: (pt: Point) => void): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
     onMouseOut(listener: () => void): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     arc({ center, radius, angle, lineWidth, color }: { center: Point; radius: number; angle: number; lineWidth: number; color: RGBA; }): void {}

@@ -1,5 +1,5 @@
-import { Shape, isShape } from './shapes/base_shapes';
-import { Text } from './shapes/text';
+import { Shape, isShape } from './shapes/shape';
+import { Text } from './shapes/primitives/text';
 import { Animation, isAnimation, Animatable } from './animations/animations';
 import { Canvas, HtmlCanvas } from './renderers/renderer';
 import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from './base';

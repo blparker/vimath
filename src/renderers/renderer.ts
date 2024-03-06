@@ -1,9 +1,9 @@
 import { Point, HAlign, X_TICKS, Y_TICKS, FONT_STACK, VAlign, Config } from '../base';
 import { Colors, RGBA, rgbaToString } from '../colors';
-import { LineStyle, Shape } from '../shapes/base_shapes.js';
+import { LineStyle, Shape } from '../shapes/shape.js';
 import { SvgCommand } from '../shapes/brace';
 import * as math from '../math.js';
-import { TextBaseline } from '../shapes/text';
+import { TextBaseline } from '../shapes/primitives/text';
 
 
 type ArcArgs = { center: Point; radius: number; angle: number; lineWidth: number; lineColor: RGBA, color: RGBA; };

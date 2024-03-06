@@ -1,7 +1,9 @@
 import { Axes, AxesConfig } from '../../src/shapes/axes';
 import { TestTextMetrics, expectArraysClose } from '../utils';
-import { Text } from '../../src/shapes/text';
-import { Line, PointShape, Shape } from '../../src/shapes/base_shapes';
+import { Text } from '../../src/shapes/primitives/text';
+import { Shape } from '../../src/shapes/shape';
+import { Line } from '../../src/shapes/primitives/line';
+import { PointShape } from '../../src/shapes/primitives/point_shape';
 import { X_TICKS, Y_TICKS } from '../../src/base';
 import { NumberLine } from '../../src/shapes/number_line';
 import { Colors } from '../../src/colors';

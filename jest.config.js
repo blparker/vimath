@@ -11,7 +11,17 @@
   },
 };*/
 import structuredClone from '@ungap/structured-clone'
+// import { pathsToModuleNameMapper } from 'ts-jest';
+// import { compilerOptions } from './tsconfig.json';
+// const tsconfig = await import('./tsconfig.json', { assert: { type: 'json' } });
+// console.log(tsconfig)
+// const { compilerOptions } = tsconfig.default;
+// console.log("### ", compilerOptions)
 
+// const paths = {
+//   "@/*": ["./src/*"],
+//   "*": ["./node_modules/*"]
+// };
 
 
 export default {
@@ -37,8 +47,12 @@ export default {
   // },
   globals: {
     structuredClone,
+    'ts-jest': {
+      tsConfig: './tsconfig.json',
+    }
   },
   moduleNameMapper: {
+    // moduleNameMapper: pathsToModuleNameMapper(paths, { prefix: '<rootDir>/' }),
     "(.+)\\.js": "$1"
   },
   // extensionsToTreatAsEsm: [".ts"],

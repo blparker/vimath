@@ -1,5 +1,5 @@
 import { Shift, Point, RIGHT, OFFSET_GUTTER } from '../base.js';
-import { PointsAware, Shape } from './base_shapes.js';
+import { PointsAware, Shape } from './shape.js';
 import * as math from '../math.js';
 
 

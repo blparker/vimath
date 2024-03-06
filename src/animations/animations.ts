@@ -1,5 +1,5 @@
 import { Point, Shift } from '../base.js';
-import { PointsAware, Shape, Styleable, isShape } from '../shapes/base_shapes.js';
+import { PointsAware, Styleable, isShape, Shape } from '../shapes/shape.js';
 import { RGBA } from '../colors.js';
 import { Easing, EasingFunction } from '../easing.js';
 import { arrLerp, distance, lerp } from '../math.js';

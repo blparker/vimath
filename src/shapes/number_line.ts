@@ -1,8 +1,8 @@
 import { X_TICKS, Y_TICKS, Range, Point, VAlign, HAlign } from '../base';
 import { ComposableShape } from './composed_shape';
 import * as math from '../math';
-import { Line } from './base_shapes';
-import { Text } from './text';
+import { Line } from './primitives/line';
+import { Text } from './primitives/text';
 
 
 type NumberLineArgs = {
