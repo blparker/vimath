@@ -19,8 +19,14 @@ import { Scene, Square } from 'vimath';
 
 class TestScene extends Scene {
     compose() {
-        const s = new Square();
-        this.add(s);
+        const s = new Square({ lineColor: Colors.red() })
+            .shift([1, 2])         // Shift 1 unit right and 2 units up
+            .rotate(Math.PI / 4);  // Rotate 45 degrees
+
+        const t = new Triangle({ color: Colors.blue() })
+            .scale(0.5);   // Scale down by 50%
+
+        this.add(s, t);
 
         return this;
     }
@@ -30,7 +36,7 @@ new TestScene().compose().render();
 ```
 
 #### Output
-![alt text](assets/image.png)
+![alt text](assets/screenshot.png)
 
 ## Playground
 
