@@ -19,6 +19,6 @@ jobs:
           git config --local user.email "bryan@bryanp.xyz"
           git config --local user.name "Bryan Parker"
       - run: npm ci
-      - run: npm run publish-to-npm
+      - run: npm run vite-npm-publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
