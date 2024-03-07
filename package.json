@@ -23,7 +23,7 @@
     "publish-to-npm": "rm -rf dist && npm run bundle-dev && npm run bundle-prod && cp package.json dist && npm version patch && npm publish --access public",
     "vite-npm-publish": "./node_modules/.bin/vite build --config vite.config.ts && cp package.json dist && npm version patch && npm publish --access public && git push --follow-tags ",
     "launch-visual-tests": "canvas-test --port 8001",
-    "build-docs": "typedoc --out docs src"
+    "build-docs": "typedoc --out docs --excludeInternal --readme README.md src"
   },
   "devDependencies": {
     "@blparker/canvas-test": "^1.0.15",

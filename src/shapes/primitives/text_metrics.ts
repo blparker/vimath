@@ -9,11 +9,17 @@ import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
 import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 
 
+/**
+ * @internal
+ */
 export interface TextMetrics {
     measureText(text: string, size: number): [number, number];
 }
 
 
+/**
+ * @internal
+ */
 export abstract class BaseCanvasTextMetrics implements TextMetrics {
     protected canvas: OffscreenCanvas;
 
