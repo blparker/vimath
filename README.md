@@ -3,6 +3,8 @@
 Vimath is a browser library for creating animatable and interactive visualizations. While it's general and flexible enough for any visualizations
 it's been built with math education and math visualizations in mind. Vimath is heavily inspired by the work Grant Sanderson (3Blue1Brown) has been doing with the the manim Python library.
 
+Note: the library is still in alpha phase, so there may be some thrash in the API in the meantime.
+
 ## Documentation
 https://bryan.blog/vimath/
 
@@ -45,3 +47,7 @@ I created a [little playground](https://vimath-editor.bryan.blog) where you can 
 > Vimath Playground: https://vimath-editor.bryan.blog
 
 ![alt text](assets/vimath_playground.png)
+
+## Contribution
+
+Accepting any and all contributions. Help with development, documentation, or examples would be greatly appreciated.
