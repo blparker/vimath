@@ -1,5 +1,4 @@
-// import { describe, expect, test } from '@jest/globals';
-// import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
+import { describe, test, expect } from 'vitest';
 import { PointShape } from '../src/shapes/primitives/point_shape';
 import { Line } from '../src/shapes/primitives/line';
 import { Circle } from '../src/shapes/primitives/circle';
@@ -132,8 +131,8 @@ describe('shape module', function() {
         expect(circle.center()).toEqual([0, 0]);
         expect(circle.right()).toEqual([1, 0]);
 
-        const triangle = new Triangle();
-        const square = new Square();
+        new Triangle();
+        new Square();
     });
 
     test('should set line color to color when color is specified but not line color', () => {

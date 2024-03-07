@@ -1,15 +1,16 @@
+import { describe, test, expect } from 'vitest';
 // import { createCanvas, Canvas as NodeCanvas } from '../../node_modules/canvas/index';
-import { Canvas, HtmlCanvas } from '../../src/renderers/renderer';
-import { TextRenderer } from '../../src/renderers/text';
+import { HtmlCanvas } from '../../src/renderers/renderer';
 import { PointShapeRenderer } from '../../src/renderers/shape';
+import { TextRenderer } from '../../src/renderers/text';
 // import { TextRenderer } from '../../src/renderers/text';
-import { TestTextMetrics } from '../utils';
-import { getRenderer } from '../../src/renderers/renderer_factory';
 import { DEFAULT_PADDING, Point, X_TICKS, Y_TICKS } from '../../src/base';
-import { Square } from '../../src/shapes/primitives/square';
-import { Line } from '../../src/shapes/primitives/line';
-import { Text } from '../../src/shapes/primitives/text';
 import { Colors } from '../../src/colors';
+import { getRenderer } from '../../src/renderers/renderer_factory';
+import { Line } from '../../src/shapes/primitives/line';
+import { Square } from '../../src/shapes/primitives/square';
+import { Text } from '../../src/shapes/primitives/text';
+import { TestTextMetrics } from '../utils';
 
 // import { JSDOM } from '../../node_modules/jsdom/lib/api.js';
 // import { JSDOM } from 'jsdom';
@@ -102,7 +103,7 @@ describe('renderer module', () => {
         const spy = jest.spyOn(canvas, 'text');
 
         const text = new Text({ text: 'Hello world', x: 0, y: 0, size: 20, align: 'center', baseline: 'top', color: Colors.white(), textMetrics: new TestTextMetrics(100, 10) })
-        const r = new TextRenderer(canvas).render(text);
+        new TextRenderer(canvas).render(text);
 
         // text should only be called once, from -> to
         expect(spy).toHaveBeenCalledTimes(1);
@@ -150,7 +151,7 @@ describe('html canvas module', () => {
         const canvas = createTestCanvas(400, 200);
         canvas.line({ from: [-1, 0], to: [1, 0], lineWidth: 2, color: Colors.blue(), lineStyle: 'solid' });
 
-        const drawCalls = canvas.ctx.__getDrawCalls();
+        // const drawCalls = canvas.ctx.__getDrawCalls();
         // console.log(canvas.ctx.__getEvents())
         // expect(drawCalls[0].props.path[0].props).toEqual(calcAbsPosition(canvas, [-1, 0]));
     });

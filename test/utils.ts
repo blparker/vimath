@@ -1,10 +1,11 @@
+import { expect } from 'vitest';
 import { Point, X_TICKS, Y_TICKS } from '../src/base';
 import { HtmlCanvas } from '../src/renderers/renderer';
 import { zip } from '../src/math';
-import { TextMetrics } from '../src/shapes/text_metrics';
+import { TextMetrics } from '../src/shapes/primitives/text_metrics';
 
 
-export function createTestCanvas(cvsWidth = 400, cvsHeight = 200) {
+export function createTestCanvas(cvsWidth = 400, cvsHeight = 200): HtmlCanvas {
     const cvs: HTMLCanvasElement = document.createElement('canvas');
     cvs.width = cvsWidth; cvs.height = cvsHeight;
 
@@ -33,7 +34,7 @@ export class TestTextMetrics implements TextMetrics {
         this.height = height;
     }
 
-    measureText(text: string, size: number): [number, number] {
+    measureText(): [number, number] {
         // return [105.23332977294922, 15.419921875];
         const canvasWidth = 860;
         const canvasHeight = 500;

@@ -1,5 +1,5 @@
 import { Point, Prettify, Range, X_TICKS, Y_TICKS } from '../base';
-import { ComposableShape } from './composed_shape';
+import { ComposableShape } from './composable_shape';
 import * as math from '../math';
 import { Shape, StyleArgs } from './shape.js';
 import { Line } from './primitives/line';

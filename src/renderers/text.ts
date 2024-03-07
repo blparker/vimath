@@ -1,13 +1,12 @@
-import { NativeRenderer, ShapeRenderer } from './renderer';
 import { Text } from '../shapes/primitives/text';
-import { TextMetrics } from '../shapes/text_metrics';
+import { NativeRenderer, ShapeRenderer } from './renderer';
 
-import { mathjax } from 'mathjax-full/js/mathjax';
-import { TeX } from 'mathjax-full/js/input/tex';
-import { SVG } from 'mathjax-full/js/output/svg';
+import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor';
 import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
-import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
+import { TeX } from 'mathjax-full/js/input/tex';
+import { mathjax } from 'mathjax-full/js/mathjax';
+import { SVG } from 'mathjax-full/js/output/svg';
 
 
 export const adaptor = liteAdaptor()
@@ -18,13 +17,13 @@ export const mjDocument = mathjax.document('', {
     OutputJax: new SVG({ fontCache: 'local' })
 });
 
-const mjOptions = {
-    em: 16,
-    ex: 8,
-    // em: 32,
-    // ex: 16,
-    containerWidth: 1280,
-};
+// const mjOptions = {
+//     em: 16,
+//     ex: 8,
+//     // em: 32,
+//     // ex: 16,
+//     containerWidth: 1280,
+// };
 
 
 class TexImageRenderer {
@@ -48,7 +47,7 @@ class TexImageRenderer {
         const image = new Image();
 
         return new Promise((resolve, reject) => {
-            image.onload = e => {
+            image.onload = () => {
                 this.imageCache.set(tex, image);
                 resolve(image)
             };

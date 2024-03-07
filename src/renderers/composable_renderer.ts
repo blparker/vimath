@@ -1,8 +1,4 @@
-import { Composable, ComposableShape } from "../shapes/composed_shape";
-import { Point } from '../base';
-import { Circle } from '../shapes/primitives/circle';
-import { CircleArc } from '../shapes/primitives/circle_arc';
-import { PointShape } from '../shapes/primitives/point_shape';
+import { ComposableShape } from "../shapes/composable_shape";
 import { Shape } from '../shapes/shape';
 import { Canvas, NativeRenderer, ShapeRenderer } from './renderer';
 

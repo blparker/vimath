@@ -1,7 +1,6 @@
-import { OFFSET_GUTTER, ORIGIN, Point, RIGHT, Shift } from '../base';
+import { ORIGIN, RIGHT } from '../base';
+import { ComposableShape } from './composable_shape';
 import { Shape } from './shape';
-import * as math from '../math';
-import { Composable, ComposableShape } from './composed_shape';
 
 
 export class Group extends ComposableShape {

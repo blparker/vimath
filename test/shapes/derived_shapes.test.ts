@@ -1,5 +1,6 @@
+import { describe, test, expect } from 'vitest';
 import { Colors } from '../../src/colors';
-import { Dot } from '../../src/shapes/derived_shapes';
+import { Dot } from '../../src/shapes/dot';
 
 
 describe('dot tests', function() {

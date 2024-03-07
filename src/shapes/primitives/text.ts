@@ -1,11 +1,9 @@
 /// <reference types="offscreencanvas/index.d.ts" />
+import { HAlign, OFFSET_GUTTER, Point, RIGHT, Shift } from '../../base.js';
 import { Colors, RGBA } from '../../colors.js';
-import { Point, Shift, HAlign, RIGHT, OFFSET_GUTTER, DEFAULT_PADDING } from '../../base.js';
 import * as math from '../../math.js';
 import { PointsAware, Shape, Styleable } from '../shape.js';
-import { TexTextMetrics } from '../text_metrics.js';
-import { TextMetrics } from '../text_metrics.js';
-import { CanvasTextMetrics } from '../text_metrics.js';
+import { CanvasTextMetrics, TexTextMetrics, TextMetrics } from './text_metrics.js';
 
 
 export type TextBaseline = 'top' | 'middle' | 'bottom';
@@ -267,7 +265,7 @@ export class Text implements Shape, PointsAware, Styleable {
         return this._color;
     }
 
-    changeLineColor(newColor: RGBA): Styleable {
+    changeLineColor(_: RGBA): Styleable {
         return this;
     }
 

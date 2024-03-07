@@ -2,7 +2,7 @@ import { ORIGIN, Point, Shift } from '../base.js';
 import { Colors, RGBA } from '../colors.js';
 import { Triangle } from './primitives/triangle.js';
 import { Line } from './primitives/line.js';
-import { ComposableShape } from './composed_shape.js';
+import { ComposableShape } from './composable_shape.js';
 import * as math from '../math.js';
 
 

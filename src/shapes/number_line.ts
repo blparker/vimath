@@ -1,6 +1,6 @@
-import { X_TICKS, Y_TICKS, Range, Point, VAlign, HAlign } from '../base';
-import { ComposableShape } from './composed_shape';
+import { HAlign, Point, Range, VAlign, X_TICKS } from '../base';
 import * as math from '../math';
+import { ComposableShape } from './composable_shape';
 import { Line } from './primitives/line';
 import { Text } from './primitives/text';
 
@@ -114,14 +114,14 @@ export class NumberLine extends ComposableShape {
         const ticks = [];
         let [start, end] = this.range;
 
-        const numTicks = Math.floor(math.range(this.range) / this.tickStep) + 1;
-        if (numTicks % 2 === 0) {
-            const newRange = (numTicks - 2) * this.tickStep;
-            const diff = math.range(this.range) - newRange;
+        // const numTicks = Math.floor(math.range(this.range) / this.tickStep) + 1;
+        // if (numTicks % 2 === 0) {
+        //     // const newRange = (numTicks - 2) * this.tickStep;
+        //     // const diff = math.range(this.range) - newRange;
 
-            // start += diff / 2;
-            // end -= diff / 2;
-        }
+        //     // start += diff / 2;
+        //     // end -= diff / 2;
+        // }
 
         for (let i = start; i <= end; i += this.tickStep) {
             if (i === 0 && !this.showZero) {

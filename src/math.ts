@@ -1,5 +1,6 @@
 // import { Decimal } from 'decimal.js';
-import { Decimal } from '../node_modules/decimal.js/decimal.js';
+// import { Decimal } from '../node_modules/decimal.js/decimal.js';
+import { Decimal } from 'decimal.js/decimal.js';
 
 
 function decimalToInt(...args: number[]) {
@@ -44,21 +45,21 @@ export function* zip<T extends any[][]>(...args: T) {
 }
 
 
-function standardizeArrays(l: number | number[], r: number | number[]): [number[], number[]] {
-    if (!Array.isArray(l)) {
-        l = [l];
-    }
+// function standardizeArrays(l: number | number[], r: number | number[]): [number[], number[]] {
+//     if (!Array.isArray(l)) {
+//         l = [l];
+//     }
 
-    if (!Array.isArray(r)) {
-        r = [r];
-    }
+//     if (!Array.isArray(r)) {
+//         r = [r];
+//     }
 
-    if (l.length !== r.length) {
-        throw new Error('Expected arrays to be of equal length');
-    }
+//     if (l.length !== r.length) {
+//         throw new Error('Expected arrays to be of equal length');
+//     }
 
-    return [l, r];
-}
+//     return [l, r];
+// }
 
 
 export function subtract(l: number, r: number): number;

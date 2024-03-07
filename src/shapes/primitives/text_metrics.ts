@@ -1,5 +1,5 @@
-import { Point, Config, X_TICKS, Y_TICKS } from '../base';
-import * as math from "../math.js";
+import { Point, Config, X_TICKS, Y_TICKS } from '../../base';
+import * as math from "../../math.js";
 
 import { mathjax } from 'mathjax-full/js/mathjax';
 import { TeX } from 'mathjax-full/js/input/tex';
@@ -81,13 +81,13 @@ export const mjDocument = mathjax.document('', {
     OutputJax: new SVG({ fontCache: 'local' })
 });
 
-const mjOptions = {
-    em: 16,
-    ex: 8,
-    // em: 32,
-    // ex: 16,
-    containerWidth: 1280,
-};
+// const mjOptions = {
+//     em: 16,
+//     ex: 8,
+//     // em: 32,
+//     // ex: 16,
+//     containerWidth: 1280,
+// };
 
 
 export class TexTextMetrics extends BaseCanvasTextMetrics {

@@ -1,46 +1,46 @@
-import { Axes, AxesConfig } from '../../src/shapes/axes';
-import { TestTextMetrics, expectArraysClose } from '../utils';
-import { Text } from '../../src/shapes/primitives/text';
-import { Shape } from '../../src/shapes/shape';
+import { describe, test, expect } from 'vitest';
+import { X_TICKS, Y_TICKS } from '../../src/base';
+import { Colors } from '../../src/colors';
+import { Axes } from '../../src/shapes/axes';
+import { NumberLine } from '../../src/shapes/number_line';
 import { Line } from '../../src/shapes/primitives/line';
 import { PointShape } from '../../src/shapes/primitives/point_shape';
-import { X_TICKS, Y_TICKS } from '../../src/base';
-import { NumberLine } from '../../src/shapes/number_line';
-import { Colors } from '../../src/colors';
+import { Text } from '../../src/shapes/primitives/text';
+import { expectArraysClose } from '../utils';
 
 
-function findLabel({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
-    for (const shape of cs) {
-        if (!(shape instanceof Text)) continue;
+// function findLabel({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
+//     for (const shape of cs) {
+//         if (!(shape instanceof Text)) continue;
 
-        const [cX, cY] = shape.center();
+//         const [cX, cY] = shape.center();
 
-        if (x !== undefined && cX === x) {
-            return shape;
-        } else if (y !== undefined && cY === y) {
-            return shape;
-        }
-    }
+//         if (x !== undefined && cX === x) {
+//             return shape;
+//         } else if (y !== undefined && cY === y) {
+//             return shape;
+//         }
+//     }
 
-    throw new Error(`Could not find shape for [${x}, ${y}]`);
-}
+//     throw new Error(`Could not find shape for [${x}, ${y}]`);
+// }
 
 
-function findTick({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
-    for (const shape of cs) {
-        if (!(shape instanceof Line)) continue;
+// function findTick({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
+//     for (const shape of cs) {
+//         if (!(shape instanceof Line)) continue;
 
-        const [cX, cY] = shape.center();
+//         const [cX, cY] = shape.center();
 
-        if (x !== undefined && cX === x) {
-            return shape;
-        } else if (y !== undefined && cY === y) {
-            return shape;
-        }
-    }
+//         if (x !== undefined && cX === x) {
+//             return shape;
+//         } else if (y !== undefined && cY === y) {
+//             return shape;
+//         }
+//     }
 
-    throw new Error(`Could not find shape for [${x}, ${y}]`);
-}
+//     throw new Error(`Could not find shape for [${x}, ${y}]`);
+// }
 
 
 // describe('axes module', function() {
@@ -238,7 +238,7 @@ function findTick({ cs, x, y }: { cs: Shape[], x?: number, y?: number }) {
 
 describe('axes module', () => {
 
-    it('should create default axes with the origin at (0, 0) and have full width and height', () => {
+    test('should create default axes with the origin at (0, 0) and have full width and height', () => {
         const a = new Axes();
         const cs = a.composedShapes();
 
@@ -253,7 +253,7 @@ describe('axes module', () => {
     });
 
 
-    it('should create X-axis with length, ticks, and labels', () => {
+    test('should create X-axis with length, ticks, and labels', () => {
         const a = new Axes({ xLength: 6 });
         const cs = (a.composedShapes()[0] as NumberLine).composedShapes();
 
@@ -268,7 +268,7 @@ describe('axes module', () => {
     });
 
 
-    it('should create Y-axis with length, ticks, and labels', () => {
+    test('should create Y-axis with length, ticks, and labels', () => {
         const a = new Axes({ yLength: 4 });
         const cs = (a.composedShapes()[1] as NumberLine).composedShapes();
 
@@ -283,7 +283,7 @@ describe('axes module', () => {
     });
 
 
-    it('should move origin', () => {
+    test('should move origin', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [-2, 6], yRange: [-1, 3], showAxisLabels: false, showAxisTicks: false });
         const cs = a.composedShapes();
 
@@ -295,7 +295,7 @@ describe('axes module', () => {
     });
 
 
-    it('should determine origin being offset', () => {
+    test('should determine origin being offset', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [0, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
         const cs = a.composedShapes();
 
@@ -307,7 +307,7 @@ describe('axes module', () => {
     });
 
 
-    it('should determine origin being offset when start of range is is not 0', () => {
+    test('should determine origin being offset when start of range is is not 0', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
         const cs = a.composedShapes();
 
@@ -319,18 +319,18 @@ describe('axes module', () => {
     });
 
 
-    it('should use provided color for area under axes', () => {
+    test('should use provided color for area under axes', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
-        const p = a.plot(x => 2, { color: Colors.red() }) as PointShape;
+        const p = a.plot(() => 2, { color: Colors.red() }) as PointShape;
         const area = a.area({ plot: p, xRange: [1, 3], color: Colors.blue({ opacity: 0.5 }) });
 
         expect(area.color()).toEqual(Colors.blue({ opacity: 0.5 }));
     });
 
 
-    it('should use plot color for area under axes', () => {
+    test('should use plot color for area under axes', () => {
         const a = new Axes({ xLength: 8, yLength: 4, xRange: [2, 8], yRange: [0, 4], showAxisLabels: false, showAxisTicks: false });
-        const p = a.plot(x => 2, { color: Colors.red() }) as PointShape;
+        const p = a.plot(() => 2, { color: Colors.red() }) as PointShape;
         const area = a.area({ plot: p, xRange: [1, 3] });
 
         expect(area.color()).toEqual(Colors.red({ opacity: 0.3 }));

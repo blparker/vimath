@@ -1,3 +1,5 @@
+// @ts-nocheck
+import { describe, test, expect } from 'vitest';
 import { Point, HAlign } from '../src/base';
 import { RGBA } from '../src/colors';
 import { Canvas } from '../src/renderers/renderer';
@@ -6,8 +8,8 @@ import { TextBaseline } from '../src/shapes/primitives/text';
 import { Animation, Animatable } from '../src/animations/animations';
 import { SvgCommand } from '../src/shapes/brace';
 
-
 class TestCanvas implements Canvas {
+    /* ts:ignore */
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseMove(listener: unknown): void {

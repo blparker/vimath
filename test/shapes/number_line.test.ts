@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { X_TICKS } from '../../src/base';
 import { Line } from '../../src/shapes/primitives/line';
 import { Text } from '../../src/shapes/primitives/text';
@@ -26,7 +27,7 @@ describe('number line module', function() {
 
     test('should default to center and full width', () => {
         const n = new NumberLine({ showLabels: false, showTicks: false });
-        const cs = n.composedShapes();
+        n.composedShapes();
 
         expect(n.width()).toEqual(X_TICKS);
         expect(n.center()).toEqual([0, 0]);
@@ -35,7 +36,7 @@ describe('number line module', function() {
 
     test('should create with specified length', () => {
         const n = new NumberLine({ length: 10, showLabels: false, showTicks: false });
-        const cs = n.composedShapes();
+        n.composedShapes();
 
         expect(n.width()).toEqual(10);
     });

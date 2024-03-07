@@ -3,7 +3,7 @@ import { getHtmlColor, isHtmlColor } from "./html_colors";
 export type RGBA = [number, number, number, number];
 
 type ColorStyle = { variant?: number; opacity?: number; };
-type Variant = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
+// type Variant = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
 
 /**

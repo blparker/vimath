@@ -1,9 +1,9 @@
 import { Point, Shift } from '../base.js';
-import { PointsAware, Styleable, isShape, Shape } from '../shapes/shape.js';
 import { RGBA } from '../colors.js';
 import { Easing, EasingFunction } from '../easing.js';
-import { arrLerp, distance, lerp } from '../math.js';
 import * as math from '../math.js';
+import { arrLerp, distance, lerp } from '../math.js';
+import { PointsAware, Shape, Styleable, isShape } from '../shapes/shape.js';
 
 
 export type AnimationArgs = {
@@ -365,7 +365,7 @@ export class Orbit extends Animation {
         this.center = center;
     }
 
-    update(pctComplete: number, reversing: boolean): Animatable[] {
+    update(pctComplete: number): Animatable[] {
         if (this.startAngle !== undefined && this.distance !== undefined) {
             const endAngle = this.startAngle + Math.PI * 2;
             const updatedVal = this.updateWithEase(this.startAngle, endAngle, pctComplete);

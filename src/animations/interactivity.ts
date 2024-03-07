@@ -28,7 +28,6 @@ export function isInteraction(el: any): el is Interaction {
 function inside(point: Point, points: Point[]): boolean {
     const [x, y] = point;
     let inside = false;
-    const padding = 0.1;
 
     for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
         // const [xi, yi] = math.scalarMultiply(points[i], 1 + padding);

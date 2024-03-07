@@ -82,7 +82,7 @@ type SceneArgs = {
 
 
 class Wait extends Animation {
-    update(pctComplete: number, reversing: boolean): Animatable[] {
+    update(): Animatable[] {
         return [];
     }
 
@@ -95,7 +95,7 @@ class RemoveElement extends Animation {
         super({ duration: 0, easing: Easing.linear });
     }
 
-    update(pctComplete: number, reversing: boolean): Animatable[] {
+    update(): Animatable[] {
         for (const layer of this.els) {
             for (const el of this.toRemove) {
                 const idx = layer.indexOf(el);

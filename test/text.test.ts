@@ -1,8 +1,7 @@
-// import { describe, expect, test } from '@jest/globals';
-// import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
+import { describe, test, expect } from 'vitest';
+import { LEFT, RIGHT } from '../src/base';
 import { Square } from '../src/shapes/primitives/square';
 import { Text } from '../src/shapes/primitives/text';
-import { RIGHT, LEFT, UP, DOWN } from '../src/base';
 import { TestTextMetrics } from './utils';
 
 

@@ -1,10 +1,7 @@
-// import { describe, expect, test } from '@jest/globals';
-// import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
-import { PointShape } from '../../src/shapes/primitives/point_shape';
-import { Line } from '../../src/shapes/primitives/line';
+import { describe, test, expect } from 'vitest';
+import { LEFT, UP } from '../../src/base';
+import { ComposableShape } from '../../src/shapes/composable_shape';
 import { Square } from '../../src/shapes/primitives/square';
-import { Point, LEFT, UP } from '../../src/base';
-import { ComposableShape } from '../../src/shapes/composed_shape';
 
 
 class TestShape extends ComposableShape {

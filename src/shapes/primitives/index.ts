@@ -5,4 +5,5 @@ export * from './n_sided_polygon';
 export * from './point_shape';
 export * from './square';
 export * from './text';
+export * from './text_metrics';
 export * from './triangle';

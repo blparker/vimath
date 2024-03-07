@@ -1,7 +1,7 @@
-import { Shift, Point, Prettify } from '../base';
-import { Shape, StyleArgs, Styleable } from './shape';
-import * as math from '../math';
+// @ts-nocheck
+import { Point, Prettify, Shift } from '../base';
 import { RGBA } from '../colors';
+import { Shape, StyleArgs, Styleable } from './shape';
 
 
 export type SvgCommand = [string, ...number[]];
@@ -59,27 +59,33 @@ export class Brace implements SvgShape {
         return this._lineWidth;
     }
 
-    changeLineColor(newColor: RGBA): Styleable {
+    // changeLineColor(newColor: RGBA): Styleable {
+    changeLineColor(): Styleable {
         throw new Error('Method not implemented.');
     }
 
-    shift(...shifts: Shift[]): Shape {
+    // shift(...shifts: Shift[]): Shape {
+    shift(): Shape {
         throw new Error("Method not implemented.");
     }
 
-    moveTo(point: Point): Shape {
+    // moveTo(point: Point): Shape {
+    moveTo(): Shape {
         throw new Error("Method not implemented.");
     }
 
-    scale(factor: number): Shape {
+    // scale(factor: number): Shape {
+    scale(): Shape {
         throw new Error("Method not implemented.");
     }
 
-    rotate(angle: number): Shape {
+    // rotate(angle: number): Shape {
+    rotate(): Shape {
         throw new Error("Method not implemented.");
     }
 
-    nextTo(shape: Shape | Point, direction?: Point | undefined): Shape {
+    // nextTo(shape: Shape | Point, direction?: Point | undefined): Shape {
+    nextTo(): Shape {
         throw new Error("Method not implemented.");
     }
 
@@ -93,7 +99,8 @@ export class Brace implements SvgShape {
         }
     }
 
-    moveCenter(newCenter: Point): Shape {
+    // moveCenter(newCenter: Point): Shape {
+    moveCenter(): Shape {
         throw new Error("Method not implemented.");
     }
 
@@ -205,7 +212,7 @@ export class Brace implements SvgShape {
     }
 
     svgPath(): SvgCommand[] {
-        let [dX, dY] = this.direction;
+        let dY = this.direction[1];
         let [[x1, y1], [x2, y2]] = this.getPoints();
 
         const q = 0.6;

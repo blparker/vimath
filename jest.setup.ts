@@ -29,7 +29,7 @@ if (!window.OffscreenCanvas) {
     class OffscreenCanvas {
         constructor(public width: number, public height: number) {}
 
-        public getContext(contextType: '2d'): CanvasRenderingContext2D {
+        public getContext(): CanvasRenderingContext2D {
             const sizes: Record<string, number> = {
                 "0": 0.5, "1": 0.5, "2": 0.5, "3": 0.5, "4": 0.5, "5": 0.5, "6": 0.5, "7": 0.5, "8": 0.5, "9": 0.5,
 

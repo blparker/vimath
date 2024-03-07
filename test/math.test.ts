@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 // import {describe, expect, test} from '@jest/globals';
 // import { describe, expect, test } from '../node_modules/@jest/globals/build/index';
 import * as math from '../src/math';

@@ -1,11 +1,12 @@
-import { Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget, Animatable } from '../src/animations/animations';
-import { LEFT, Point, Shift } from '../src/base';
-import { Square } from '../src/shapes/primitives/square';
+import { describe, test, expect } from 'vitest';
+import structuredClone from '@ungap/structured-clone';
+import { Animatable, Animation, ChangeFillColor, MoveAlongPath, MoveToTarget, Orbit, Rotate, Scale, ShiftTarget } from '../src/animations/animations';
+import { LEFT, Point } from '../src/base';
 import { Colors } from '../src/colors';
 import { Easing } from '../src/easing';
 import { zip } from '../src/math';
-import { Dot } from '../src/shapes/derived_shapes';
-import structuredClone from '@ungap/structured-clone'
+import { Dot } from '../src/shapes/dot';
+import { Square } from '../src/shapes/primitives/square';
 
 
 function expectArraysClose(a1: number[][], a2: number[][]) {
@@ -28,7 +29,7 @@ class TestAnimation extends Animation {
         super({ duration, })
     }
 
-    update(delta: number, reversing: boolean): Animatable[] {
+    update(delta: number): Animatable[] {
         this.updateVal = delta;
 
         return [];
