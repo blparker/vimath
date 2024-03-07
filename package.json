@@ -1,6 +1,6 @@
 {
   "name": "vimath",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Vimath is a library for creating interactive math content in the browser.",
   "author": "Bryan Parker",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "bundle-local": "./node_modules/.bin/esbuild src/index.ts --bundle --sourcemap --outdir=./dist/out --global-name=${npm_package_name} --watch --format=esm",
     "local-publish": "rm -rf dist && npm run build && npm run bundle-prod && cp package.json dist && cd dist && npm pack --pack-destination .",
     "publish-to-npm": "rm -rf dist && npm run bundle-dev && npm run bundle-prod && cp package.json dist && npm version patch && npm publish --access public",
+    "vite-npm-publish": "./node_modules/.bin/vite build --config vite.config.ts && cp package.json dist && npm version patch && npm publish --access public",
     "launch-visual-tests": "canvas-test --port 8001",
     "build-docs": "typedoc --out docs src"
   },
