@@ -6,11 +6,11 @@
   "license": "ISC",
   "type": "module",
   "outDir": "./dist",
-  "main": "${npm_package_outDir}/${npm_package_name}.umd.js",
-  "module": "${npm_package_outDir}/${npm_package_name}.es.js",
-  "files": [
-    "${npm_package_outDir}/**/*"
-  ],
+  "main": "dist/vimath.umd.js",
+  "module": "dist/vimath.es.js",
+  "browser": "dist/vimath.iife.js",
+  "files": ["dist/"],
+  "types": "dist/vimath.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "npx jest --verbose --config jest.config.js",

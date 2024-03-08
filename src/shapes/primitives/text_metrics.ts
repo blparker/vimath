@@ -56,6 +56,9 @@ export abstract class BaseCanvasTextMetrics implements TextMetrics {
 }
 
 
+/**
+ * @internal
+ */
 export class CanvasTextMetrics extends BaseCanvasTextMetrics {
     measureText(text: string, size: number): [number, number] {
         const ctx = this.canvas.getContext('2d');
@@ -96,6 +99,9 @@ export const mjDocument = mathjax.document('', {
 // };
 
 
+/**
+ * @internal
+ */
 export class TexTextMetrics extends BaseCanvasTextMetrics {
     measureText(text: string, size: number): [number, number] {
         const node = mjDocument.convert(text, { display: false });
