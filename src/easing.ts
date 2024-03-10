@@ -1,10 +1,10 @@
-export type EasingFunction = (x: number) => number;
+type EasingFunction = (x: number) => number;
 
 
 /**
  * Taken from https://easings.net/en
  */
-export class Easing {
+class Easing {
     static easeInOutCubic(x: number): number {
         return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
     }
@@ -67,3 +67,5 @@ export class Easing {
         return x;
     }
 }
+
+export { type EasingFunction, Easing };

@@ -1,9 +1,9 @@
-import { Point, Shift } from '../base.js';
-import { RGBA } from '../colors.js';
-import { Easing, EasingFunction } from '../easing.js';
-import * as math from '../math.js';
-import { arrLerp, distance, lerp } from '../math.js';
-import { PointsAware, Shape, Styleable, isShape } from '../shapes/shape.js';
+import { Point, Shift } from '@/base';
+import { RGBA } from '@/colors';
+import { Easing, EasingFunction } from '@/easing';
+import * as math from '@/math';
+import { arrLerp, distance, lerp } from '@/math';
+import { PointsAware, Shape, Styleable, isShape } from '@/shapes/shape';
 
 
 export type AnimationArgs = {

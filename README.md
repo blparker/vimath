@@ -38,7 +38,7 @@ new TestScene().compose().render();
 ```
 
 #### Output
-![alt text](assets/screenshot.png)
+![example output](https://raw.githubusercontent.com/blparker/vimath/master/assets/screenshot.png)
 
 ## Playground
 
@@ -46,7 +46,7 @@ I created a [little playground](https://vimath-editor.bryan.blog) where you can 
 
 > Vimath Playground: https://vimath-editor.bryan.blog
 
-![alt text](assets/vimath_playground.png)
+![playground](https://raw.githubusercontent.com/blparker/vimath/master/assets/vimath_playground.png)
 
 ## Contribution
 

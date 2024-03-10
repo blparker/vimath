@@ -53,5 +53,6 @@ export default defineConfig({
             '**/*.spec.js',
         ],
     },
-    plugins: [dts({ rollupTypes: true })],
+    // plugins: [dts({ rollupTypes: true })],
+    plugins: [dts()],
 });

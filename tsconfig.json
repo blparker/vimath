@@ -23,7 +23,7 @@
     "outDir": "./dist",
     "declaration": true,
     "sourceMap": true,
-    // "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
     // "esModuleInterop": true,
     // "forceConsistentCasingInFileNames": true,
 
