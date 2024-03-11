@@ -1,4 +1,4 @@
-import { getHtmlColor, isHtmlColor } from "./html_colors";
+import { getHtmlColor, isHtmlColor } from "@/html_colors";
 
 export type RGBA = [number, number, number, number];
 

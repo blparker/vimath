@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Point, Prettify, Shift } from '../base';
-import { RGBA } from '../colors';
+import { Point, Prettify, Shift } from '@/base';
+import { RGBA } from '@/colors';
 import { Shape, StyleArgs, Styleable } from './shape';
 
 

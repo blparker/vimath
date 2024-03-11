@@ -1,6 +1,7 @@
-import { ComposableShape } from "../shapes/composable_shape";
-import { Shape } from '../shapes/shape';
-import { Canvas, NativeRenderer, ShapeRenderer } from './renderer';
+import { ComposableShape } from '@/shapes/composable_shape';
+import { Shape } from '@/shapes/shape';
+import { Canvas, NativeRenderer, ShapeRenderer } from '@/renderers/renderer';
+
 
 export class ComposableRenderer extends NativeRenderer<ComposableShape> {
     constructor(canvas: Canvas, private getRenderer: (canvas: Canvas, shape: Shape) => ShapeRenderer<Shape>) {

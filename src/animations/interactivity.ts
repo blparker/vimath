@@ -1,9 +1,9 @@
-import { Point } from '../base';
-import { isPointsAware } from '../shapes/shape';
-import { Shape } from '../shapes/shape';
-import { Animation } from './animations';
-import * as math from '../math';
-import { Canvas } from '../renderers/renderer';
+import { Point } from '@/base';
+import { isPointsAware } from '@/shapes/shape';
+import { Shape } from '@/shapes/shape';
+import { Animation } from '@/animations/animations';
+import * as math from '@/math';
+import { Canvas } from '@/renderers/renderer';
 
 
 export type MouseDown = 'mousedown';

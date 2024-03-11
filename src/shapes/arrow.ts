@@ -1,9 +1,9 @@
-import { ORIGIN, Point, Shift } from '../base.js';
-import { Colors, RGBA } from '../colors.js';
-import { Triangle } from './primitives/triangle.js';
-import { Line } from './primitives/line.js';
-import { ComposableShape } from './composable_shape.js';
-import * as math from '../math.js';
+import { ORIGIN, Point, Shift } from '@/base';
+import { Colors, RGBA } from '@/colors';
+import { Triangle } from './primitives/triangle';
+import { Line } from './primitives/line';
+import { ComposableShape } from './composable_shape';
+import * as math from '@/math';
 
 
 

@@ -1,7 +1,7 @@
-import { Point, Prettify } from '../../base.js';
-import * as math from '../../math.js';
-import { Shape, StyleArgs, isShape } from '../shape.js';
-import { PointShape } from './point_shape.js';
+import { Point, Prettify } from '@/base';
+import * as math from '@/math';
+import { Shape, StyleArgs, isShape } from '@/shapes/shape';
+import { PointShape } from './point_shape';
 
 
 

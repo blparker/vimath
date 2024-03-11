@@ -1,7 +1,7 @@
-import { Colors, RGBA, parseColor } from '../../colors.js';
-import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '../../base.js';
-import * as math from '../../math.js';
-import { LineStyle, PointsAware, Shape, StyleArgs, Styleable, defaultStyleArgs } from '../shape.js';
+import { Colors, RGBA, parseColor } from '@/colors';
+import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '@/base';
+import * as math from '@/math';
+import { LineStyle, PointsAware, Shape, StyleArgs, Styleable, defaultStyleArgs } from '@/shapes/shape';
 
 /**
  * PointShape is a base class for shapes that are constructed of points and lines (e.g., square)

@@ -1,2 +1,2 @@
-export * from './animations';
-export * from './interactivity';
+export * from '@/animations/animations';
+export * from '@/animations/interactivity';

@@ -1,7 +1,7 @@
-import { X_TICKS, Y_TICKS } from "../base";
-import { ComposableShape } from "./composable_shape";
+import { X_TICKS, Y_TICKS } from '@/base';
+import { ComposableShape } from './composable_shape';
 import { Line } from './primitives/line';
-import { Colors, RGBA, colorWithOpacity } from "../colors";
+import { Colors, RGBA, colorWithOpacity } from '@/colors';
 
 
 export class GridLines extends ComposableShape {

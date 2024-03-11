@@ -1,9 +1,9 @@
 /// <reference types="offscreencanvas/index.d.ts" />
-import { HAlign, OFFSET_GUTTER, Point, RIGHT, Shift } from '../../base.js';
-import { Colors, RGBA } from '../../colors.js';
-import * as math from '../../math.js';
-import { PointsAware, Shape, Styleable } from '../shape.js';
-import { CanvasTextMetrics, TexTextMetrics, TextMetrics } from './text_metrics.js';
+import { HAlign, OFFSET_GUTTER, Point, RIGHT, Shift } from '@/base';
+import { Colors, RGBA } from '@/colors';
+import * as math from '@/math';
+import { PointsAware, Shape, Styleable } from '@/shapes/shape';
+import { CanvasTextMetrics, TexTextMetrics, TextMetrics } from './text_metrics';
 
 
 export type TextBaseline = 'top' | 'middle' | 'bottom';

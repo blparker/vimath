@@ -1,6 +1,6 @@
-import { Point, Prettify } from '../../base.js';
-import { StyleArgs } from '../shape.js';
-import { PointShape } from './point_shape.js';
+import { Point, Prettify } from '@/base';
+import { StyleArgs } from '@/shapes/shape';
+import { PointShape } from './point_shape';
 
 
 

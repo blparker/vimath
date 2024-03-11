@@ -1,12 +1,12 @@
-import { Shape, isShape } from './shapes/shape';
-import { Text } from './shapes/primitives/text';
-import { Animation, isAnimation, Animatable } from './animations/animations';
-import { Canvas, HtmlCanvas } from './renderers/renderer';
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from './base';
-import { getRenderer } from './renderers/renderer_factory';
-import { Interaction, isInteraction } from './animations/interactivity';
-import { Colors } from './colors';
-import { Easing } from './easing';
+import { Shape, isShape } from '@/shapes/shape';
+import { Text } from '@/shapes/primitives/text';
+import { Animation, isAnimation, Animatable } from '@/animations/animations';
+import { Canvas, HtmlCanvas } from '@/renderers/renderer';
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from '@/base';
+import { getRenderer } from '@/renderers/renderer_factory';
+import { Interaction, isInteraction } from '@/animations/interactivity';
+import { Colors } from '@/colors';
+import { Easing } from '@/easing';
 
 
 export class DOM {

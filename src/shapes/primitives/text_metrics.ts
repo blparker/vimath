@@ -1,5 +1,5 @@
-import { Point, Config, X_TICKS, Y_TICKS } from '../../base';
-import * as math from "../../math.js";
+import { Point, Config, X_TICKS, Y_TICKS } from '@/base';
+import * as math from '@/math';
 
 import { mathjax } from 'mathjax-full/js/mathjax';
 import { TeX } from 'mathjax-full/js/input/tex';

@@ -1,7 +1,7 @@
-import { SvgShape } from '../shapes/brace';
-import { CircleArc } from '../shapes/primitives/circle_arc';
-import { PointShape } from '../shapes/primitives/point_shape';
-import { NativeRenderer, ShapeRenderer } from './renderer';
+import { SvgShape } from '@/shapes/brace';
+import { CircleArc } from '@/shapes/primitives/circle_arc';
+import { PointShape } from '@/shapes/primitives/point_shape';
+import { NativeRenderer, ShapeRenderer } from '@/renderers/renderer';
 
 
 export class PointShapeRenderer extends NativeRenderer<PointShape> {

@@ -1,10 +1,7 @@
-import { Point, Prettify } from '../base';
+import { Point, Prettify } from '@/base';
 import { StyleArgs } from './shape';
 import { Line } from './primitives/line';
-import * as math from '../math';
-
-
-
+import * as math from '@/math';
 
 
 export class LineThroughPoints extends Line {

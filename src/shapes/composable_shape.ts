@@ -1,6 +1,6 @@
-import { Shift, Point, RIGHT, OFFSET_GUTTER } from '../base.js';
-import { PointsAware, Shape } from './shape.js';
-import * as math from '../math.js';
+import { Shift, Point, RIGHT, OFFSET_GUTTER } from '@/base';
+import { PointsAware, Shape } from './shape';
+import * as math from '@/math';
 
 
 export interface Composable extends Shape {

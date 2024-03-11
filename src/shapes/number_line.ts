@@ -1,5 +1,5 @@
-import { HAlign, Point, Range, VAlign, X_TICKS } from '../base';
-import * as math from '../math';
+import { HAlign, Point, Range, VAlign, X_TICKS } from '@/base';
+import * as math from '@/math';
 import { ComposableShape } from './composable_shape';
 import { Line } from './primitives/line';
 import { Text } from './primitives/text';

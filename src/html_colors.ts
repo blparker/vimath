@@ -1,4 +1,4 @@
-import { RGBA } from "./colors";
+import { RGBA } from '@/colors';
 
 export const htmlColors = {
     IndianRed: [205, 92, 92, 1.0],

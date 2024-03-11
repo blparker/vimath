@@ -1,4 +1,4 @@
-import { ORIGIN, RIGHT } from '../base';
+import { ORIGIN, RIGHT } from '@/base';
 import { ComposableShape } from './composable_shape';
 import { Shape } from './shape';
 

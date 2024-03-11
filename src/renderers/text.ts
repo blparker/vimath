@@ -1,5 +1,5 @@
-import { Text } from '../shapes/primitives/text';
-import { NativeRenderer, ShapeRenderer } from './renderer';
+import { Text } from '@/shapes/primitives/text';
+import { NativeRenderer, ShapeRenderer } from '@/renderers/renderer';
 
 import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor';

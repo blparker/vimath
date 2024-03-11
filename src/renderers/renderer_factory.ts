@@ -1,12 +1,12 @@
-import { CircleArc } from '../shapes/primitives/circle_arc';
-import { PointShape } from '../shapes/primitives/point_shape';
-import { Shape } from '../shapes/shape';
-import { isSvgShape } from '../shapes/brace';
-import { Text } from '../shapes/primitives/text';
-import { ComposableRenderer } from './composable_renderer';
-import { Canvas, ShapeRenderer } from './renderer';
-import { CircleRenderer, PointShapeRenderer, SvgShapeRenderer } from './shape';
-import { TextRenderer } from './text';
+import { CircleArc } from '@/shapes/primitives/circle_arc';
+import { PointShape } from '@/shapes/primitives/point_shape';
+import { Shape } from '@/shapes/shape';
+import { isSvgShape } from '@/shapes/brace';
+import { Text } from '@/shapes/primitives/text';
+import { ComposableRenderer } from '@/renderers/composable_renderer';
+import { Canvas, ShapeRenderer } from '@/renderers/renderer';
+import { CircleRenderer, PointShapeRenderer, SvgShapeRenderer } from '@/renderers/shape';
+import { TextRenderer } from '@/renderers/text';
 
 
 export function getRenderer(canvas: Canvas, shape: Shape): ShapeRenderer<Shape> {

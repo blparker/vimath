@@ -1,7 +1,7 @@
-import { Colors, RGBA, parseColor } from '../../colors';
-import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '../../base';
-import * as math from '../../math';
-import { PointsAware, Shape, StyleArgs, Styleable, defaultStyleArgs } from '../../shapes/shape';
+import { Colors, RGBA, parseColor } from '@/colors';
+import { Point, Shift, RIGHT, OFFSET_GUTTER, Prettify } from '@/base';
+import * as math from '@/math';
+import { PointsAware, Shape, StyleArgs, Styleable, defaultStyleArgs } from '@/shapes/shape';
 
 
 

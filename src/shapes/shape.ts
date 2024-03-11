@@ -1,5 +1,5 @@
-import { Point, Shift } from '../base.js';
-import { Colors, RGBA } from '../colors.js';
+import { Point, Shift } from '@/base';
+import { Colors, RGBA } from '@/colors';
 
 
 const DEFAULT_LINE_WIDTH = 3;
