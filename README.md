@@ -1,3 +1,5 @@
+![vimath logo](assets/logo.png)
+
 # Vimath (VIsual MATH)
 
 Vimath is a browser library for creating animatable and interactive visualizations. While it's general and flexible enough for any visualizations
