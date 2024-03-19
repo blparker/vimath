@@ -18,6 +18,7 @@ export const DEFAULT_PADDING = 20;  // In pixels
 export const FONT_STACK = ['Iowan Old Style', 'Apple Garamond', 'Baskerville', 'Times New Roman', 'Droid Serif', 'Times', 'Source Serif Pro', 'serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'];
 export const DEFAULT_CANVAS_WIDTH = 860;
 export const DEFAULT_CANVAS_HEIGHT = 500;
+export const CANVAS_ASPECT_RATIO =  DEFAULT_CANVAS_HEIGHT / DEFAULT_CANVAS_WIDTH;
 
 export const ORIGIN = [0, 0] as Point;
 

@@ -25,7 +25,9 @@ export interface Canvas {
     onMouseUp(listener: (pt: Point) => void): void;
     onMouseOut(listener: () => void): void;
     onResize(listener: (width: number, height: number) => void): void;
+    getSize(): [number, number];
     setSize(width: number, height: number): void;
+    parentSize(): [number, number];
 }
 
 // const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
@@ -78,6 +80,19 @@ export class HtmlCanvas implements Canvas {
     setSize(width: number, height: number): void {
         this.canvas.width = width;
         this.canvas.height = height;
+    }
+
+    getSize(): [number, number] {
+        return [this.canvas.width, this.canvas.height];
+    }
+
+    parentSize(): [number, number] {
+        const parent = this.canvas.parentElement;
+        if (!parent) {
+            return [0, 0];
+        }
+
+        return [parent.clientWidth, parent.clientHeight];
     }
 
     handleMouseEvent(e: MouseEvent): void {

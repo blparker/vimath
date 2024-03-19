@@ -2,7 +2,7 @@ import { Shape, isShape } from '@/shapes/shape';
 import { Text } from '@/shapes/primitives/text';
 import { Animation, isAnimation, Animatable } from '@/animations/animations';
 import { Canvas, HtmlCanvas } from '@/renderers/renderer';
-import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, Prettify } from '@/base';
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, CANVAS_ASPECT_RATIO, Prettify } from '@/base';
 import { getRenderer } from '@/renderers/renderer_factory';
 import { Interaction, isInteraction } from '@/animations/interactivity';
 import { Colors } from '@/colors';
@@ -27,6 +27,15 @@ export class DOM {
         }
 
         return el;
+    }
+
+    static elementParentDimensions(element: HTMLElement): { width: number, height: number } {
+        const parent = element.parentElement;
+        if (!parent) {
+            return { width: 0, height: 0 };
+        }
+
+        return { width: parent.clientWidth, height: parent.clientHeight };
     }
 }
 
@@ -149,6 +158,9 @@ export abstract class Scene {
         this.allowResize = allowResize ?? true;
 
         if (this.allowResize) {
+            const parentWidth = this.canvas.parentSize()[0];
+            this.canvas.setSize(parentWidth, parentWidth * CANVAS_ASPECT_RATIO);
+
             this.canvas.onResize((width, height) => {
                 this.canvas.setSize(width, height);
                 if (this.staticScene) {
