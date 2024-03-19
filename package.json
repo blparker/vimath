@@ -1,6 +1,6 @@
 {
   "name": "vimath",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Vimath is a library for creating interactive math content in the browser.",
   "author": "Bryan Parker",
   "license": "ISC",
