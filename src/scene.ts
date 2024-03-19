@@ -78,6 +78,7 @@ type SceneArgs = {
     canvas?: Canvas | string;
     showFps?: boolean;
     staticScene?: boolean;
+    allowResize?: boolean;
 };
 
 
@@ -119,13 +120,14 @@ export abstract class Scene {
     private added: Set<Shape> = new Set();
     private fpsText: Text | null = null;
     private staticScene: boolean;
+    private allowResize: boolean;
 
     /**
      * Create a new scene instance
      * @param canvas the canvas selector or element to use
      * @param showFps a flag indicating whether or not to render a FPS (frames per second) on the canvas
      */
-    constructor({ canvas, showFps, staticScene }: Prettify<SceneArgs> = { showFps: false, staticScene: false }) {
+    constructor({ canvas, showFps, staticScene, allowResize }: Prettify<SceneArgs> = { showFps: false, staticScene: false, allowResize: true }) {
         this.els = [];
 
         if (canvas !== undefined && typeof canvas !== 'string') {
@@ -144,6 +146,16 @@ export abstract class Scene {
         }
 
         this.staticScene = staticScene ?? false;
+        this.allowResize = allowResize ?? true;
+
+        if (this.allowResize) {
+            this.canvas.onResize((width, height) => {
+                this.canvas.setSize(width, height);
+                if (this.staticScene) {
+                    this.nextTick(0);
+                }
+            });
+        }
     }
 
     add(...els: Renderable[]): Scene {

@@ -24,6 +24,8 @@ export interface Canvas {
     onMouseMove(listener: (pt: Point) => void): void;
     onMouseUp(listener: (pt: Point) => void): void;
     onMouseOut(listener: () => void): void;
+    onResize(listener: (width: number, height: number) => void): void;
+    setSize(width: number, height: number): void;
 }
 
 // const textBaselineToCanvas: Record<TextBaseline, CanvasTextBaseline> = {
@@ -45,6 +47,7 @@ export class HtmlCanvas implements Canvas {
         'mousemove': [],
         'mouseout': [],
     };
+    private readonly resizeListeners: ((width: number, height: number) => void)[] = [];
     public readonly ctx: CanvasRenderingContext2D;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -61,6 +64,20 @@ export class HtmlCanvas implements Canvas {
         canvas.addEventListener('mouseup', this.handleMouseEvent.bind(this));
         canvas.addEventListener('mousemove', this.handleMouseEvent.bind(this));
         canvas.addEventListener('mouseout', this.handleMouseEvent.bind(this));
+
+        const ratio = canvas.clientHeight / canvas.clientWidth;
+
+        window.addEventListener('resize', () => {
+            if (canvas.parentElement) {
+                const parent = canvas.parentElement!;
+                this.resizeListeners.forEach(listener => listener(parent.clientWidth, parent.clientWidth * ratio));
+            }
+        });
+    }
+
+    setSize(width: number, height: number): void {
+        this.canvas.width = width;
+        this.canvas.height = height;
     }
 
     handleMouseEvent(e: MouseEvent): void {
@@ -160,6 +177,10 @@ export class HtmlCanvas implements Canvas {
 
     onMouseOut(listener: () => void): void {
         this.mouseListeners['mouseout'].push(listener);
+    }
+
+    onResize(listener: (width: number, height: number) => void): void {
+        this.resizeListeners.push(listener);
     }
 
     // https://stackoverflow.com/a/15528789/301302

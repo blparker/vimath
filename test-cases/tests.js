@@ -1,6 +1,7 @@
 // import { Circle, Scene, Line, Text, LEFT, UP, RIGHT, DOWN, ORIGIN, Square, Triangle, Colors, CircleArc, Group, HtmlCanvas, PointShape, Dot, MoveToTarget, Axes, Arrow } from '../dist/out/index.js';
-import * as exports from '../dist/out/index.js';
-Object.entries(exports).forEach(([name, exported]) => window[name] = exported);
+import * as vimath from '../dist/vimath.es.js';
+Object.assign(window, vimath);
+// Object.entries(exports).forEach(([name, exported]) => window[name] = exported);
 
 
 export class VisualTests extends TestSuite {
@@ -853,17 +854,31 @@ export class VisualTests extends TestSuite {
     // }
 
 
-    testLineWithWidth(canvas, done) {
+    // testLineWithWidth(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             // const a = new Dot({ x: -2, y: 2 });
+    //             // const b = new Dot({ x: 2, y: -1 });
+
+    //             // const l = new Line({ from: a, to: b, length: 8 });
+    //             // this.add(a, b, l);
+
+
+
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    // }
+
+    testCanvasWidth(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                // const a = new Dot({ x: -2, y: 2 });
-                // const b = new Dot({ x: 2, y: -1 });
-
-                // const l = new Line({ from: a, to: b, length: 8 });
-                // this.add(a, b, l);
-
-
-
+                // const square = new Square();
+                // this.add(square);
+                this.add(new Axes());
 
                 return this;
             }
