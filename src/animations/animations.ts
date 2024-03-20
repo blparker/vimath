@@ -148,32 +148,88 @@ export function isTargetAnimation<T>(o: any): o is TargetAnimation<T> {
 }
 
 
-type MoveToTargetArgs = { target: Shape, destination: Shape | Point } & AnimationArgs;
+type MoveToTargetArgs = { target: Shape, destination: Shape | Point, alongPath?: Point[] | PointsAware } & AnimationArgs;
 
 export class MoveToTarget extends Animation implements TargetAnimation<Shape> {
     private _target: Shape;
     private startLocation: Point
     private endLocation: Point
 
-    constructor({ target, destination, ...baseConfig }: MoveToTargetArgs) {
+    private pathObj?: Point[] | PointsAware;
+    private path?: Point[];
+
+    constructor({ target, destination, alongPath, ...baseConfig }: MoveToTargetArgs) {
         super(baseConfig);
 
         this._target = target;
         this.startLocation = this._target.center();
         this.endLocation = isShape(destination) ? destination.center() : destination;
+        this.pathObj = alongPath;
     }
 
     update(pctComplete: number, reversing: boolean): Animatable[] {
-        const [start, end] = reversing ? [this.endLocation, this.startLocation] : [this.startLocation, this.endLocation];
+        // const [start, end] = reversing ? [this.endLocation, this.startLocation] : [this.startLocation, this.endLocation];
 
-        const [nX, nY] = this.updateWithEase(start, end, pctComplete);
+        // const [nX, nY] = this.updateWithEase(start, end, pctComplete);
+        const [nX, nY] = this.getNewPoint(pctComplete, reversing);
         this._target.moveCenter([nX, nY]);
 
         return [this._target];
     }
 
+    private getNewPoint(pctComplete: number, reversing: boolean): Point {
+        if (this.path && this.path.length > 0) {
+            const [from, to] = reversing ? [this.path.length, 0] : [0, this.path.length];
+
+            const idxWithEase = this.updateWithEase(from, to, pctComplete);
+            const idx = Math.floor(idxWithEase);
+
+            if (idx < this.path.length - 1) {
+                const [pt, nextPt] = [this.path[idx], this.path[idx + 1]];
+
+                return arrLerp(pt, nextPt, idxWithEase - idx) as Point;
+            } else {
+                return this.path[Math.min(idx, this.path.length - 1)];
+            }
+        } else {
+            const [start, end] = reversing ? [this.endLocation, this.startLocation] : [this.startLocation, this.endLocation];
+            return this.updateWithEase(start, end, pctComplete) as Point;
+        }
+    }
+
     protected initState(): void {
         this.startLocation = this._target.center();
+
+        if (this.pathObj) {
+            const pathPoints = Array.isArray(this.pathObj) ? this.pathObj : this.pathObj.points();
+
+            // Find the closest point along the path to the start and end locations
+            let [minStartDist, pathStart] = [Number.MAX_VALUE, -1];
+            let [minEndDist, pathEnd] = [Number.MAX_VALUE, -1];
+
+            for (let i = 0; i < pathPoints.length; i++) {
+                const pt = pathPoints[i];
+                const ds = distance(pt, this.startLocation);
+                const dt = distance(pt, this.endLocation);
+
+                if (ds < minStartDist) {
+                    minStartDist = ds;
+                    pathStart = i;
+                }
+
+                if (dt < minEndDist) {
+                    minEndDist = dt;
+                    pathEnd = i;
+                }
+            }
+
+            let segment = pathPoints.slice(Math.min(pathStart, pathEnd), Math.max(pathStart, pathEnd));
+            if (pathStart > pathEnd) {
+                segment = segment.toReversed();
+            }
+
+            this.path = segment;
+        }
     }
 
     resetState(): void {

@@ -5,9 +5,12 @@ import * as math from '@/math';
 
 
 export class LineThroughPoints extends Line {
+    private readonly _length: number;
+
     constructor({ p1, p2, length = 3, ...styleArgs }: { p1: Point; p2: Point; length: number; } & Prettify<StyleArgs>) {
         const [from, to] = LineThroughPoints.linePoints(p1, p2, length);
         super({ from, to, ...styleArgs });
+        this._length = length;
     }
 
     private static linePoints(p1: Point, p2: Point, length: number): [Point, Point] {
@@ -25,5 +28,9 @@ export class LineThroughPoints extends Line {
         const e2 = math.add(midPoint, [halfLength * c, halfLength * s]);
 
         return [e1, e2] as [Point, Point];
+    }
+
+    changePoints(p1: Point, p2: Point) {
+        this.setPoints(LineThroughPoints.linePoints(p1, p2, this._length));
     }
 }

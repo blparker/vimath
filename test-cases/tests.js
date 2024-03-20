@@ -873,17 +873,67 @@ export class VisualTests extends TestSuite {
     //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
     // }
 
-    testCanvasWidth(canvas, done) {
+    // testCanvasWidth(canvas, done) {
+    //     class TestScene extends Scene {
+    //         compose() {
+    //             // const square = new Square();
+    //             // this.add(square);
+    //             this.add(new Axes());
+
+    //             return this;
+    //         }
+    //     }
+
+    //     new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+    // }
+
+    testMoveAlongPathToDestination(canvas, done) {
         class TestScene extends Scene {
             compose() {
-                // const square = new Square();
-                // this.add(square);
-                this.add(new Axes());
+                const ax = new Axes({
+                    xRange: [0, 6],
+                    yRange: [0, 16],
+                    xLength: 10,
+                    yLength: 6,
+                    yAxisTickStep: 2,
+                });
+
+                const plot = ax.plot(x => x * x);
+                const p = ax.relativePoint([2, 4]);
+                const q = ax.relativePoint([3, 9])
+        
+                const pd = new Dot({ pt: p });
+                const qd = new Dot({ pt: q });
+                const t = new TangentLine({ shape: plot, x: p[0], length: 5, lineColor: Colors.pink() });
+                const s = new LineThroughPoints({ p1: p, p2: q, length: 5, lineColor: Colors.blue() });
+
+                this.add(
+                    ax,
+                    plot,
+                    t,
+                    s,
+                    pd,
+                    qd,
+                );
+
+                // this.add(new MoveAlongPath({ target: qd, path: plot, duration: 2000 }));
+                class Updater extends Animation {
+                    update(pctComplete, reversing) {
+                        s.changePoints(p, qd.center());
+
+                        return [];
+                    }
+                }
+
+                this.add(
+                    new MoveToTarget({ target: qd, destination: pd, alongPath: plot, duration: 2000, easing: Easing.linear, repeat: true, }),
+                    new Updater({ duration: 2000, easing: Easing.linear, repeat: true, }),
+                );
 
                 return this;
             }
         }
 
-        new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: true }).compose().render();
+        new TestScene({ canvas: new HtmlCanvas(canvas), staticScene: false, }).compose().render();
     }
 }

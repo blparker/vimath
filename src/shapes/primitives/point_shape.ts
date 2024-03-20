@@ -167,6 +167,10 @@ export class PointShape implements Shape, Styleable, PointsAware {
         return this._points;
     }
 
+    public setPoints(points: Point[]) {
+        this._points = points;
+    }
+
     computedPoints(): Point[] {
         const [cX, cY] = this.center();
         const computedPoints = [];
