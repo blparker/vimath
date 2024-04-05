@@ -1,0 +1,25 @@
+{
+  "name": "vimath2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest --config vite.config.ts"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.1",
+    "vitest": "^1.4.0"
+  },
+  "outDir": "./dist",
+  "main": "${npm_package_outDir}/${npm_package_name}.umd.js",
+  "module": "${npm_package_outDir}/${npm_package_name}.es.js",
+  "files": [
+    "${npm_package_outDir}/**/*"
+  ]
+}
