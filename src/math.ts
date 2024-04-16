@@ -1,9 +1,11 @@
+import { Point } from '@/base';
+
 /**
  * Find the minimum value in an array of numbers
  * @param arr the array of numbers to find the minimum within
  * @returns the minimum value in the array
  */
-export function min(arr: number[]): number;
+function min(arr: number[]): number;
 
 /**
  * Find the minimum value in 2D array of numbers in a specific column
@@ -11,7 +13,7 @@ export function min(arr: number[]): number;
  * @param idx the index of the column to find the minimum within
  * @returns the minimum value in the column of the array
  */
-export function min(arr: number[][], idx: number): number;
+function min(arr: number[][], idx: number): number;
 
 /**
  * Given two arrays, find the minimum value at the same index in both arrays
@@ -19,9 +21,9 @@ export function min(arr: number[][], idx: number): number;
  * @param b the second array
  * @param idx the minimum value of either a[idx] or b[idx]
  */
-export function min(a: number[], b: number[], idx: number): number;
+function min(a: number[], b: number[], idx: number): number;
 
-export function min(a: unknown, b?: unknown, idx?: number): number {
+function min(a: unknown, b?: unknown, idx?: number): number {
     if (Array.isArray(a) && b === undefined && idx === undefined) {
         return Math.min(...a);
     } else if (Array.isArray(a) && a.length > 0 && Array.isArray(a[0]) && b !== undefined && typeof b === 'number' && idx === undefined) {
@@ -45,7 +47,7 @@ export function min(a: unknown, b?: unknown, idx?: number): number {
  * @param p the percentage to interpolate
  * @returns the interpolated value between n1 and n2
  */
-export function lerp(n1: number, n2: number, p: number) {
+function lerp(n1: number, n2: number, p: number) {
     return (1 - p) * n1 + p * n2;
 }
 
@@ -62,7 +64,7 @@ export function lerp(n1: number, n2: number, p: number) {
  * clamp(1, 7, 10)  // > returns 7 (1 < 7, so min is returned)
  * ```
  */
-export function clamp(v: number, min: number = 0, max: number = 1) {
+function clamp(v: number, min: number = 0, max: number = 1) {
     return Math.min(max, Math.max(min, v));
 }
 
@@ -78,7 +80,7 @@ export function clamp(v: number, min: number = 0, max: number = 1) {
  * @param v the value to find the percentage of
  * @returns the percentage of v between n1 and n2
  */
-export function invlerp(n1: number, n2: number, v: number) {
+function invlerp(n1: number, n2: number, v: number) {
     return clamp((v - n1) / (n2 - n1));
 }
 
@@ -92,7 +94,72 @@ export function invlerp(n1: number, n2: number, v: number) {
  * @param v the value to convert
  * @returns the value converted from the original range to the target range
  */
-export function remap(oFrom: number, oTo: number, tFrom: number, tTo: number, v: number) {
+function remap(oFrom: number, oTo: number, tFrom: number, tTo: number, v: number) {
     const rel = invlerp(oFrom, oTo, v);
     return lerp(tFrom, tTo, rel);
 }
+
+
+function dist(a: [number, number], b: [number, number]): number {
+    return Math.hypot(a[0] - b[0], a[1] - b[1]);
+}
+
+
+function multScalar(v: Point, s: number): Point {
+    return [v[0] * s, v[1] * s];
+}
+
+
+function addVec(a: Point, b: Point): Point {
+    return [a[0] + b[0], a[1] + b[1]];
+}
+
+
+function subVec(a: Point, b: Point): Point {
+    return [a[0] - b[0], a[1] - b[1]];
+}
+
+
+function unitVec(a: Point, b: Point): Point {
+    const ab = subVec(b, a);
+    const d = Math.hypot(...ab);
+
+    return multScalar(ab, 1 / d);
+}
+
+
+function angleVec(a: Point, b: Point): number {
+    return Math.atan2(b[1] - a[1], b[0] - a[0]);
+}
+
+
+function rotateAboutPoint(p: Point, angle: number, center: Point): Point {
+    const [x, y] = p;
+    const [cx, cy] = center;
+
+    const x1 = cx + (x - cx) * Math.cos(angle) - (y - cy) * Math.sin(angle);
+    const y1 = cy + (x - cx) * Math.sin(angle) + (y - cy) * Math.cos(angle);
+
+    return [x1, y1];
+}
+
+
+function midpoint(a: Point, b: Point): Point {
+    return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+}
+
+export default {
+    min,
+    lerp,
+    clamp,
+    invlerp,
+    remap,
+    dist,
+    multScalar,
+    addVec,
+    subVec,
+    unitVec,
+    angleVec,
+    rotateAboutPoint,
+    midpoint
+};

@@ -1,4 +1,5 @@
 import { Easing } from '@/animation/easing';
+import { Canvas } from '@/canvas';
 
 
 const DEFAULT_CONFIG = {
@@ -6,7 +7,7 @@ const DEFAULT_CONFIG = {
     xTicks: 14,
     yTicks: 8,
 
-    lineWidth: 3,
+    lineWidth: 4,
 
     animation: {
         durationMs: 1000,
@@ -18,6 +19,9 @@ const DEFAULT_CONFIG = {
         blocking: true,
     },
 
+    arrowTipSize: 0.15,
+    standoff: 0.15,
+
     showFps: false,
     responsiveResize: true,
 
@@ -27,6 +31,7 @@ const DEFAULT_CONFIG = {
     canvasWidth: 860,
     canvasHeight: 500,
     canvasPadding: 20,
+    canvasInstance: undefined as Canvas | undefined,
 };
 
 

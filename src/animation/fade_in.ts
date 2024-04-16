@@ -1,7 +1,7 @@
 import { AnimationArgs, BaseAnimation } from '@/animation/animation';
 import { RGBA } from '@/colors';
 import { Shape, isShape } from '@/shapes';
-import { lerp } from '@/math';
+import math from '@/math';
 
 
 class FadeIn extends BaseAnimation {
@@ -24,7 +24,7 @@ class FadeIn extends BaseAnimation {
         }
 
         const [from, to] = this.isReversing() || this.startReverse() ? [1, 0] : [0, 1];
-        const updatedOpacity = lerp(from, to, this._easing(pctComplete))
+        const updatedOpacity = math.lerp(from, to, this._easing(pctComplete))
 
         this._fromColor[3] = updatedOpacity;
         this._target.changeColor(this._fromColor);

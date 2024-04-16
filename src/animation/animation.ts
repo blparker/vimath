@@ -1,4 +1,4 @@
-import { invlerp } from '@/math';
+import math from '@/math';
 import { config } from '@/config';
 import { EasingFunction } from '@/animation/easing';
 import { Shape } from '@/shapes/shape';
@@ -37,7 +37,7 @@ type AnimationArgs = {
 const animConfig = config.animation;
 
 
-export abstract class BaseAnimation implements Animation {
+abstract class BaseAnimation implements Animation {
     private _complete: boolean = false;
     private _reversing: boolean = false;
     private _startTime: number = -Infinity;
@@ -80,12 +80,7 @@ export abstract class BaseAnimation implements Animation {
             this._startTime = time;
         }
 
-        let pctComplete = invlerp(this._startTime, this._startTime + this._duration, time);
-        // console.log(`${this.id} - time ${pctComplete}`);
-        // if (this._reversing && this._yoyo) {
-        //     pctComplete = 1 - pctComplete;
-        // }
-
+        let pctComplete = math.invlerp(this._startTime, this._startTime + this._duration, time);
         this.update(pctComplete, starting);
 
         // Not done yet?
@@ -149,4 +144,4 @@ export abstract class BaseAnimation implements Animation {
 }
 
 
-export { type Animation, type AnimationArgs, isAnimation };
+export { type Animation, BaseAnimation, type AnimationArgs, isAnimation };

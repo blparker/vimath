@@ -21,5 +21,8 @@
   "module": "${npm_package_outDir}/${npm_package_name}.es.js",
   "files": [
     "${npm_package_outDir}/**/*"
-  ]
+  ],
+  "dependencies": {
+    "mathjax-full": "^3.2.2"
+  }
 }

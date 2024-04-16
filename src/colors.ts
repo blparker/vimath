@@ -225,9 +225,14 @@ const Colors: {
             return getColor(color as ColorName, { variant: parseInt(variant) as Variant });
         }
 
+        if (prop === 'transparent') {
+            return (style?: ColorStyle): RGBA => [255, 255, 255, 0];
+        }
+
         return (style?: ColorStyle): RGBA => getColor(prop, style);
     }
 }) as any;
+
 
 // Build up the ColorVariant type dynamically
 type BuildColorVariants<T extends Record<string, any[]>> = {

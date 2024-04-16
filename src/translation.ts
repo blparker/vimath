@@ -4,12 +4,22 @@ import { Canvas } from '@/canvas';
 
 
 class Translation {
-    private _canvasWidth: number;
-    private _canvasHeight: number;
+    // private _canvasWidth: number;
+    // private _canvasHeight: number;
+    private _canvas: Canvas;
 
     constructor(canvas: Canvas) {
-        this._canvasWidth = canvas.width() - 2 * config.canvasPadding;
-        this._canvasHeight = canvas.height() - 2 * config.canvasPadding;
+        // this._canvasWidth = canvas.width() - 2 * config.canvasPadding;
+        // this._canvasHeight = canvas.height() - 2 * config.canvasPadding;
+        this._canvas = canvas;
+    }
+
+    canvasWidth(): number {
+        return this._canvas.width() - 2 * config.canvasPadding;
+    }
+
+    canvasHeight(): number {
+        return this._canvas.height() - 2 * config.canvasPadding;
     }
 
     /**
@@ -26,8 +36,8 @@ class Translation {
      */
     translateRelative(p: Point): Point;
     translateRelative(x: unknown, y?: unknown): Point {
-        const xUnits = this._canvasWidth / config.xTicks;
-        const yUnits = this._canvasHeight / config.yTicks;
+        const xUnits = this.canvasWidth() / config.xTicks;
+        const yUnits = this.canvasHeight() / config.yTicks;
 
         let _x: number;
         let _y: number;
@@ -41,19 +51,55 @@ class Translation {
         }
 
         return [
-            (_x * xUnits) + (this._canvasWidth / 2) + config.canvasPadding,
-            (this._canvasHeight / 2) - (_y * yUnits) + config.canvasPadding
+            (_x * xUnits) + (this.canvasWidth() / 2) + config.canvasPadding,
+            (this.canvasHeight() / 2) - (_y * yUnits) + config.canvasPadding
         ];
     }
 
     translateAbsolute(x: number, y: number): Point {
-        const xUnits = this._canvasWidth / config.xTicks;
-        const yUnits = this._canvasHeight / config.yTicks;
+        const xUnits = this.canvasWidth() / config.xTicks;
+        const yUnits = this.canvasHeight() / config.yTicks;
 
         return [
-            (x - config.canvasPadding - (this._canvasWidth / 2)) / xUnits,
-            (this._canvasHeight / 2 - (y - config.canvasPadding)) / yUnits,
+            (x - config.canvasPadding - (this.canvasWidth() / 2)) / xUnits,
+            (this.canvasHeight() / 2 - (y - config.canvasPadding)) / yUnits,
         ];
+    }
+
+
+    translateDimensions(relWidth: number, relHeight: number): Point {
+        const xUnits = this.canvasWidth() / config.xTicks;
+        const yUnits = this.canvasHeight() / config.yTicks;
+
+        return [
+            relWidth * xUnits,
+            relHeight * yUnits
+        ];
+    }
+
+    translateAbsWidth(absWidth: number): number {
+        const xUnits = this.canvasWidth() / config.xTicks;
+        // return (absWidth - config.canvasPadding - (this._canvasWidth / 2)) / xUnits;
+        // absWidth = relWidth * xUnits
+        // relWidth = absWidth / xUnits
+
+        return absWidth / xUnits;
+    }
+
+    translateAbsHeight(absHeight: number): number {
+        // return absHeight * this._canvasHeight / config.yTicks;
+        const yUnits = this.canvasHeight() / config.yTicks;
+        return absHeight / yUnits;
+    }
+
+    translateRelWidth(relWidth: number): number {
+        const xUnits = this.canvasWidth() / config.xTicks;
+        return relWidth * xUnits;
+    }
+
+    translateRelHeight(relHeight: number): number {
+        const yUnits = this.canvasHeight() / config.yTicks;
+        return relHeight * yUnits;
     }
 }
 

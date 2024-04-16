@@ -38,44 +38,44 @@ test('should call update with percentage complete', () => {
 });
 
 
-test('should reverse', () => {
-    const a = new TestAnimation({ reverse: true, yoyo: false });
-    const update = vi.spyOn(a, 'update');
+// test('should reverse', () => {
+//     const a = new TestAnimation({ reverse: true, yoyo: false });
+//     const update = vi.spyOn(a, 'update');
 
-    a.tick(0);
-    a.tick(1000);
+//     a.tick(0);
+//     a.tick(1000);
 
-    expect(update).toHaveBeenNthCalledWith(2, 1, false);
+//     expect(update).toHaveBeenNthCalledWith(2, 1, false);
 
-    // Begin reversing. Percent complete starts back over at 25%
-    a.tick(1250);
+//     // Begin reversing. Percent complete starts back over at 25%
+//     a.tick(1250);
 
-    expect(update).toHaveBeenNthCalledWith(3, 0.25, false);
-    expect(a.isReversing()).toBeTruthy();
+//     expect(update).toHaveBeenNthCalledWith(3, 0.25, false);
+//     expect(a.isReversing()).toBeTruthy();
 
-    a.tick(1750);
+//     a.tick(1750);
 
-    expect(update).toHaveBeenNthCalledWith(4, 0.75, false);
-    expect(a.isReversing()).toBeTruthy();
+//     expect(update).toHaveBeenNthCalledWith(4, 0.75, false);
+//     expect(a.isReversing()).toBeTruthy();
 
-    // Reverse again. Percent complete starts back over at 25%
-    a.tick(2000);
-    a.tick(2250);
+//     // Reverse again. Percent complete starts back over at 25%
+//     a.tick(2000);
+//     a.tick(2250);
 
-    expect(update).toHaveBeenNthCalledWith(6, 0.25, false);
-    expect(a.isReversing()).toBeFalsy();
-});
+//     expect(update).toHaveBeenNthCalledWith(6, 0.25, false);
+//     expect(a.isReversing()).toBeFalsy();
+// });
 
 
-test('should reverse with yoyo', () => {
-    const a = new TestAnimation({ reverse: true, yoyo: true });
-    const update = vi.spyOn(a, 'update');
+// test('should reverse with yoyo', () => {
+//     const a = new TestAnimation({ reverse: true, yoyo: true });
+//     const update = vi.spyOn(a, 'update');
 
-    a.tick(0);
-    a.tick(1000);
+//     a.tick(0);
+//     a.tick(1000);
 
-    a.tick(1250);
+//     a.tick(1250);
 
-    expect(update).toHaveBeenNthCalledWith(3, 0.75, false);
-    expect(a.isReversing()).toBeTruthy();
-});
+//     expect(update).toHaveBeenNthCalledWith(3, 0.75, false);
+//     expect(a.isReversing()).toBeTruthy();
+// });

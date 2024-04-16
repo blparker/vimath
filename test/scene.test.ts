@@ -1,25 +1,26 @@
 import { expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { Scene } from '../src/scene';
-import { Line } from '../src/shapes/derived/line';
-import { Canvas } from '../src/canvas';
-import { Shape } from '../src/shapes';
-import { Interaction } from '../src/canvas';
+import { Line } from '../src/shapes/primitives/line';
+import { Canvas, Drawable } from '../src/canvas';
+import { BezierCurve, PointShape, Shape } from '../src/shapes';
 import { BaseAnimation } from '../src/animation/animation';
+import { Arc } from '../src/shapes/primitives/arc';
 
 
 function getTestCanvas() {
     return new class implements Canvas {
-        renderShape(shape: Shape): void {
-        }
-
-        line(line: Line): void {
-        }
-
-        clear(): void {
-        }
-
-        addInteraction(interation: Interaction): void {
-        }
+        renderShape(shape: Shape): Promise<void> { return Promise.resolve(); }
+        text(text: Text): Promise<void> { return Promise.resolve();}
+        bezierCurve(curve: BezierCurve): void { }
+        drawable(drawable: Drawable): void { }
+        line2({ from, to, ...styles }: any): void { }
+        connectedPath(path: PointShape): void { }
+        arc(arc: Arc): void { }
+        onMouseMove(cb: (state: { absoluteX: number; absoluteY: number; x: number; y: number; canvasX: number; canvasY: number; }) => void): void { }
+        onClick(cb: (state: { absoluteX: number; absoluteY: number; x: number; y: number; canvasX: number; canvasY: number; }) => void): void { }
+        onResize(cb: () => void): void {}
+        line(line: Line): void { }
+        clear(): void { }
 
         width(): number {
             return 0;

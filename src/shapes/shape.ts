@@ -8,27 +8,34 @@ type ShapeStyles = {
     lineColor?: RGBA;
     lineWidth?: number;
     lineStyle?: 'solid' | 'dashed' | 'dotted' | 'dashedsmall';
+    adjustForLineWidth?: boolean;
 };
 
 
 const defaultShapeStyles: ShapeStyles = {
-    color: Colors.black(),
+    // color: Colors.black(),
+    // color: Colors.transparent(),
+    color: undefined,
     lineColor: Colors.black(),
     lineWidth: config.lineWidth,
     lineStyle: 'solid',
+    adjustForLineWidth: false,
 };
 
 
-export interface SelectableShape {
+interface SelectableShape {
+    canSelect: boolean;
+
     select(): void;
     deselect(): void;
     selectStyles(): ShapeStyles;
 }
 
 
-export function isSelectableShape(o: any): o is SelectableShape {
+function isSelectableShape(o: any): o is SelectableShape {
     return 'select' in o && typeof o.select === 'function' && 
-           'deselect' in o && typeof o.deselect === 'function';
+           'deselect' in o && typeof o.deselect === 'function' &&
+           o.canSelect;
 }
 
 
@@ -55,6 +62,8 @@ interface Shape {
 
     rotate(angle: number): Shape;
 
+    nextTo(other: Locatable, direction: Point): Shape;
+
     angle(): number;
 
     currentScale(): number;
@@ -65,16 +74,18 @@ interface Shape {
     changeColor(color: RGBA): Shape;
 
     changeLineColor(color: RGBA): Shape;
+
+    copy(): this;
 };
 
 
 type Locatable = Point | Shape;
 
 
-export function isShape(o: any): o is Shape {
+function isShape(o: any): o is Shape {
     return 'shift' in o && typeof o.shift === 'function' && 
            'moveTo' in o && typeof o.moveTo === 'function';
 }
 
 
-export { type Shape, type ShapeStyles, type Locatable, defaultShapeStyles };
+export { type Shape, type ShapeStyles, type Locatable, type SelectableShape, defaultShapeStyles, isShape, isSelectableShape };

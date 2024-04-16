@@ -1,5 +1,5 @@
 import { Animation, AnimationArgs, BaseAnimation } from '@/animation/animation';
-import { Shape } from '..';
+import { Shape } from '@/shapes';
 
 
 class AnimationGroup extends BaseAnimation {
@@ -11,7 +11,6 @@ class AnimationGroup extends BaseAnimation {
     }
 
     tick(time: number): void {
-        // console.log("### ", this._animations[0].isComplete())
         for (const a of this._animations) {
             a.tick(time);
         }
