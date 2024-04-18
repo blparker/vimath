@@ -1,8 +1,10 @@
 import { Point, Prettify } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, defaultShapeStyles } from '@/shapes/shape';
+import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
 import math from '@/math';
 import utils from '@/utils';
+import { locatableToPoint } from '@/shapes/primitives/point_shape';
+import { config } from '@/config';
 
 
 class ComposedShape implements Shape {
@@ -109,7 +111,45 @@ class ComposedShape implements Shape {
     }
 
     nextTo(other: Locatable, direction: Point): Shape {
-        throw new Error('Method not implemented.');
+        let [toX, toY] = locatableToPoint(other);
+        let [sW, sH] = [0, 0];
+        const [w, h] = [this.width(), this.height()];
+
+        if (isShape(other)) {
+            sW = other.width();
+            sH = other.height();
+        }
+
+        const [dX, dY] = direction;
+
+        if (dX > 0) {
+            toX += sW / 2 + w / 2 + config.standoff;
+        } else if (dX < 0) {
+            toX -= sW / 2 + w / 2 + config.standoff;
+        }
+
+        if (dY > 0) {
+            toY += sH / 2 + h / 2 + config.standoff;
+        } else if (dY < 0) {
+            toY -= sH / 2 + h / 2 + config.standoff;
+        }
+
+        const adjStandoff = Math.sqrt(config.standoff ** 2 / 2);
+
+        if (direction[0] !== 0 && direction[1] !== 0) {
+            const xDir = Math.sign(direction[0]);
+            const yDir = Math.sign(direction[1]);
+
+            toX += -xDir * config.standoff;
+            toY += -yDir * config.standoff;
+
+            toX += xDir * adjStandoff;
+            toY += yDir * adjStandoff;
+        }
+
+        this.moveTo([toX, toY]);
+
+        return this;
     }
 
     angle(): number {

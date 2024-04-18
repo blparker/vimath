@@ -46,7 +46,37 @@ class TestScene extends Scene {
         // this.add(triangle.texOnEdge('\\sin \\theta', 1, LEFT()));
         // this.add(triangle.texOnEdge('\\cos \\theta', 2, UP()));
 
-        // this.add(new Brace({ from: [0, 0], to: [4, 2] }));
+        // const b = this.add(new Brace({ from: [0, 0], to: [0, 3], direction: DOWN() }));
+
+        /**** TODO:
+         * 
+         *  Need to rework how a brace is formed. What Manim currently does is the following:
+         *      - if direction is not provided, it infers the direction from the points
+         *      - if the direction is provided, the direction is used, but it doesn't follow the direction of the points. For example, for
+         *        the points [0, 0] to [3, 2] and the direction is DOWN(), the brace doesn't follow the direction of the points. It is completely 
+         *        horizontal spanning the X-distance between the points
+        */
+
+        const sq = this.add(new Square());
+        this.add(new Brace(sq, DOWN()));
+
+        // const b = this.add(new Brace({ from: [0, 0], to: [3, 0], direction: DOWN() }));
+    
+        // const b1 = this.add(new Brace({ from: [0, 0], to: [3, 2] }));
+        // const b2 = this.add(new Brace({ from: [3, 2], to: [0, 0] }));
+        // const b3 = this.add(new Brace({ from: [0, 0], to: [-3, 2] }));
+        // const b4 = this.add(new Brace({ from: [0, 0], to: [-3, 2], direction: DOWN() }));
+
+        // const b4 = this.add(new Brace({ from: [-1, 1], to: [-4, 3], direction: RIGHT() }));
+        // const b4 = this.add(new Brace({ from: [-1, 1], to: [-4, 3] }));
+        // const b4 = this.add(new Brace({ from: [-4, 3], to: [-1, 1] }));
+        // const b4 = this.add(new Brace({ from: [-4, 1], to: [-1, 3] }));
+        // const b4 = this.add(new Brace({ from: [1, 1], to: [4, 3], direction: DOWN() }));
+
+        // const b5 = this.add(new Brace({ from: [0, 0], to: [-3, 0], direction: DOWN() }));
+
+        // b.shift([1, 0]);
+        // b.moveTo([1, 1])
 
         // const a = new Axes({ xLength: 10, yLength: 8 });
         // this.add(a);
@@ -56,9 +86,10 @@ class TestScene extends Scene {
 
         // const t = new TangentLine({ plot: p, x: 2, color: Colors.pink() });
         // this.add(t);
-        const s1 = this.add(new Square());
-        const s2 = this.add(new Square().nextTo(s1, RIGHT()));
-        this.add(new Text('test').nextTo(s2, RIGHT()));
+        // const s1 = this.add(new Square());
+        // const s2 = this.add(new Square().nextTo(s1, RIGHT()));
+        // this.add(new Text('test').nextTo(s2, RIGHT()));
+        // const b = this.add(new Brace(s1, UP()));
     }
 }
 
