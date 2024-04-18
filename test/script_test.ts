@@ -1,8 +1,7 @@
 import { Scene } from '../src/scene';
 import { Line } from '../src/shapes/primitives/line';
-import { BaseAnimation } from '../src/animation/animation';
+import { BaseAnimation, Create } from '../src/animation';
 import { FadeIn } from '../src/animation/fade_in';
-import { Line2 } from '../src/shapes/primitives/connected_shape';
 import { Arc } from '../src/shapes/primitives/arc';
 import { Arrow } from '../src/shapes/composed/arrow';
 import { Triangle } from '../src/shapes/derived/triangle';
@@ -57,8 +56,10 @@ class TestScene extends Scene {
          *        horizontal spanning the X-distance between the points
         */
 
-        const sq = this.add(new Square());
-        this.add(new Brace(sq, DOWN()));
+        // const sq = this.add(new Square());
+        // this.add(new Brace(sq, DOWN()));
+        const sq = new Square();
+        this.add(new Create({ target: sq, duration: 1000 }));
 
         // const b = this.add(new Brace({ from: [0, 0], to: [3, 0], direction: DOWN() }));
     

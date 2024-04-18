@@ -8,7 +8,7 @@ import { config } from '@/config';
 
 
 class PointShape implements Shape, SelectableShape {
-    private readonly _points: Point[];
+    private _points: Point[];
     private _styles: ShapeStyles;
     private _canSelect: boolean = true;
     private _smooth: boolean;
@@ -276,7 +276,30 @@ class PointShape implements Shape, SelectableShape {
         return this._textOnEdge(text, position, direction, true);
     }
 
-    _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Shape {
+    interpolate(shape: PointShape, pct: number) {
+        const points = shape.points();
+        const totalPoints = points.length;
+
+        const fullEdges = Math.floor(pct * totalPoints);
+        const partialPct = (pct * totalPoints) - fullEdges;
+
+        this._points = points.slice(0, fullEdges);
+
+        if (fullEdges < totalPoints) {
+            const start = points[fullEdges % totalPoints];
+            const end = points[(fullEdges + 1) % totalPoints];
+
+            const nextPoint = [
+                start[0] + partialPct * (end[0] - start[0]),
+                start[1] + partialPct * (end[1] - start[1])
+            ] as Point;
+
+            this._points.push(start);
+            this._points.push(nextPoint);
+        }
+    }
+
+    private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Shape {
         const pt1 = this._points[position];
         const pt2 = position === this._points.length - 1 ? this._points[0] : this._points[position + 1];
 

@@ -91,7 +91,7 @@ class BezierCurve implements Shape {
         }
 
         this._scale += factor;
-    
+
         this._bbox = this.boundingBox();
         return this;
     }

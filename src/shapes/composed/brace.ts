@@ -170,46 +170,6 @@ class Brace extends ComposedShape {
         rightDrawable.fill(Colors.black());
         this.add(rightDrawable);
 
-        // const len = math.dist(this._from, this._to);
-        // const [minX, minY] = [Math.min(this._from[0], this._to[0]), Math.min(this._from[1], this._to[1])];
-        // const [maxX, maxY] = [Math.max(this._from[0], this._to[0]), Math.max(this._from[1], this._to[1])];
-        // const [midX, midY] = [(minX + maxX) / 2, (minY + maxY) / 2];
-        // const [dX, dY] = this._direction;
-
-        // // Define the brace dimensions based on the length and direction
-        // const braceWidth = len <= 2 ? 0.3 : 0.5;
-        // const thickness = len <= 2 ? 0.1 : 0.15;
-    
-        // // Function to rotate and translate based on the calculated angle and direction
-        // const angle = dX === 0 && dY === 0 ? math.angleVec(this._from, this._to) : Math.atan2(dY, dX);
-    
-        // const rotateAndTranslate = (x: number, y: number): Point => {
-        //     return math.rotateAboutPoint([x, y], angle, [midX, midY]);
-        // };
-    
-        // // Calculate the adjusted midpoints for start and end of the brace based on direction
-        // const horizontalShift = (dX === 0 ? len : dX * len) / 2;
-        // const verticalShift = (dY === 0 ? 0 : dY * len / 2);
-    
-        // // Create drawables for each side of the brace
-        // const leftDrawable = new Drawable();
-        // leftDrawable.bezierCurve({
-        //     start: rotateAndTranslate(-horizontalShift, midY - braceWidth),
-        //     control1: rotateAndTranslate(-horizontalShift, midY),
-        //     control2: rotateAndTranslate(-len / 2, -braceWidth),
-        //     end: rotateAndTranslate(-len / 2, 0)
-        // });
-    
-        // // Continue the curve smoothly
-        // leftDrawable.bezierCurve({
-        //     control1: rotateAndTranslate(-len / 2, -braceWidth - thickness),
-        //     control2: rotateAndTranslate(0, -thickness * 2),
-        //     end: rotateAndTranslate(0, -braceWidth)
-        // });
-    
-        // leftDrawable.fill(Colors.black());
-        // this.add(leftDrawable);
-
         return this;
     }
 }
