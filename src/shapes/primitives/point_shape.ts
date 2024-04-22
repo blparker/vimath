@@ -1,4 +1,4 @@
-import { DOWN, Point, Prettify, RIGHT } from '@/base';
+import { BezierSegment, DOWN, Point, Prettify, RIGHT } from '@/base';
 import { Colors, RGBA } from '@/colors';
 import { Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
 import { Text } from './text';
@@ -8,7 +8,9 @@ import { config } from '@/config';
 
 
 class PointShape implements Shape, SelectableShape {
+    // private _points: (Point | BezierPoint)[];
     private _points: Point[];
+    private _bezierPoints: BezierSegment[] = [];
     private _styles: ShapeStyles;
     private _canSelect: boolean = true;
     private _smooth: boolean;
@@ -17,12 +19,16 @@ class PointShape implements Shape, SelectableShape {
     private _angle = 0;
     private _scale = 1;
 
-    constructor({ points, selectable = false, smooth = false, ...styleArgs }: { points: Point[]; selectable?: boolean; smooth?: boolean; } & Prettify<ShapeStyles>) {
+    constructor({ points, selectable = false, smooth = false, bezierPoints, ...styleArgs }: { points: Point[]; selectable?: boolean; smooth?: boolean; bezierPoints?: BezierSegment[] } & Prettify<ShapeStyles>) {
         this._points = structuredClone(points);
         this._canSelect = selectable;
         this._smooth = smooth;
         this._styles = Object.assign({}, defaultShapeStyles, styleArgs);
         this._allStyles.push(this._styles);
+
+        if (bezierPoints) {
+            this._bezierPoints = bezierPoints;
+        }
     }
 
     center(): Point {
@@ -88,12 +94,24 @@ class PointShape implements Shape, SelectableShape {
     }
 
     scale(factor: number): Shape {
-        for (const p of this._points) {
-            p[0] *= factor;
-            p[1] *= factor;
+        if (factor === 0) {
+            const initSize = 0.00001;
+
+            for (const p of this._points) {
+                p[0] = Math.sign(p[0]) * initSize;
+                p[1] = Math.sign(p[1]) * initSize;
+            }
+
+            this._scale = initSize;
+        } else {
+            for (const p of this._points) {
+                p[0] *= factor;
+                p[1] *= factor;
+            }
+
+            this._scale *= factor;
         }
 
-        this._scale += factor;
         return this;
     }
 
@@ -276,7 +294,7 @@ class PointShape implements Shape, SelectableShape {
         return this._textOnEdge(text, position, direction, true);
     }
 
-    interpolate(shape: PointShape, pct: number) {
+    partial(shape: PointShape, pct: number) {
         const points = shape.points();
         const totalPoints = points.length;
 
@@ -297,6 +315,64 @@ class PointShape implements Shape, SelectableShape {
             this._points.push(start);
             this._points.push(nextPoint);
         }
+    }
+
+    bezierPartial(shape: PointShape, pct: number) {
+        const points = shape.bezierPoints();
+        const totalPoints = points.length;
+
+        const fullCurves = Math.floor(pct * totalPoints);
+        const partialPct = (pct * totalPoints) - fullCurves;
+
+        this._bezierPoints = points.slice(0, fullCurves);
+
+        function interpolatePoint(p1: Point, p2: Point, t: number): Point {
+            return [
+                p1[0] + t * (p2[0] - p1[0]),
+                p1[1] + t * (p2[1] - p1[1])
+            ];
+        }
+
+        if (fullCurves < totalPoints) {
+            let [start, control1, control2, end] = points[fullCurves];
+            start = start ? start : this._bezierPoints[this._bezierPoints.length - 1][3];
+
+            const l1 = interpolatePoint(start, control1, partialPct);
+            const l2 = interpolatePoint(control1, control2, partialPct);
+            const l3 = interpolatePoint(control2, end, partialPct);
+            const m1 = interpolatePoint(l1, l2, partialPct);
+            const m2 = interpolatePoint(l2, l3, partialPct);
+            const b = interpolatePoint(m1, m2, partialPct);
+
+            // this._bezierPoints.push([start, l1, m1, b]);
+            if (fullCurves > 0) {
+                this._bezierPoints.push([null, l1, m1, b]);
+            } else {
+                this._bezierPoints.push([start, l1, m1, b]);
+            }
+        } // else {
+        //     const finalCurve = points[totalPoints - 1];
+        //     let [start, control1, control2, end] = finalCurve;
+        //     start = this._bezierPoints[0][3];
+
+        //     const l1 = interpolatePoint(start!, control1, partialPct);
+        //     const l2 = interpolatePoint(control1, control2, partialPct);
+        //     const l3 = interpolatePoint(control2, end, partialPct);
+        //     const m1 = interpolatePoint(l1, l2, partialPct);
+        //     const m2 = interpolatePoint(l2, l3, partialPct);
+        //     const b = interpolatePoint(m1, m2, partialPct);
+
+        //     this._bezierPoints.push([start, l1, m1, b]);
+        // }
+    }
+
+    // addBezierPoint({ start, control1, control2, end }: { start?: Point, control1: Point, control2: Point, end: Point }): void {
+    //     let bezierPoint: BezierPoint = [start === undefined ? null : start, control1, control2, end];
+    //     this._bezierPoints.push(bezierPoint);
+    // }
+
+    bezierPoints(): BezierSegment[] {
+        return this._bezierPoints;
     }
 
     private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Shape {
@@ -326,4 +402,4 @@ function locatableToPoint(locatable: Locatable): Point {
     return isShape(locatable) ? locatable.center() : locatable;
 }
 
-export { PointShape, type ShapeStyles, locatableToPoint };
+export { PointShape, type ShapeStyles, locatableToPoint, type BezierSegment as BezierPoint };

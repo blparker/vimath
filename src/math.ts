@@ -148,6 +148,19 @@ function midpoint(a: Point, b: Point): Point {
     return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 }
 
+function approxEqual(a: number[], b: number[], epsilon?: number): boolean;
+function approxEqual(a: number, b: number, epsilon?: number): boolean;
+function approxEqual(a: number | number[], b: number | number[], epsilon: number = 1e-6): boolean {
+    if (Array.isArray(a) && Array.isArray(b)) {
+        return a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) < epsilon);
+    } else if (typeof a === 'number' && typeof b === 'number') {
+        return Math.abs(a - b) < epsilon;
+    } else {
+        throw new Error('Invalid arguments');
+    }
+}
+
+
 export default {
     min,
     lerp,
@@ -161,5 +174,6 @@ export default {
     unitVec,
     angleVec,
     rotateAboutPoint,
-    midpoint
+    midpoint,
+    approxEqual
 };

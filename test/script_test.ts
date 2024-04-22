@@ -3,6 +3,7 @@ import { Line } from '../src/shapes/primitives/line';
 import { BaseAnimation, Create } from '../src/animation';
 import { FadeIn } from '../src/animation/fade_in';
 import { Arc } from '../src/shapes/primitives/arc';
+import { Arc as Arc2 } from '../src/shapes/primitives/bezier_arc';
 import { Arrow } from '../src/shapes/composed/arrow';
 import { Triangle } from '../src/shapes/derived/triangle';
 import { Tex } from '../src/shapes/derived/tex';
@@ -16,6 +17,10 @@ import { Brace } from '../src/shapes/composed/brace';
 import { Circle, Dot, PointShape } from '../src/shapes';
 import { TangentLine } from '../src/shapes/derived/tangent_line';
 import { Square } from '../src/shapes/derived/square';
+import { Square as Square2 } from '../src/shapes/derived/bezier_square';
+import { Brace as Brace2 } from '../src/shapes/derived/bezier_brace';
+import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
+import { GrowFromCenter } from '../src/animation/grow_from_center';
 import math from '../src/math';
 
 
@@ -26,6 +31,9 @@ class TestAnimation extends BaseAnimation {
         console.log(pctComplete);
     }
 }
+
+
+// Call this Mavis (MAth VIS or MAth VIsualization System)?
 
 
 class TestScene extends Scene {
@@ -58,11 +66,18 @@ class TestScene extends Scene {
 
         // const sq = this.add(new Square());
         // this.add(new Brace(sq, DOWN()));
-        const sq = new Square();
-        this.add(new Create({ target: sq, duration: 1000 }));
+        // const sq = this.add(new Square2());
+
+
+        // const sq = new Circle();
+        // const sq = new Arc2({ center: [0, 0], radius: 1, startAngle: 0, endAngle: Math.PI / 2, lineColor: Colors.blue() });
+        // this.add(new Create({ target: sq, duration: 1000 }));
+        // this.add(sq)
+        // this.add(new Arc2({ center: [0, 0], radius: 1, startAngle: 0, endAngle: Math.PI / 2, lineColor: Colors.blue() }));
+        // this.add(new Square2({ center: [-4, 0], size: 2, lineColor: Colors.red() }));
 
         // const b = this.add(new Brace({ from: [0, 0], to: [3, 0], direction: DOWN() }));
-    
+
         // const b1 = this.add(new Brace({ from: [0, 0], to: [3, 2] }));
         // const b2 = this.add(new Brace({ from: [3, 2], to: [0, 0] }));
         // const b3 = this.add(new Brace({ from: [0, 0], to: [-3, 2] }));
@@ -74,7 +89,8 @@ class TestScene extends Scene {
         // const b4 = this.add(new Brace({ from: [-4, 1], to: [-1, 3] }));
         // const b4 = this.add(new Brace({ from: [1, 1], to: [4, 3], direction: DOWN() }));
 
-        // const b5 = this.add(new Brace({ from: [0, 0], to: [-3, 0], direction: DOWN() }));
+        // const b5 = this.add(new Brace2({ from: [0, 0], to: [-3, 0] }));
+        // const b5 = this.add(new Brace2([0, 0], [-3, 0]));
 
         // b.shift([1, 0]);
         // b.moveTo([1, 1])
@@ -91,6 +107,14 @@ class TestScene extends Scene {
         // const s2 = this.add(new Square().nextTo(s1, RIGHT()));
         // this.add(new Text('test').nextTo(s2, RIGHT()));
         // const b = this.add(new Brace(s1, UP()));
+
+        // const s = new Arc2({ center: [0, 0], radius: 1, startAngle: 0, endAngle: Math.PI / 2, lineColor: Colors.blue() });
+        const s = new Square();
+        this.add(new GrowFromCenter(s))
+
+        // const shape = new PointShape2({ points: [[1, 1], [1, -1], [-1, -1], [-1, 1], [1, 1]] });
+        // this.add(new Create({ target: shape, duration: 1000 }));
+        // this.add(shape);
     }
 }
 

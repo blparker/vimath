@@ -9,7 +9,6 @@ class Arc extends PointShape {
     private _startAngle: number;
     private _endAngle: number;
 
-
     constructor({ center = ORIGIN, radius = 2, startAngle = 0, endAngle = 2 * Math.PI, selectable = false, ...styleArgs }: { center?: Locatable; radius?: number; startAngle?: number; endAngle?: number; selectable?: boolean; } & Prettify<ShapeStyles> = {}) {
         super({ points: [locatableToPoint(center)], selectable, ...styleArgs });
 
@@ -77,6 +76,15 @@ class Arc extends PointShape {
     left(): Point {
         const [cX, cY] = this.points()[0];
         return [cX - this._radius, cY];
+    }
+
+    partial(shape: PointShape, pct: number) {
+        if (shape instanceof Arc) {
+            const spanAngle = shape.endAngle() - shape.startAngle();
+            const partialEndAngle = shape.startAngle() + pct * spanAngle;
+
+            this._endAngle = partialEndAngle;
+        }
     }
 }
 

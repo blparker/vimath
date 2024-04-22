@@ -21,7 +21,6 @@ function expectArraysToBeClose(arr1: number[] | number[][], arr2: number[] | num
 }
 
 
-
 beforeEach(() => {
     triangle = new PointShape({ points: [[0, 0], [1, 0], [0, 1]] as Point[] });
     square = new PointShape({ points: [[0, 0], [0, 2], [2, 2], [2, 0]] as Point[] });

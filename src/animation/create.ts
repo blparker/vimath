@@ -1,5 +1,6 @@
 import { AnimationArgs, BaseAnimation } from '@/animation/animation';
-import { PointShape, Shape, isShape } from '@/shapes';
+import { Shape, isShape } from '@/shapes';
+import { PointShape } from '@/shapes/primitives/bezier_point_shape';
 
 
 class Create extends BaseAnimation {
@@ -19,11 +20,13 @@ class Create extends BaseAnimation {
     }
 
     update(pctComplete: number, starting: boolean): void {
-        if (starting) {
-        }
-
         if (this._target instanceof PointShape && this._targetCopy instanceof PointShape) {
-            this._target.interpolate(this._targetCopy, pctComplete);
+            // this._target.partial(this._targetCopy, pctComplete);
+            this._target.bezierPartial(this._targetCopy, pctComplete);
+
+            if (pctComplete >= 1) {
+                // console.log(this._target.bezierPoints());
+            }
         }
     }
 

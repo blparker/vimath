@@ -3,6 +3,8 @@ type Shift = [number, number];
 type Range = [number, number];
 type HAlign = 'left' | 'center' | 'right';
 type VAlign = 'top' | 'middle' | 'bottom';
+type BezierSegment = [Point | null, Point, Point, Point];
+
 
 type Prettify<T> = {
     [K in keyof T]: T[K];
@@ -22,4 +24,4 @@ function DL(v: number = 1): Point { return [-v, -v]; }
 function DR(v: number = 1): Point { return [v, -v]; }
 
 
-export { type Point, type Shift, type Range, type HAlign, type VAlign, type Prettify, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, ORIGIN };
+export { type Point, type Shift, type Range, type HAlign, type VAlign, type BezierSegment, type Prettify, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, ORIGIN };
