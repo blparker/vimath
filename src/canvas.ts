@@ -1,4 +1,4 @@
-import { BezierSegment, Point } from '@/base';
+import { Point } from '@/base';
 import { Colors, rgbaToString } from '@/colors';
 import { config } from '@/config';
 import { PointShape, Shape } from '@/shapes';
@@ -31,7 +31,7 @@ interface Canvas {
 
     line(line: Line): void;
     connectedPath(path: PointShape): void;
-    connectedPath2(path: BezierPointShape): void;
+    connectedPathBezier(path: BezierPointShape): void;
     arc(arc: Arc): void;
     text(text: Text): Promise<void>;
     bezierCurve(curve: BezierCurve): void;
@@ -81,7 +81,7 @@ class HtmlCanvas implements Canvas {
         } else if (shape instanceof PointShape) {
             this.connectedPath(shape);
         } else if (shape instanceof BezierPointShape) {
-            this.connectedPath2(shape);
+            this.connectedPathBezier(shape);
         } else if (shape instanceof Text) {
             await this.text(shape);
         } else if (shape instanceof Drawable) {
@@ -118,11 +118,6 @@ class HtmlCanvas implements Canvas {
     }
 
     connectedPath(shape: PointShape): void {
-        if (shape.bezierPoints().length > 0) {
-            this.connectedPathBezier(shape);
-            return;
-        }
-
         if (shape.smooth()) {
             this.smoothPath(shape);
             return;
@@ -170,103 +165,34 @@ class HtmlCanvas implements Canvas {
         this._ctx.restore();
     }
 
-    connectedPath2(shape: BezierPointShape): void {
+    connectedPathBezier(shape: BezierPointShape): void {
         this._ctx.save();
         this.setContextStyles(shape);
 
         const points = shape.points();
         const p = new Path2D();
 
-        function isBezier(point: Point | BezierSegment): point is BezierSegment {
-            return Array.isArray(point) && point.length === 4;
-        }
-
         for (let i = 0; i < points.length; i++) {
             const pt = points[i];
 
-            if (isBezier(pt)) {
-                if (pt[0] !== null) {
-                    p.moveTo(...this.t.translateRelative(pt[0]));
-                }
-
-                p.bezierCurveTo(...this.t.translateRelative(pt[1]), ...this.t.translateRelative(pt[2]), ...this.t.translateRelative(pt[3]));
-            } else if (i === 0) {
-                p.moveTo(...this.t.translateRelative(pt));
-            } else {
-                p.lineTo(...this.t.translateRelative(pt));
+            if (pt[0] !== null) {
+                p.moveTo(...this.t.translateRelative(pt[0]));
             }
+
+            p.bezierCurveTo(...this.t.translateRelative(pt[1]), ...this.t.translateRelative(pt[2]), ...this.t.translateRelative(pt[3]));
         }
 
         const first = points[0];
         const last = points[points.length - 1];
 
-        if (isBezier(first) && isBezier(last) && first[0] !== null && math.approxEqual(first[0], last[3])) {
-            p.closePath();
-        } else if (isBezier(first) && !isBezier(last) && first[0] !== null && math.approxEqual(first[0], last)) {
-            p.closePath();
-        } else if (!isBezier(first) && isBezier(last) && math.approxEqual(first, last[3])) {
-            p.closePath();
-        } else if (!isBezier(first) && !isBezier(last) && math.approxEqual(first, last)) {
+        const start = first[0] ?? first[1];
+        const end = last[3];
+
+        if (math.approxEqual(start, end)) {
             p.closePath();
         }
-        // p.closePath();
 
         const styles = shape.styles();
-
-        if (styles.color) {
-            this._ctx.fill(p);
-        }
-
-        if (styles.lineColor) {
-            this._ctx.stroke(p);
-        }
-
-        this._ctx.restore();
-    }
-
-    private connectedPathBezier(shape: PointShape): void {
-        this._ctx.save();
-        this.setContextStyles(shape);
-
-        const p = new Path2D();
-        const points = shape.bezierPoints();
-
-        const styles = shape.styles();
-        // if (styles.adjustForLineWidth && styles.lineWidth) {
-        //     const relLineWidth = this.t.translateAbsWidth(styles.lineWidth);
-
-        //     const innerWidth = shape.width() - relLineWidth;
-        //     const innerHeight = shape.height() - relLineWidth;
-
-        //     const [sX, sY] = [innerWidth / shape.width(), innerHeight / shape.height()];
-        //     const [cX, cY] = shape.center();
-
-        //     for (const p of points) {
-        //         const dX = p[0] - cX;
-        //         const dY = p[1] - cY;
-
-        //         p[0] = cX + dX * sX;
-        //         p[1] = cY + dY * sY;
-        //     }
-        // }
-
-        if (points[0][0] === null) {
-            throw new Error('No starting point')
-        }
-
-        for (let i = 0; i < points.length; i++) {
-            if (points[i][0] !== null) {
-                p.moveTo(...this.t.translateRelative(points[i][0]!));
-            }
-
-            p.bezierCurveTo(...this.t.translateRelative(points[i][1]), ...this.t.translateRelative(points[i][2]), ...this.t.translateRelative(points[i][3]));
-        }
-
-        // Check to see if we should close the path
-        const [first, last] = [points[0][0], points[points.length - 1][3]];
-        if (math.approxEqual(first, last)) {
-            p.closePath();
-        }
 
         if (styles.color) {
             this._ctx.fill(p);

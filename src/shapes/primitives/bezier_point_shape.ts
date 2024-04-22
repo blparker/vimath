@@ -33,30 +33,70 @@ class PointShape implements Shape, SelectableShape {
     }
 
     center(): Point {
-        let xMean = 0;
-        let yMean = 0;
+        // let xMean = 0;
+        // let yMean = 0;
 
-        for (let i = 0, count = 0; i < this._points.length; i++) {
-            const pt = this._points[i];
+        // for (let i = 0, count = 0; i < this._points.length; i++) {
+        //     const pt = this._points[i];
 
-            // if (isBezier(pt)) {
-                for (let j = 0; j < pt.length; j++) {
-                    if (pt[j] !== null) {
-                        xMean += (pt[j]![0] - xMean) / (count + 1);
-                        yMean += (pt[j]![1] - yMean) / (count + 1);
+        //     for (let j = 0; j < pt.length; j++) {
+        //         if (pt[j] !== null) {
+        //             xMean += (pt[j]![0] - xMean) / (count + 1);
+        //             yMean += (pt[j]![1] - yMean) / (count + 1);
 
-                        count++;
-                    }
-                }
-            // } else {
-            //     xMean += (pt[0] - xMean) / (count + 1);
-            //     yMean += (pt[1] - yMean) / (count + 1);
+        //             count++;
+        //         }
+        //     }
+        // }
 
-            //     count++;
-            // }
+        // console.log(xMean, yMean);
+        // return [xMean, yMean];
+        return this.centerWithSampling();
+    }
+
+    private centerWithSampling(): Point {
+        function evalBezier(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
+            const mt = 1 - t;
+            const mt2 = mt * mt;
+            const t2 = t * t;
+
+            return [
+                // mt**3 * p0[0] + 3 * mt**2 * t * p1[0] + 3 * mt**2 * p2[0] + t**3 * p3[0],
+                // mt**3 * p0[1] + 3 * mt**2 * t * p1[1] + 3 * mt**2 * p2[1] + t**3 * p3[1]
+                (mt * mt2 * p0[0]) + (3 * mt2 * t * p1[0]) + (3 * mt * t2 * p2[0]) + (t * t2 * p3[0]),
+                (mt * mt2 * p0[1]) + (3 * mt2 * t * p1[1]) + (3 * mt * t2 * p2[1]) + (t * t2 * p3[1])
+            ];
         }
 
-        return [xMean, yMean];
+        let xSum = 0, ySum = 0;
+        let sampleCount = 0;
+        const samplesPerCurve = 100;
+
+        for (let i = 0; i < this._points.length; i++) {
+            let [start, cp1, cp2, end] = this._points[i];
+
+            // If the start point is null, make sure this isn't the first point
+            if (start === null) {
+                if (i === 0) {
+                    throw new Error('Invalid bezier curve. Expect the initial point to define a starting point');
+                }
+
+                // Set the start point of the current curve to the end point of the previous curve
+                start = this._points[i - 1][3];
+            }
+
+            for (let j = 0; j <= samplesPerCurve; j++) {
+                const t = j / samplesPerCurve;
+                const [x, y] = evalBezier(start, cp1, cp2, end, t);
+
+                xSum += x;
+                ySum += y;
+            }
+
+            sampleCount += samplesPerCurve + 1;
+        }
+
+        return [xSum / sampleCount, ySum / sampleCount];
     }
 
     top(): Point {
@@ -87,7 +127,7 @@ class PointShape implements Shape, SelectableShape {
         return this.top()[1] - this.bottom()[1];
     }
 
-    moveTo(point: Point): Shape {
+    moveTo(point: Point): this {
         const [cX, cY] = this.center();
 
         for (const pt of this._points) {
@@ -107,7 +147,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    shift(...shifts: Point[]): Shape {
+    shift(...shifts: Point[]): this {
         const [sX, sY] = shifts.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
 
         for (const p of this._points) {
@@ -127,26 +167,51 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    scale(factor: number): Shape {
-        for (const p of this._points) {
-            // if (isBezier(p)) {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i] !== null) {
-                        p[i]![0] *= factor;
-                        p[i]![1] *= factor;
-                    }
-                }
-            // } else {
-            //     p[0] *= factor;
-            //     p[1] *= factor;
-            // }
+    scale(factor: number): this {
+
+        // if (factor === 0) {
+        //     const initSize = 0.00001;
+
+        //     for (const seg of this._points) {
+        //         for (const pt of seg) {
+        //             if (pt !== null) {
+        //                 pt[0] = Math.sign(pt[0]) * initSize;
+        //                 pt[1] = Math.sign(pt[1]) * initSize;
+        //             }
+        //         }
+        //     }
+
+        //     this._scale = initSize;
+        // } else {
+        //     for (const seg of this._points) {
+        //         for (const pt of seg) {
+        //             if (pt !== null) {
+        //                 pt[0] *= factor;
+        //                 pt[1] *= factor;
+        //             }
+        //         }
+        //     }
+
+        //     this._scale *= factor;
+        // }
+        if (factor === 0) {
+            factor = 0.00001;
         }
 
-        this._scale += factor;
+        for (const seg of this._points) {
+            for (const pt of seg) {
+                if (pt !== null) {
+                    pt[0] *= factor;
+                    pt[1] *= factor;
+                }
+            }
+        }
+
+        this._scale *= factor;
         return this;
     }
 
-    rotate(angle: number): Shape {
+    rotate(angle: number): this {
         const [cX, cY] = this.center();
 
         // function rot(x: number, y: number): [number, number] {
@@ -190,7 +255,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point = RIGHT()): Shape {
+    nextTo(other: Locatable, direction: Point = RIGHT()): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -249,19 +314,19 @@ class PointShape implements Shape, SelectableShape {
         return this._allStyles[this._allStyles.length - 1];
     }
 
-    changeColor(color: RGBA): Shape {
+    changeColor(color: RGBA): this {
         // this._styles.color = color;
         this.styles().color = color;
         return this;
     }
 
-    changeLineColor(color: RGBA): Shape {
+    changeLineColor(color: RGBA): this {
         // this._styles.lineColor = color;
         this.styles().lineColor = color;
         return this;
     }
 
-    changeLineWidth(width: number): Shape {
+    changeLineWidth(width: number): this {
         this.styles().lineWidth = width;
         return this;
     }
@@ -499,12 +564,26 @@ class PointShape implements Shape, SelectableShape {
         if (points.every(isBezier)) {
             return points as BezierSegment[];
         } else if (points.every(pt => !isBezier(pt))) {
+            if (n === 1) {
+                const pt = points[0] as Point;
+                return [[pt, pt, pt, pt]];
+            } else if (n === 2) {
+                const [pt1, pt2] = points as [Point, Point];
+                return [[pt1, pt1, pt2, pt2]];
+            }
+
             for (let i = 0; i < n; i++) {
                 const curr = points[i] as Point;
                 const next = points[(i + 1) % n] as Point;
-
                 segments.push([i > 0 ? null : curr, curr, next, next]);
             }
+
+            // const first = points[0] as Point;
+            // const last = points[n - 1] as Point;
+
+            // if (first[0] === last[0] && first[1] === last[1]) {
+            //     segments.push([null, last, first, first])
+            // }
         } else {
             /*
              * Mixture of points and bezier segments. Assume that the bezier segments are just points.

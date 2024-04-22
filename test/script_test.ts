@@ -15,12 +15,14 @@ import { Colors } from '../src/colors';
 import { GridLines } from '../src/shapes/composed/grid_lines';
 import { Brace } from '../src/shapes/composed/brace';
 import { Circle, Dot, PointShape } from '../src/shapes';
+import { Circle as Circle2 } from '../src/shapes/derived/bezier_circle';
 import { TangentLine } from '../src/shapes/derived/tangent_line';
 import { Square } from '../src/shapes/derived/square';
 import { Square as Square2 } from '../src/shapes/derived/bezier_square';
 import { Brace as Brace2 } from '../src/shapes/derived/bezier_brace';
 import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
 import { GrowFromCenter } from '../src/animation/grow_from_center';
+import { Line as Line2 } from '../src/shapes/primitives/bezier_line';
 import math from '../src/math';
 
 
@@ -109,12 +111,24 @@ class TestScene extends Scene {
         // const b = this.add(new Brace(s1, UP()));
 
         // const s = new Arc2({ center: [0, 0], radius: 1, startAngle: 0, endAngle: Math.PI / 2, lineColor: Colors.blue() });
-        const s = new Square();
-        this.add(new GrowFromCenter(s))
+        // this.add(s.scale(0.0).scale(100000));
+        // const s = new Square();
+        // this.add(new GrowFromCenter(s))
 
         // const shape = new PointShape2({ points: [[1, 1], [1, -1], [-1, -1], [-1, 1], [1, 1]] });
         // this.add(new Create({ target: shape, duration: 1000 }));
         // this.add(shape);
+
+        const c = this.add(new Circle2(4).changeLineColor(Colors.blue()));
+        const pt45 = c.pointAtAngle(Math.PI / 4);
+        // const pt45 = c.pointAtAngle(Math.PI / 2);
+        // console.log(pt45);
+        this.add(new Dot(c.center()), new Dot(pt45));
+
+        // console.log(2 * Math.cos(Math.PI / 4), 2 * Math.sin(Math.PI / 4));
+
+        // this.add(new Line({ from: ORIGIN, to: pt45 }))
+        this.add(new Line2(ORIGIN, pt45));
     }
 }
 

@@ -81,6 +81,10 @@ interface Shape {
 
 type Locatable = Point | Shape;
 
+function isLocatable(o: any): o is Locatable {
+    return Array.isArray(o) && o.length === 2 || isShape(o);
+}
+
 
 function isShape(o: any): o is Shape {
     return 'shift' in o && typeof o.shift === 'function' && 
@@ -88,4 +92,4 @@ function isShape(o: any): o is Shape {
 }
 
 
-export { type Shape, type ShapeStyles, type Locatable, type SelectableShape, defaultShapeStyles, isShape, isSelectableShape };
+export { type Shape, type ShapeStyles, type Locatable, type SelectableShape, defaultShapeStyles, isShape, isSelectableShape, isLocatable };

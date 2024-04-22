@@ -36,4 +36,17 @@ function deepCopy(obj: any): any {
 }
 
 
-export default { deepCopy };
+function extractType<T extends Object>(obj: any): T {
+    const result: Partial<T> = {};
+
+    (Object.keys(obj) as Array<keyof T>).forEach(key => {
+        if (key in obj) {
+            result[key] = obj[key];
+        }
+    });
+
+    return result as T;
+}
+
+
+export default { deepCopy, extractType };
