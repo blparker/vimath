@@ -19,8 +19,9 @@
     // TODO: Enable this rule
     // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     },
     "outDir": "./dist",
     "declaration": true,

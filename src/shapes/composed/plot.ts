@@ -1,6 +1,6 @@
 import { Shape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { PointShape } from '@/shapes/primitives/point_shape';
+import { PointShape } from '@/shapes/primitives/bezier_point_shape';
 import { Point } from '@/base';
 
 
@@ -29,13 +29,13 @@ class Plot extends ComposedShape {
         return this._fn(x)[1];
     }
 
-    *points(): Generator<Point> {
-        for (const subplot of this._subplots) {
-            for (const point of subplot.points()) {
-                yield point;
-            }
-        }
-    }
+    // *points(): Generator<Point> {
+    //     for (const subplot of this._subplots) {
+    //         for (const point of subplot.points()) {
+    //             yield point;
+    //         }
+    //     }
+    // }
 }
 
 

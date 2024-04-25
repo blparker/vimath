@@ -1,18 +1,19 @@
 import { expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { Scene } from '../src/scene';
 import { Line } from '../src/shapes/primitives/line';
-import { Canvas, Drawable } from '../src/canvas';
+import { Canvas } from '../src/canvas';
 import { BezierCurve, PointShape, Shape } from '../src/shapes';
 import { BaseAnimation } from '../src/animation/animation';
 import { Arc } from '../src/shapes/primitives/arc';
+import { PointShape as BezierPointShape } from '../src/shapes/primitives/bezier_point_shape';
 
 
 function getTestCanvas() {
     return new class implements Canvas {
+        connectedPathBezier(path: BezierPointShape): void {}
         renderShape(shape: Shape): Promise<void> { return Promise.resolve(); }
         text(text: Text): Promise<void> { return Promise.resolve();}
         bezierCurve(curve: BezierCurve): void { }
-        drawable(drawable: Drawable): void { }
         line2({ from, to, ...styles }: any): void { }
         connectedPath(path: PointShape): void { }
         arc(arc: Arc): void { }
@@ -58,7 +59,7 @@ afterEach(() => {
 });
 
 
-test.skip('should render shape', () => {
+test('should render shape', () => {
     const l = new Line({ from: [-2, 0], to: [2, 0] });
     const testCanvas = getTestCanvas();
 
@@ -84,7 +85,7 @@ test.skip('should render shape', () => {
 });
 
 
-test.skip('should render animation', () => {
+test('should render animation', () => {
     const mockUpdate = vi.fn();
 
     class TestAnimation extends BaseAnimation {

@@ -19,6 +19,10 @@ const DEFAULT_CONFIG = {
         blocking: true,
     },
 
+    text: {
+        size: 20,
+    },
+
     arrowTipSize: 0.15,
     standoff: 0.15,
 

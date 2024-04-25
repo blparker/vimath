@@ -1,7 +1,7 @@
 import { DOWN, Point, Prettify, RIGHT } from '@/base';
 import { Colors, RGBA } from '@/colors';
 import { Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
-import { Text } from './text';
+import { Text } from '../primitives/text';
 import utils from '@/utils';
 import math from '@/math';
 import { config } from '@/config';
@@ -391,4 +391,4 @@ function locatableToPoint(locatable: Locatable): Point {
     return isShape(locatable) ? locatable.center() : locatable;
 }
 
-export { PointShape, type ShapeStyles, locatableToPoint };
+export { PointShape, locatableToPoint };

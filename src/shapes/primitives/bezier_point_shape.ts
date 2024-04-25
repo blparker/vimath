@@ -1,7 +1,7 @@
 import { BezierSegment, DOWN, Point, Prettify, RIGHT } from '@/base';
 import { Colors, RGBA } from '@/colors';
-import { Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
-import { Text } from './text';
+import { Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
+import { Text } from '@/shapes/primitives/text';
 import utils from '@/utils';
 import math from '@/math';
 import { config } from '@/config';
@@ -55,19 +55,6 @@ class PointShape implements Shape, SelectableShape {
     }
 
     private centerWithSampling(): Point {
-        function evalBezier(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
-            const mt = 1 - t;
-            const mt2 = mt * mt;
-            const t2 = t * t;
-
-            return [
-                // mt**3 * p0[0] + 3 * mt**2 * t * p1[0] + 3 * mt**2 * p2[0] + t**3 * p3[0],
-                // mt**3 * p0[1] + 3 * mt**2 * t * p1[1] + 3 * mt**2 * p2[1] + t**3 * p3[1]
-                (mt * mt2 * p0[0]) + (3 * mt2 * t * p1[0]) + (3 * mt * t2 * p2[0]) + (t * t2 * p3[0]),
-                (mt * mt2 * p0[1]) + (3 * mt2 * t * p1[1]) + (3 * mt * t2 * p2[1]) + (t * t2 * p3[1])
-            ];
-        }
-
         let xSum = 0, ySum = 0;
         let sampleCount = 0;
         const samplesPerCurve = 100;
@@ -87,7 +74,7 @@ class PointShape implements Shape, SelectableShape {
 
             for (let j = 0; j <= samplesPerCurve; j++) {
                 const t = j / samplesPerCurve;
-                const [x, y] = evalBezier(start, cp1, cp2, end, t);
+                const [x, y] = math.evalBezier(start, cp1, cp2, end, t);
 
                 xSum += x;
                 ySum += y;
@@ -406,14 +393,6 @@ class PointShape implements Shape, SelectableShape {
         return utils.deepCopy(this);
     }
 
-    textOnEdge(text: string, position: number, direction: Point = DOWN()): Shape {
-        return this._textOnEdge(text, position, direction, false);
-    }
-
-    texOnEdge(text: string, position: number, direction: Point = DOWN()): Shape {
-        return this._textOnEdge(text, position, direction, true);
-    }
-
     partial(shape: PointShape, pct: number) {
         // const points = shape.points();
         // const totalPoints = points.length;
@@ -513,13 +492,68 @@ class PointShape implements Shape, SelectableShape {
     //     this._bezierPoints.push(bezierPoint);
     // }
 
-    private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Shape {
-        // const pt1 = this._points[position];
-        // const pt2 = position === this._points.length - 1 ? this._points[0] : this._points[position + 1];
+    textOnEdge(text: string, position: number, direction: Point = DOWN()): Text {
+        return this._textOnEdge(text, position, direction, false);
+    }
 
-        // const midPoint = math.midpoint(pt1, pt2);
-        // return new Text({ text, tex: true, }).nextTo(midPoint, direction);
-        return null;
+    texOnEdge(text: string, position: number, direction: Point = DOWN()): Text {
+        return this._textOnEdge(text, position, direction, true);
+    }
+
+    private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Text {
+        function approxCurveLength(p0: Point, p1: Point, p2: Point, p3: Point, samples: number = 1000): number {
+            let length = 0;
+            let prevPoint = p0;
+
+            for (let i = 1; i <= samples; i++) {
+                const t = i / samples;
+                const currPoint = math.evalBezier(p0, p1, p2, p3, t);
+
+                const dx = currPoint[0] - prevPoint[0];
+                const dy = currPoint[1] - prevPoint[1];
+
+                length += Math.sqrt(dx * dx + dy * dy);
+                prevPoint = currPoint;
+            }
+
+            return length;
+        }
+
+        function findMidT(p0: Point, p1: Point, p2: Point, p3: Point, length: number, samples: number = 1000): number {
+            let accumulatedLength = 0;
+            let t = 0;
+            const step = 1 / samples;
+
+            for (let i = 0; i <= samples; i++) {
+                const tNext = i / samples;
+                const currPoint = math.evalBezier(p0, p1, p2, p3, tNext);
+                const prevPoint = i === 0 ? p0 : math.evalBezier(p0, p1, p2, p3, tNext - step);
+                const dx = currPoint[0] - prevPoint[0];
+                const dy = currPoint[1] - prevPoint[1];
+                accumulatedLength += Math.sqrt(dx * dx + dy * dy);
+
+                if (accumulatedLength >= length) {
+                    t = tNext;
+                    break;
+                }
+            }
+
+            return t;
+        }
+
+        let [p0, p1, p2, p3] = this._points[position];
+        if (p0 === null) {
+            if (position === 0) {
+                throw new Error('Invalid bezier curve. Expect the initial point to define a starting point');
+            }
+
+            p0 = this._points[position - 1][3];
+        }
+
+        const length = approxCurveLength(p0, p1, p2, p3);
+        const midpoint = math.evalBezier(p0, p1, p2, p3, findMidT(p0, p1, p2, p3, length / 2));
+
+        return new Text({ text, tex: isTex }).nextTo(midpoint, direction);
     }
 
     private boundingBox(): { minX: number, minY: number, maxX: number, maxY: number } {
@@ -572,7 +606,7 @@ class PointShape implements Shape, SelectableShape {
                 return [[pt1, pt1, pt2, pt2]];
             }
 
-            for (let i = 0; i < n; i++) {
+            for (let i = 0; i < n - 1; i++) {
                 const curr = points[i] as Point;
                 const next = points[(i + 1) % n] as Point;
                 segments.push([i > 0 ? null : curr, curr, next, next]);
@@ -605,8 +639,4 @@ class PointShape implements Shape, SelectableShape {
 }
 
 
-function locatableToPoint(locatable: Locatable): Point {
-    return isShape(locatable) ? locatable.center() : locatable;
-}
-
-export { PointShape, type ShapeStyles, locatableToPoint, type BezierSegment as BezierPoint };
+export { PointShape, type ShapeStyles, type BezierSegment as BezierPoint };

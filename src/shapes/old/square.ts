@@ -1,5 +1,5 @@
 import { ORIGIN, Point } from '@/base';
-import { PointShape, locatableToPoint } from '@/shapes/primitives/point_shape';
+import { PointShape, locatableToPoint } from '@/shapes/old/point_shape';
 import { Locatable, ShapeStyles } from '@/shapes/shape';
 
 

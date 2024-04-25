@@ -1,8 +1,7 @@
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { Locatable, Shape } from '@/shapes/shape';
-import { Line } from '@/shapes/primitives/line';
+import { Locatable, Shape, locatableToPoint } from '@/shapes/shape';
+import { Line } from '@/shapes/primitives/bezier_line';
 import { Point } from '@/base';
-import { locatableToPoint } from '@/shapes/primitives/point_shape';
 import { Triangle } from '@/shapes/derived/triangle';
 import { config } from '@/config';
 import math from '@/math';

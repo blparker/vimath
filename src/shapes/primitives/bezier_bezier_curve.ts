@@ -1,6 +1,5 @@
 import { Point } from '@/base';
-import { ShapeStyles } from '@/shapes/primitives/point_shape';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape, ShapeStyles } from '@/shapes/primitives/bezier_point_shape';
 
 
 class BezierCurve extends PointShape {

@@ -1,8 +1,8 @@
 import { Scene } from '../src/scene';
-import { Line } from '../src/shapes/primitives/line';
+// import { Line } from '../src/shapes/primitives/line';
 import { BaseAnimation, Create } from '../src/animation';
 import { FadeIn } from '../src/animation/fade_in';
-import { Arc } from '../src/shapes/primitives/arc';
+// import { Arc } from '../src/shapes/primitives/arc';
 import { Arc as Arc2 } from '../src/shapes/primitives/bezier_arc';
 import { Arrow } from '../src/shapes/composed/arrow';
 import { Triangle } from '../src/shapes/derived/triangle';
@@ -13,14 +13,14 @@ import { LEFT, DOWN, UP, RIGHT, UL, UR, DL, DR, ORIGIN } from '../src/base';
 import { Axes } from '../src/shapes/composed/axes';
 import { Colors } from '../src/colors';
 import { GridLines } from '../src/shapes/composed/grid_lines';
-import { Brace } from '../src/shapes/composed/brace';
-import { Circle, Dot, PointShape } from '../src/shapes';
-import { Circle as Circle2 } from '../src/shapes/derived/bezier_circle';
+// import { Brace } from '../src/shapes/composed/brace';
+// import { Circle, Dot, PointShape } from '../src/shapes';
 import { TangentLine } from '../src/shapes/derived/tangent_line';
-import { Square } from '../src/shapes/derived/square';
+// import { Square } from '../src/shapes/derived/square';
 import { Square as Square2 } from '../src/shapes/derived/bezier_square';
-import { Brace as Brace2 } from '../src/shapes/derived/bezier_brace';
-import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
+import { Brace } from '../src/shapes/derived/bezier_brace';
+// import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
+import { PointShape, Dot, Circle } from '../src/shapes'
 import { GrowFromCenter } from '../src/animation/grow_from_center';
 import { Line as Line2 } from '../src/shapes/primitives/bezier_line';
 import math from '../src/math';
@@ -40,22 +40,19 @@ class TestAnimation extends BaseAnimation {
 
 class TestScene extends Scene {
     compose() {
-        this.add(new GridLines());
+        // this.add(new GridLines());
 
-        // const c = this.add(new Circle({ radius: 4, lineColor: Colors.blue() }));
-        // const pt45 = c.pointAtAngle(Math.PI / 4);
+        // const c2 = this.add(new Circle({ radius: 4, lineColor: Colors.blue() }));
+        // const pt452 = c2.pointAtAngle(Math.PI / 4);
 
-        // const d = this.add(new Dot(pt45));
-        // const o = this.add(new Dot(ORIGIN));
-        // this.add(new Tex('\\text{O}').nextTo(o, DOWN()));
-        // this.add(new Tex('\\text{P}').nextTo(d, UR()));
+        // const triangle = this.add(new PointShape({ points: [ORIGIN, pt452, [pt452[0], 0]], lineWidth: 2 }));
+        // this.add(triangle.texOnEdge('1', 0, UP()));
 
-        // const triangle = this.add(new PointShape({ points: [ORIGIN, pt45, [pt45[0], 0]], lineWidth: 2 }));
-        // this.add(triangle.texOnEdge('1', 0, UL()));
         // this.add(triangle.texOnEdge('\\sin \\theta', 1, LEFT()));
         // this.add(triangle.texOnEdge('\\cos \\theta', 2, UP()));
 
-        // const b = this.add(new Brace({ from: [0, 0], to: [0, 3], direction: DOWN() }));
+        // const b = this.add(new Brace({ from: [0, 0], to: [3, 0], direction: DOWN() }));
+        // const b2 = this.add(new Brace({ from: [0, 0], to: [-3, 0], direction: DOWN() }));
 
         /**** TODO:
          * 
@@ -119,16 +116,41 @@ class TestScene extends Scene {
         // this.add(new Create({ target: shape, duration: 1000 }));
         // this.add(shape);
 
-        const c = this.add(new Circle2(4).changeLineColor(Colors.blue()));
-        const pt45 = c.pointAtAngle(Math.PI / 4);
-        // const pt45 = c.pointAtAngle(Math.PI / 2);
-        // console.log(pt45);
-        this.add(new Dot(c.center()), new Dot(pt45));
 
-        // console.log(2 * Math.cos(Math.PI / 4), 2 * Math.sin(Math.PI / 4));
+        // const c = this.add(new Circle(4).changeLineColor(Colors.blue()));
+        // const pt45 = c.pointAtAngle(Math.PI / 4);
 
-        // this.add(new Line({ from: ORIGIN, to: pt45 }))
-        this.add(new Line2(ORIGIN, pt45));
+        // const [dotOrigin, dot45] = this.add(new Dot(c.center()), new Dot(pt45));
+
+        // const tri = this.add(new PointShape({ points: [ORIGIN, pt45, [pt45[0], 0]], lineWidth: 2, }));
+        // this.add(
+        //     tri.texOnEdge('1', 0, UL()),
+        //     tri.texOnEdge('\\sin \\theta', 1, LEFT()),
+        //     tri.texOnEdge('\\cos \\theta', 2, DOWN()),
+        // );
+
+        // this.add(
+        //     new Tex('O').nextTo(dotOrigin, DOWN()),
+        //     new Tex('P').nextTo(dot45, RIGHT()),
+        // );
+
+        // const a = new Axes();
+        // // const f = x => (2 * x * x - x - 1) / (x - 1)
+        // const p = a.plot(x => 1 / x);
+        // // const p = a.plot(f);
+        // // const p = a.plot(x => 0.1 * x * x);
+
+        // this.add(a, p);
+        const a = new Axes({
+            xRange: [-20, 20],
+            yRange: [-10, 10],
+            xStep: 2,
+            yStep: 2,
+            labelSize: 16,
+            showGrid: true,
+        });
+
+        this.add(a);
     }
 }
 

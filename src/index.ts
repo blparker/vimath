@@ -1,5 +1,5 @@
-export * from '@/animation';
-export * from '@/shapes';
+export * from './animation';
+export * from './shapes';
 export * from './base';
 export * from './canvas';
 export * from './colors';

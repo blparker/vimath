@@ -2,7 +2,7 @@ import { Point, RIGHT } from '@/base';
 import { Shape, ShapeStyles, isShape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Colors } from '@/colors';
-import { Drawable } from '@/shapes/primitives/drawable';
+import { Drawable } from '@/shapes/old/drawable';
 import math from '@/math';
 import { config } from '@/config';
 

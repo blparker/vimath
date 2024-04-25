@@ -1,9 +1,8 @@
 import { Point, Prettify } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
+import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import math from '@/math';
 import utils from '@/utils';
-import { locatableToPoint } from '@/shapes/primitives/point_shape';
 import { config } from '@/config';
 
 
@@ -60,7 +59,7 @@ class ComposedShape implements Shape {
         return maxY - minY;
     }
 
-    moveTo(point: Point): Shape {
+    moveTo(point: Point): this {
         const [cX, cY] = this.center();
         const shift = [point[0] - cX, point[1] - cY] as Point;
 
@@ -69,7 +68,7 @@ class ComposedShape implements Shape {
         return this;
     }
 
-    shift(...shifts: Point[]): Shape {
+    shift(...shifts: Point[]): this {
         for (const s of this.composedShapes()) {
             s.shift(...shifts);
         }
@@ -77,7 +76,7 @@ class ComposedShape implements Shape {
         return this;
     }
 
-    scale(factor: number): Shape {
+    scale(factor: number): this {
         for (const shape of this.composedShapes()) {
             // When scaling, the centers of the constituent shapes get translated
             shape.moveTo(math.multScalar(shape.center(), factor) as Point);
@@ -88,7 +87,7 @@ class ComposedShape implements Shape {
         return this;
     }
 
-    rotate(angle: number): Shape {
+    rotate(angle: number): this {
         const center = this.center();
 
         for (const s of this.composedShapes()) {
@@ -110,7 +109,7 @@ class ComposedShape implements Shape {
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point): Shape {
+    nextTo(other: Locatable, direction: Point): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -164,12 +163,12 @@ class ComposedShape implements Shape {
         return this._styles;
     }
 
-    changeColor(color: RGBA): Shape {
+    changeColor(color: RGBA): this {
         this.styles().color = color;
         return this;
     }
 
-    changeLineColor(color: RGBA): Shape {
+    changeLineColor(color: RGBA): this {
         this.styles().lineColor = color;
         return this;
     }

@@ -93,7 +93,7 @@ abstract class Scene {
 
     render(): void {
         const loop = (time: number) => {
-            this._rafId = requestAnimationFrame(loop);
+            // this._rafId = requestAnimationFrame(loop);
 
             try {
                 this.nextTick(time);

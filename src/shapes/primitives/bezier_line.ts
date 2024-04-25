@@ -1,16 +1,12 @@
 import { Point, Prettify } from '@/base';
 import { RGBA } from '@/colors';
-import { ShapeStyles, locatableToPoint } from '@/shapes/primitives/point_shape';
-import { Locatable, Shape, isLocatable } from '@/shapes/shape';
+import { Locatable, ShapeStyles, isLocatable, locatableToPoint } from '@/shapes/shape';
 import { PointShape } from '@/shapes/primitives/bezier_point_shape';
 import utils from '@/utils';
 
 
 type LineCap = 'butt' | 'round' | 'square';
-
-type LineStyles = {
-    lineCap?: LineCap;
-};
+type LineStyles = { lineCap?: LineCap; };
 
 
 class Line extends PointShape {

@@ -1,9 +1,9 @@
 import { Prettify } from '@/base';
 import { ShapeStyles } from '@/shapes/shape';
-import { Text, TextArgs } from '@/shapes/primitives/text';
+import { Text, TextArgs } from '../primitives/text';
 
 
-class Tex extends Text {
+export class Tex extends Text {
     constructor();
     constructor(text: string);
     constructor(args: Prettify<TextArgs & ShapeStyles>);
@@ -19,4 +19,4 @@ class Tex extends Text {
 }
 
 
-export { Tex };
+// export { Tex };

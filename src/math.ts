@@ -161,6 +161,18 @@ function approxEqual(a: number | number[], b: number | number[], epsilon: number
 }
 
 
+function evalBezier(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
+    const mt = 1 - t;
+    const mt2 = mt * mt;
+    const t2 = t * t;
+
+    return [
+        (mt * mt2 * p0[0]) + (3 * mt2 * t * p1[0]) + (3 * mt * t2 * p2[0]) + (t * t2 * p3[0]),
+        (mt * mt2 * p0[1]) + (3 * mt2 * t * p1[1]) + (3 * mt * t2 * p2[1]) + (t * t2 * p3[1])
+    ];
+}
+
+
 export default {
     min,
     lerp,
@@ -175,5 +187,6 @@ export default {
     angleVec,
     rotateAboutPoint,
     midpoint,
-    approxEqual
+    approxEqual,
+    evalBezier,
 };

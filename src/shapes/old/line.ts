@@ -1,7 +1,7 @@
 import { Point, Prettify } from '@/base';
 import { RGBA } from '@/colors';
-import { PointShape, ShapeStyles, locatableToPoint } from '@/shapes/primitives/point_shape';
-import { Locatable, Shape } from '@/shapes/shape';
+import { PointShape, ShapeStyles } from '@/shapes/old/point_shape';
+import { Locatable, Shape, locatableToPoint } from '@/shapes/shape';
 
 
 type LineCap = 'butt' | 'round' | 'square';

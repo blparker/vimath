@@ -1,7 +1,6 @@
 import { Point, Prettify, RIGHT } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape } from '@/shapes/shape';
-import { locatableToPoint } from './point_shape';
+import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import { config } from '@/config';
 import { TextMeasurement } from '@/shapes/primitives/text_measurement';
 import utils from '@/utils';
@@ -27,7 +26,7 @@ class Text implements Shape {
     private _text: string = 'Vimath';
     private _x: number = 0;
     private _y: number = 0;
-    private _size: number = 20;
+    private _size: number = config.text.size;
     private _font: string = 'monospace';
     private _styles: ShapeStyles = Object.assign({}, defaultShapeStyles);
     private _baseline: TextBaseline = 'middle';
@@ -109,7 +108,7 @@ class Text implements Shape {
         return this._textHeight;
     }
 
-    moveTo(point: Point): Shape {
+    moveTo(point: Point): this {
         const [cX, cY] = this.position();
 
         this._x += (point[0] - cX);
@@ -118,7 +117,7 @@ class Text implements Shape {
         return this;
     }
 
-    shift(...shifts: Point[]): Shape {
+    shift(...shifts: Point[]): this {
         for (const [x, y] of shifts) {
             this._x += x;
             this._y += y;
@@ -127,17 +126,17 @@ class Text implements Shape {
         return this;
     }
 
-    scale(factor: number): Shape {
+    scale(factor: number): this {
         this._scale += factor;
         return this;
     }
 
-    rotate(angle: number): Shape {
+    rotate(angle: number): this {
         this._angle += angle;
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point = RIGHT()): Shape {
+    nextTo(other: Locatable, direction: Point = RIGHT()): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -184,8 +183,6 @@ class Text implements Shape {
                 toY -= h;
             }
         }
-
-
 
         if (dX > 0 && dY === 0) {
             // Right
@@ -344,12 +341,12 @@ class Text implements Shape {
         return this._styles;
     }
 
-    changeColor(color: RGBA): Shape {
+    changeColor(color: RGBA): this {
         this.styles().color = color;
         return this;
     }
 
-    changeLineColor(color: RGBA): Shape {
+    changeLineColor(color: RGBA): this {
         this.styles().lineColor = color;
         return this;
     }

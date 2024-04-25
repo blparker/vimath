@@ -1,7 +1,6 @@
 import { Point } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, isShape } from '@/shapes/shape';
-import { locatableToPoint } from './point_shape';
+import { Locatable, Shape, ShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import { config } from '@/config';
 import utils from '@/utils';
 
