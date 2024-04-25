@@ -17,7 +17,7 @@ import { GridLines } from '../src/shapes/composed/grid_lines';
 // import { Circle, Dot, PointShape } from '../src/shapes';
 import { TangentLine } from '../src/shapes/derived/tangent_line';
 // import { Square } from '../src/shapes/derived/square';
-import { Square as Square2 } from '../src/shapes/derived/bezier_square';
+import { Square } from '../src/shapes/derived/bezier_square';
 import { Brace } from '../src/shapes/derived/bezier_brace';
 // import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
 import { PointShape, Dot, Circle } from '../src/shapes'
@@ -40,7 +40,7 @@ class TestAnimation extends BaseAnimation {
 
 class TestScene extends Scene {
     compose() {
-        // this.add(new GridLines());
+        this.add(new GridLines());
 
         // const c2 = this.add(new Circle({ radius: 4, lineColor: Colors.blue() }));
         // const pt452 = c2.pointAtAngle(Math.PI / 4);
@@ -141,16 +141,19 @@ class TestScene extends Scene {
         // // const p = a.plot(x => 0.1 * x * x);
 
         // this.add(a, p);
-        const a = new Axes({
-            xRange: [-20, 20],
-            yRange: [-10, 10],
-            xStep: 2,
-            yStep: 2,
-            labelSize: 16,
-            showGrid: true,
-        });
+        // const a = new Axes({
+        //     xRange: [-20, 20],
+        //     yRange: [-10, 10],
+        //     xStep: 2,
+        //     yStep: 2,
+        //     labelSize: 16,
+        //     showGrid: true,
+        // });
 
-        this.add(a);
+        // this.add(a);
+
+        this.add(new Square());
+        this.add(new Circle());
     }
 }
 

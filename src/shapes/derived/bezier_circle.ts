@@ -4,7 +4,7 @@ import { Locatable, ShapeStyles } from '@/shapes/shape';
 
 
 type CircleArgs = { center?: Locatable; radius?: number; selectable?: boolean; };
-const defaultCircleArgs: CircleArgs = { center: ORIGIN, radius: 2, selectable: false };
+const defaultCircleArgs: CircleArgs = { center: ORIGIN, radius: 1, selectable: false };
 
 
 class Circle extends Arc {

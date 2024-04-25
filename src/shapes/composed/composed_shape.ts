@@ -6,6 +6,25 @@ import utils from '@/utils';
 import { config } from '@/config';
 
 
+/**
+ * A base shape that is composed of other shapes and can be manipulated as a single entity
+ * @example
+ * ```ts
+ * // A simple composed shape that consists of a square with a inscribed circle
+ * class ComposedCircle extends ComposedShape {
+ *     compose(): this {
+ *         // Create a square with size 2 (default)
+ *         const square = new Square();
+ *         // Create a circle with radius 1 (default)
+ *         const circle = new Circle();
+ *         // Add the square and circle to the composed shape
+ *         this.add(square, circle);
+ *
+ *         return this;
+ *     }
+ * }
+ * ```
+ */
 class ComposedShape implements Shape {
     private _shapes: Shape[] = [];
     private _composed: boolean = false;
@@ -13,6 +32,10 @@ class ComposedShape implements Shape {
     private _angle = 0;
     private _scale = 1;
 
+    /**
+     * Create a new composed shape with the given styles
+     * @param styleArgs the styles to apply to the shape
+     */
     constructor({ ...styleArgs }: Prettify<ShapeStyles> = {}) {
         this._styles = Object.assign({}, defaultShapeStyles, styleArgs);
     }
@@ -177,15 +200,28 @@ class ComposedShape implements Shape {
         return utils.deepCopy(this);
     }
 
-    add(...els: Shape[]): Shape {
+    /**
+     * Add shapes to the composed shape
+     * @param els shapes to add to the composed shape
+     * @returns this for chaining
+     */
+    add(...els: Shape[]): this {
         this._shapes.push(...els);
         return this;
     }
 
-    compose(): Shape {
+    /**
+     * Method to be implemented by subclasses to compose the shape
+     * @returns this for chaining
+     */
+    compose(): this {
         return this;
     }
 
+    /**
+     * Returns a list of the composed shapes built in the `compose` method and added in the `add` method
+     * @returns the composed shapes
+     */
     composedShapes(): Shape[] {
         if (!this._composed) {
             this.compose();
