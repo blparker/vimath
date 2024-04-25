@@ -100,26 +100,56 @@ function remap(oFrom: number, oTo: number, tFrom: number, tTo: number, v: number
 }
 
 
+/**
+ * Computes the distance between two points
+ * @param a the first point
+ * @param b the second point
+ * @returns the distance between the two points
+ */
 function dist(a: [number, number], b: [number, number]): number {
     return Math.hypot(a[0] - b[0], a[1] - b[1]);
 }
 
 
+/**
+ * Scales a point/vector by a specified amount
+ * @param v the vector to multiply
+ * @param s the scalar to multiply the vector by
+ * @returns the scaled vector
+ */
 function multScalar(v: Point, s: number): Point {
     return [v[0] * s, v[1] * s];
 }
 
 
+/**
+ * Adds two points/vectors together
+ * @param a the first point
+ * @param b the second point
+ * @returns the component-wise sum of the two points
+ */
 function addVec(a: Point, b: Point): Point {
     return [a[0] + b[0], a[1] + b[1]];
 }
 
 
+/**
+ * Subtracts two points/vectors (i.e., `a - b`)
+ * @param a the first point
+ * @param b the second point
+ * @returns the component-wise difference of the two points
+ */
 function subVec(a: Point, b: Point): Point {
     return [a[0] - b[0], a[1] - b[1]];
 }
 
 
+/**
+ * Computes the unit vector between two points
+ * @param a the first point
+ * @param b the second point
+ * @returns a point representing the standard unit vector between the two points (i.e., starting at the origin)
+ */
 function unitVec(a: Point, b: Point): Point {
     const ab = subVec(b, a);
     const d = Math.hypot(...ab);
@@ -128,11 +158,31 @@ function unitVec(a: Point, b: Point): Point {
 }
 
 
+/**
+ * Computes the angle between two points
+ * @param a the first point
+ * @param b the second point
+ * @returns the angle between the two points (in radians)
+ * @example
+ * ```ts
+ * const a: Point = [0, 0];
+ * const b: Point = [2, 2];
+ * 
+ * angleVec(a, b);  // > returns Math.PI / 4
+ * ```
+ */
 function angleVec(a: Point, b: Point): number {
     return Math.atan2(b[1] - a[1], b[0] - a[0]);
 }
 
 
+/**
+ * Rotates a point, `p`, about a center point, `center`, by `angle` in radians.
+ * @param p the point to rotate
+ * @param angle the angle to rotate the point by (in radians)
+ * @param center the center point to rotate the point about
+ * @returns the rotated point
+ */
 function rotateAboutPoint(p: Point, angle: number, center: Point): Point {
     const [x, y] = p;
     const [cx, cy] = center;
@@ -144,11 +194,29 @@ function rotateAboutPoint(p: Point, angle: number, center: Point): Point {
 }
 
 
+/**
+ * Computes the midpoint between two points
+ * @param a the first point
+ * @param b the second point
+ * @returns a point that is the midpoint between a and b
+ */
 function midpoint(a: Point, b: Point): Point {
     return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 }
 
+/**
+ * Determines if the values in the two arrays are approximately equal (within epsilon). It evaulates the arrays index by index.
+ * @param a the first array
+ * @param b the second array
+ * @param epsilon the epsilon value to determine if the values are approximately equal (default 1e-6)
+ */
 function approxEqual(a: number[], b: number[], epsilon?: number): boolean;
+/**
+ * Determines if two numbers are approximately equal (within epsilon)
+ * @param a the first number
+ * @param b the second number
+ * @param epsilon the epsilon value to determine if the values are approximately equal (default 1e-6)
+ */
 function approxEqual(a: number, b: number, epsilon?: number): boolean;
 function approxEqual(a: number | number[], b: number | number[], epsilon: number = 1e-6): boolean {
     if (Array.isArray(a) && Array.isArray(b)) {
@@ -161,6 +229,15 @@ function approxEqual(a: number | number[], b: number | number[], epsilon: number
 }
 
 
+/**
+ * Evaluate a bezier curve a given t value
+ * @param p0 the start of the curve
+ * @param p1 the first control point
+ * @param p2 the second control point
+ * @param p3 the end of the curve
+ * @param t the value to evaluate the curve at
+ * @returns the point on the curve at t
+ */
 function evalBezier(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
     const mt = 1 - t;
     const mt2 = mt * mt;
