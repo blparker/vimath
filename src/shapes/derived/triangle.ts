@@ -1,6 +1,6 @@
 import { Point, Prettify } from '@/base';
-import { PointShape, ShapeStyles } from '@/shapes/primitives/bezier_point_shape';
-import { Locatable } from '@/shapes/shape';
+import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { Locatable, ShapeStyles } from '@/shapes/shape';
 
 // type TriangleArgs = ({ x?: number; y?: number; } | { center?: Locatable; }) & Prettify<ShapeStyles>;
 type TriangleArgs = { x?: number; y?: number; center?: Locatable; width?: number; height?: number; } & Prettify<ShapeStyles>;

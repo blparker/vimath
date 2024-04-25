@@ -1,7 +1,7 @@
-import { BezierSegment, Point, RIGHT } from '@/base';
+import { BezierSegment, Point } from '@/base';
 import math from '@/math';
-import { PointShape, ShapeStyles } from '@/shapes/primitives/bezier_point_shape';
-import { Shape, isShape, defaultShapeStyles } from '@/shapes';
+import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { Shape, isShape, ShapeStyles, defaultShapeStyles } from '@/shapes';
 import { config } from '@/config';
 import utils from '@/utils';
 import { Colors } from '@/colors';

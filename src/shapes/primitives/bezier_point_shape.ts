@@ -12,6 +12,9 @@ function isBezier(point: Point | BezierSegment): point is BezierSegment {
 }
 
 
+/**
+ * A shape made up of points and edges that form a shape
+ */
 class PointShape implements Shape, SelectableShape {
     private _points: BezierSegment[];
     private _styles: ShapeStyles;
@@ -22,7 +25,17 @@ class PointShape implements Shape, SelectableShape {
     private _angle = 0;
     private _scale = 1;
 
+    /**
+     * Creates a new empty point shape
+     */
     constructor();
+    /**
+     * Create a new point shape with points (standard X/Y points or bezier segments), an optional selectable flag, and optional styles
+     * @param points the points that make up the shape. The points can be provided as standard X/Y points or as bezier segments. All points are converted to bezier segments
+     * @param selectable whether the shape can be selected
+     * @param smooth whether the shape should be smoothed
+     * @param styleArgs the styles for the shape
+     */
     constructor({ points, selectable, smooth, ...styleArgs }: { points: (Point | BezierSegment)[]; selectable?: boolean; smooth?: boolean; } & Prettify<ShapeStyles>);
     constructor(args: { points?: (Point | BezierSegment)[]; selectable?: boolean; smooth?: boolean; } & Prettify<ShapeStyles> = {}) {
         this._points = args.points ? PointShape.pointsToSegments(structuredClone(args.points)) : [];
@@ -639,4 +652,4 @@ class PointShape implements Shape, SelectableShape {
 }
 
 
-export { PointShape, type ShapeStyles, type BezierSegment as BezierPoint };
+export { PointShape };
