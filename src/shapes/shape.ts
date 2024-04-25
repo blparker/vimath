@@ -27,11 +27,11 @@ interface SelectableShape {
     canSelect: boolean;
 
     /**
-     * Select the shape. Can use this to perform any actions when the shape is selected
+     * Selects the shape. Can use this to perform any actions when the shape is selected
      */
     select(): void;
     /**
-     * Select the shape. Can use this to perform any actions when the shape is deselected
+     * Selects the shape. Can use this to perform any actions when the shape is deselected
      */
     deselect(): void;
     selectStyles(): ShapeStyles;
@@ -39,7 +39,7 @@ interface SelectableShape {
 
 
 /**
- * @param o Given an object, check if it is a selectable shape (determinined by the presence of the `select` and `deselect` methods)
+ * @param o Given an object, checks if it is a selectable shape (determinined by the presence of the `select` and `deselect` methods)
  * @returns a boolean indicating whether the object is a selectable shape (intended to be used as a type guard)
  */
 function isSelectableShape(o: any): o is SelectableShape {
@@ -53,7 +53,7 @@ interface Shape {
     // Information about the shape of the... shape
 
     /**
-     * Get the geometric center of the shape (the center of the box bounding the shape)
+     * Gets the geometric center of the shape (the center of the box bounding the shape)
      * @returns a point representing the center of the shape's bounding box
      * @example
      * ```ts
@@ -66,7 +66,7 @@ interface Shape {
     center(): Point;
 
     /**
-     * Get the center-top point of the shape (the center of the top edge of the box bounding the shape)
+     * Gets the center-top point of the shape (the center of the top edge of the box bounding the shape)
      * @returns a point representing the top of the shape's bounding box
      * @example
      * ```ts
@@ -79,7 +79,7 @@ interface Shape {
     top(): Point;
 
     /**
-     * Get the center-right point of the shape (the center of the right edge of the box bounding the shape)
+     * Gets the center-right point of the shape (the center of the right edge of the box bounding the shape)
      * @returns a point representing the right of the shape's bounding box
      * @example
      * ```ts
@@ -92,7 +92,7 @@ interface Shape {
     right(): Point;
 
     /**
-     * Get the center-bottom point of the shape (the center of the bottom edge of the box bounding the shape)
+     * Gets the center-bottom point of the shape (the center of the bottom edge of the box bounding the shape)
      * @returns a point representing the bottom of the shape's bounding box
      * @example
      * ```ts
@@ -105,7 +105,7 @@ interface Shape {
     bottom(): Point;
 
     /**
-     * Get the center-left point of the shape (the center of the left edge of the box bounding the shape)
+     * Gets the center-left point of the shape (the center of the left edge of the box bounding the shape)
      * @returns a point representing the left of the shape's bounding box
      * @example
      * ```ts
@@ -119,7 +119,7 @@ interface Shape {
     left(): Point;
 
     /**
-     * Get the width of the shape (i.e., the width of the box bounding the shape)
+     * Gets the width of the shape (i.e., the width of the box bounding the shape)
      * @returns the width of the shape
      * @example
      * ```ts
@@ -131,7 +131,7 @@ interface Shape {
     width(): number;
 
     /**
-     * Get the height of the shape (i.e., the height of the box bounding the shape)
+     * Gets the height of the shape (i.e., the height of the box bounding the shape)
      * @returns the height of the shape
      * @example
      * ```ts
@@ -171,7 +171,7 @@ interface Shape {
     shift(...shifts: Point[]): this;
 
     /**
-     * Scale the shape by a factor
+     * Scales the shape by a factor
      * @param factor the factor to scale the shape by (e.g., a factor of 2 will double the size, a factor of 0.5 will halve the size)
      * @return this (used for chaining)
      * @example
@@ -185,7 +185,7 @@ interface Shape {
     scale(factor: number): this;
 
     /**
-     * Rotate the shape by some angle (in radians)
+     * Rotates the shape by some angle (in radians)
      * @param angle the amount (in radians) to rotate the angle by (e.g., Math.PI / 2 will rotate the shape by 90 degrees)
      * @return this (used for chaining)
      * @example
@@ -215,24 +215,43 @@ interface Shape {
     nextTo(other: Locatable, direction: Point): this;
 
     /**
-     * Get the current angle of the shape (defaults to 0). The angle gets updated when the shape is rotated
+     * Gets the current angle of the shape (defaults to 0). The angle gets updated when the shape is rotated
      * @returns the current angle of the shape
      */
     angle(): number;
 
     /**
-     * Get the current scale of the shape (defaults to 1). The scale gets updated when the shape is scaled
+     * Gets the current scale of the shape (defaults to 1). The scale gets updated when the shape is scaled
      * @returns the current scale of the shape
      */
     currentScale(): number;
 
     /* Styling */
+
+    /**
+     * Gets the styles of the shape
+     * @returns the current styles of the shape
+     */
     styles(): ShapeStyles;
 
+    /**
+     * Changes the current color of the shape. For shapes that are fillable, this is the fill color, for others, it's the singular color (.e.g., `Dot`, `Text`)
+     * @param color the new color to change the shape to
+     * @returns this (used for chaining)
+     */
     changeColor(color: RGBA): this;
 
+    /**
+     * Changes the line/stroke color of the shape. For shapes that are strokeable, this is the line color (e.g., `Square`)
+     * @param color the new color to change the shape to
+     * @returns this (used for chaining)
+     */
     changeLineColor(color: RGBA): this;
 
+    /**
+     * Creates a deep copy of the shape
+     * @returns a deep copy of the shape
+     */
     copy(): this;
 };
 

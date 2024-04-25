@@ -65,7 +65,7 @@ class PointShape implements Shape, SelectableShape {
         return this.top()[1] - this.bottom()[1];
     }
 
-    moveTo(point: Point): Shape {
+    moveTo(point: Point): this {
         const [cX, cY] = this.center();
 
         for (const p of this._points) {
@@ -76,7 +76,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    shift(...shifts: Point[]): Shape {
+    shift(...shifts: Point[]): this {
         const [sX, sY] = shifts.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
 
         for (const p of this._points) {
@@ -87,7 +87,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    scale(factor: number): Shape {
+    scale(factor: number): this {
         if (factor === 0) {
             const initSize = 0.00001;
 
@@ -109,7 +109,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    rotate(angle: number): Shape {
+    rotate(angle: number): this {
         const [cX, cY] = this.center();
 
         for (const p of this._points) {
@@ -129,7 +129,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point = RIGHT()): Shape {
+    nextTo(other: Locatable, direction: Point = RIGHT()): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -188,19 +188,24 @@ class PointShape implements Shape, SelectableShape {
         return this._allStyles[this._allStyles.length - 1];
     }
 
-    changeColor(color: RGBA): Shape {
+    changeColor(color: RGBA): this {
         // this._styles.color = color;
         this.styles().color = color;
         return this;
     }
 
-    changeLineColor(color: RGBA): Shape {
+    changeLineColor(color: RGBA): this {
         // this._styles.lineColor = color;
         this.styles().lineColor = color;
         return this;
     }
 
-    changeLineWidth(width: number): Shape {
+    /**
+     * Changes the line width of the shape
+     * @param width the new width
+     * @returns this (used for chaining)
+     */
+    changeLineWidth(width: number): this {
         this.styles().lineWidth = width;
         return this;
     }
@@ -226,6 +231,11 @@ class PointShape implements Shape, SelectableShape {
         });
     }
 
+    /**
+     * Determines whether or not a given point is (approximately) touching an edge of this shape
+     * @param point the point to check if it is on an edge of the shape
+     * @returns a boolean indicating whether the point is on an edge of the shape
+     */
     isPointOnEdge(point: Point): boolean {
         const points = this.points();
 
@@ -280,14 +290,42 @@ class PointShape implements Shape, SelectableShape {
         return utils.deepCopy(this);
     }
 
+    /**
+     * Return a `Text` object that is positioned next to the specified edge
+     * @param text the text to display
+     * @param position the index of the edge in the point shape
+     * @param direction the direction to display the text
+     * @returns a `Text` object positioned next to the specified edge
+     */
     textOnEdge(text: string, position: number, direction: Point = DOWN()): Shape {
         return this._textOnEdge(text, position, direction, false);
     }
 
+    /**
+     * Return a `Text` object, configured as TeX, that is positioned next to the specified edge
+     * @param text the text to display
+     * @param position the index of the edge in the point shape
+     * @param direction the direction to display the text
+     * @returns a `Text` object positioned next to the specified edge
+     */
     texOnEdge(text: string, position: number, direction: Point = DOWN()): Shape {
         return this._textOnEdge(text, position, direction, true);
     }
 
+    /**
+     * Draws a portion of this shape, based on the provided copy of the shape and the percentage of the shape to draw
+     * @param shape a copy of this shape to base the drawing on (since the points of this get based on the mutated)
+     * @param pct the percentage of the shape to draw
+     * @example
+     * ```ts
+     * // Create a new square centered at (0, 0) with a width of 2
+     * const s = new PointShape({ points: [[-1, 1], [1, 1], [1, -1], [-1, -1]] });
+     * // Create a copy of the square
+     * const sCopy = s.copy();
+     * // Draw the first 50% of the square
+     * this.add(s.partial(sCopy, 0.5));
+     * ```
+     */
     partial(shape: PointShape, pct: number) {
         const points = shape.points();
         const totalPoints = points.length;
