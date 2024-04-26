@@ -92,15 +92,18 @@ abstract class Scene {
     }
 
     render(): void {
-        const loop = (time: number) => {
+        const loop = async (time: number) => {
             this._rafId = requestAnimationFrame(loop);
 
-            try {
-                this.nextTick(time);
-            } catch (e) {
-                console.error('Error in nextTick', e);
+            // try {
+            // } catch (e) {
+            //     console.error('Error in nextTick', e);
+            //     cancelAnimationFrame(this._rafId);
+            // }
+            this.nextTick(time).catch(e => {
+                console.error('Error in nextTick', e)
                 cancelAnimationFrame(this._rafId);
-            }
+            });
         };
 
         this.compose();
