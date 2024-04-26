@@ -83,7 +83,7 @@ class Axes extends ComposedShape {
         this._showGrid = showGrid;
     }
 
-    compose(): Shape {
+    compose(): this {
         const [oX, oY] = this.origin();
 
         const xAxis = new NumberLine({

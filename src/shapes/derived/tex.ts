@@ -3,7 +3,7 @@ import { ShapeStyles } from '@/shapes/shape';
 import { Text, TextArgs } from '../primitives/text';
 
 
-export class Tex extends Text {
+class Tex extends Text {
     constructor();
     constructor(text: string);
     constructor(args: Prettify<TextArgs & ShapeStyles>);
@@ -13,10 +13,10 @@ export class Tex extends Text {
         } else if (typeof args === 'string') {
             super({ text: args, tex: true });
         } else {
-            super(args);
+            super({ tex: true, ...args });
         }
     }
 }
 
 
-// export { Tex };
+export { Tex };

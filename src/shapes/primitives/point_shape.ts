@@ -46,24 +46,6 @@ class PointShape implements Shape, SelectableShape {
     }
 
     center(): Point {
-        // let xMean = 0;
-        // let yMean = 0;
-
-        // for (let i = 0, count = 0; i < this._points.length; i++) {
-        //     const pt = this._points[i];
-
-        //     for (let j = 0; j < pt.length; j++) {
-        //         if (pt[j] !== null) {
-        //             xMean += (pt[j]![0] - xMean) / (count + 1);
-        //             yMean += (pt[j]![1] - yMean) / (count + 1);
-
-        //             count++;
-        //         }
-        //     }
-        // }
-
-        // console.log(xMean, yMean);
-        // return [xMean, yMean];
         return this.centerWithSampling();
     }
 
@@ -99,6 +81,26 @@ class PointShape implements Shape, SelectableShape {
         return [xSum / sampleCount, ySum / sampleCount];
     }
 
+    private meanCenter(): Point {
+        let xMean = 0;
+        let yMean = 0;
+
+        for (let i = 0, count = 0; i < this._points.length; i++) {
+            const pt = this._points[i];
+
+            for (let j = 0; j < pt.length; j++) {
+                if (pt[j] !== null) {
+                    xMean += (pt[j]![0] - xMean) / (count + 1);
+                    yMean += (pt[j]![1] - yMean) / (count + 1);
+
+                    count++;
+                }
+            }
+        }
+
+        return [xMean, yMean];
+    }
+
     top(): Point {
         const { minX, maxX, maxY } = this.boundingBox();
         return [(minX + maxX) / 2, maxY] as Point;
@@ -131,17 +133,12 @@ class PointShape implements Shape, SelectableShape {
         const [cX, cY] = this.center();
 
         for (const pt of this._points) {
-            // if (isBezier(pt)) {
-                for (let j = 0; j < pt.length; j++) {
-                    if (pt[j] !== null) {
-                        pt[j]![0] = pt[j]![0] + (point[0] - cX);
-                        pt[j]![1] = pt[j]![1] + (point[1] - cY);
-                    }
+            for (let j = 0; j < pt.length; j++) {
+                if (pt[j] !== null) {
+                    pt[j]![0] = pt[j]![0] + (point[0] - cX);
+                    pt[j]![1] = pt[j]![1] + (point[1] - cY);
                 }
-            // } else {
-            //     pt[0] = pt[0] + (point[0] - cX);
-            //     pt[1] = pt[1] + (point[1] - cY);
-            // }
+            }
         }
 
         return this;
@@ -151,49 +148,18 @@ class PointShape implements Shape, SelectableShape {
         const [sX, sY] = shifts.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
 
         for (const p of this._points) {
-            // if (isBezier(p)) {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i] !== null) {
-                        p[i]![0] += sX;
-                        p[i]![1] += sY;
-                    }
+            for (let i = 0; i < p.length; i++) {
+                if (p[i] !== null) {
+                    p[i]![0] += sX;
+                    p[i]![1] += sY;
                 }
-            // } else {
-            //     p[0] += sX;
-            //     p[1] += sY;
-            // }
+            }
         }
 
         return this;
     }
 
     scale(factor: number): this {
-
-        // if (factor === 0) {
-        //     const initSize = 0.00001;
-
-        //     for (const seg of this._points) {
-        //         for (const pt of seg) {
-        //             if (pt !== null) {
-        //                 pt[0] = Math.sign(pt[0]) * initSize;
-        //                 pt[1] = Math.sign(pt[1]) * initSize;
-        //             }
-        //         }
-        //     }
-
-        //     this._scale = initSize;
-        // } else {
-        //     for (const seg of this._points) {
-        //         for (const pt of seg) {
-        //             if (pt !== null) {
-        //                 pt[0] *= factor;
-        //                 pt[1] *= factor;
-        //             }
-        //         }
-        //     }
-
-        //     this._scale *= factor;
-        // }
         if (factor === 0) {
             factor = 0.00001;
         }
@@ -214,41 +180,21 @@ class PointShape implements Shape, SelectableShape {
     rotate(angle: number): this {
         const [cX, cY] = this.center();
 
-        // function rot(x: number, y: number): [number, number] {
-        //     return [
-        //         x * Math.cos(angle) - y * Math.sin(angle),
-        //         x * Math.sin(angle) + y * Math.cos(angle)
-        //     ];
-        // }
-
         for (const p of this._points) {
-            // if (isBezier(p)) {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i] !== null) {
-                        const [x, y] = p[i]!;
-                        const [xT, yT] = [x - cX, y - cY];
+            for (let i = 0; i < p.length; i++) {
+                if (p[i] !== null) {
+                    const [x, y] = p[i]!;
+                    const [xT, yT] = [x - cX, y - cY];
 
-                        const [xR, yR] = [
-                            xT * Math.cos(angle) - yT * Math.sin(angle),
-                            xT * Math.sin(angle) + yT * Math.cos(angle)
-                        ];
+                    const [xR, yR] = [
+                        xT * Math.cos(angle) - yT * Math.sin(angle),
+                        xT * Math.sin(angle) + yT * Math.cos(angle)
+                    ];
 
-                        p[i]![0] = xR + cX;
-                        p[i]![1] = yR + cY;
-                    }
+                    p[i]![0] = xR + cX;
+                    p[i]![1] = yR + cY;
                 }
-            // } else {
-            //     const [x, y] = p;
-            //     const [xT, yT] = [x - cX, y - cY];
-
-            //     const [xR, yR] = [
-            //         xT * Math.cos(angle) - yT * Math.sin(angle),
-            //         xT * Math.sin(angle) + yT * Math.cos(angle)
-            //     ];
-
-            //     p[0] = xR + cX;
-            //     p[1] = yR + cY;
-            // }
+            }
         }
 
         this._angle += angle;
@@ -310,18 +256,15 @@ class PointShape implements Shape, SelectableShape {
     }
 
     styles(): ShapeStyles {
-        // return this._styles;
         return this._allStyles[this._allStyles.length - 1];
     }
 
     changeColor(color: RGBA): this {
-        // this._styles.color = color;
         this.styles().color = color;
         return this;
     }
 
     changeLineColor(color: RGBA): this {
-        // this._styles.lineColor = color;
         this.styles().lineColor = color;
         return this;
     }
@@ -347,49 +290,90 @@ class PointShape implements Shape, SelectableShape {
 
     selectStyles(): ShapeStyles {
         return Object.assign({}, this._styles, {
-            color: Colors.red(),
+            // color: Colors.red(),
             lineColor: Colors.red(),
         });
     }
 
+    // isPointOnEdge(point: Point): boolean {
+    //     function dist(a: Point, b: Point) {
+    //         const [x1, y1] = a;
+    //         const [x2, y2] = b;
+
+    //         const A = point[0] - x1;
+    //         const B = point[1] - y1;
+    //         const C = x2 - x1;
+    //         const D = y2 - y1;
+
+    //         const dot = A * C + B * D;
+    //         const lenSq = C * C + D * D;
+    //         const param = lenSq !== 0 ? dot / lenSq : -1;
+
+    //         let xx, yy;
+    //         if (param < 0) {
+    //             xx = x1;
+    //             yy = y1;
+    //         } else if (param > 1) {
+    //             xx = x2;
+    //             yy = y2;
+    //         } else {
+    //             xx = x1 + param * C;
+    //             yy = y1 + param * D;
+    //         }
+
+    //         const dx = point[0] - xx;
+    //         const dy = point[1] - yy;
+    //         return Math.sqrt(dx * dx + dy * dy);
+    //     }
+
+    //     const points = this.points();
+
+    //     for (let i = 0; i < points.length - 1; i++) {
+    //         if (dist(points[i], points[i + 1]) < 0.1) {
+    //             return true;
+    //         }
+    //     }
+
+    //     return false;
+    // }
+
     isPointOnEdge(point: Point): boolean {
-        // const points = this.points();
+        const threshold = 0.1;
+        const samples = 100;
 
-        // function dist(a: Point, b: Point) {
-        //     const [x1, y1] = a;
-        //     const [x2, y2] = b;
+        function distToPoint(segment: BezierSegment, point: Point): number {
+            let minDistance = Infinity;
+            const [start, cp1, cp2, end] = segment;
 
-        //     const A = point[0] - x1;
-        //     const B = point[1] - y1;
-        //     const C = x2 - x1;
-        //     const D = y2 - y1;
+            for (let i = 0; i <= samples; i++) {
+                const t = i / samples;
+                const [x, y] = math.evalBezier(start!, cp1, cp2, end, t);
 
-        //     const dot = A * C + B * D;
-        //     const lenSq = C * C + D * D;
-        //     const param = lenSq !== 0 ? dot / lenSq : -1;
+                const dx = x - point[0];
+                const dy = y - point[1];
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-        //     let xx, yy;
-        //     if (param < 0) {
-        //         xx = x1;
-        //         yy = y1;
-        //     } else if (param > 1) {
-        //         xx = x2;
-        //         yy = y2;
-        //     } else {
-        //         xx = x1 + param * C;
-        //         yy = y1 + param * D;
-        //     }
+                minDistance = Math.min(minDistance, distance);
+            }
 
-        //     const dx = point[0] - xx;
-        //     const dy = point[1] - yy;
-        //     return Math.sqrt(dx * dx + dy * dy);
-        // }
+            return minDistance;
+        }
 
-        // for (let i = 0; i < points.length - 1; i++) {
-        //     if (dist(points[i], points[i + 1]) < 0.1) {
-        //         return true;
-        //     }
-        // }
+        for (let i = 0; i < this._points.length; i++) {
+            let [start, cp1, cp2, end] = this._points[i];
+
+            if (start === null) {
+                if (i === 0) {
+                    throw new Error('Invalid bezier curve. Expect the initial point to define a starting point');
+                }
+
+                start = this._points[i - 1][3];
+            }
+
+            if (distToPoint([start, cp1, cp2, end], point) < threshold) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -407,65 +391,7 @@ class PointShape implements Shape, SelectableShape {
     }
 
     partial(shape: PointShape, pct: number) {
-        // const points = shape.points();
-        // const totalPoints = points.length;
-
-        // const fullEdges = Math.floor(pct * totalPoints);
-        // const partialPct = (pct * totalPoints) - fullEdges;
-
-        // this._points = points.slice(0, fullEdges);
-
-        // if (fullEdges < totalPoints) {
-        //     const start = points[fullEdges % totalPoints];
-        //     const end = points[(fullEdges + 1) % totalPoints];
-
-        //     const nextPoint = [
-        //         start[0] + partialPct * (end[0] - start[0]),
-        //         start[1] + partialPct * (end[1] - start[1])
-        //     ] as Point;
-
-        //     this._points.push(start);
-        //     this._points.push(nextPoint);
-        // }
-    }
-
-    bezierPoints(): BezierSegment[] {
-        // return this._points.map(pt => {
-        //     if (!isBezier(pt)) {
-        //         return [pt, pt, pt, pt];
-        //     } else {
-        //         return pt;
-        //     }
-        // });
-        const bezierPoints: BezierSegment[] = [];
-
-        for (let i = 0; i < this._points.length; i++) {
-            const pt1 = this._points[i];
-            const pt2 = i + 1 < this._points.length ? this._points[i + 1] : this._points[0];
-
-            if (isBezier(pt1)) {
-                bezierPoints.push(pt1);
-            } else {
-                if (isBezier(pt2)) {
-                    const start = pt2[0];
-                    const cp1 = pt2[1]
-
-                    if (start) {
-                        bezierPoints.push([i === 0 ? pt1 : null, pt1, start, start]);
-                    } else {
-                        bezierPoints.push([i === 0? pt1 : null, pt1, cp1, cp1]);
-                    }
-                } else {
-                    bezierPoints.push([i === 0 ? pt1 : null, pt1, pt2, pt2]);
-                }
-            }
-        }
-
-        return bezierPoints;
-    }
-
-    bezierPartial(shape: PointShape, pct: number) {
-        const points = shape.bezierPoints();
+        const points = shape.points();
         const totalPoints = points.length;
 
         const fullCurves = Math.floor(pct * totalPoints);
@@ -499,11 +425,6 @@ class PointShape implements Shape, SelectableShape {
             }
         } // else {
     }
-
-    // addBezierPoint({ start, control1, control2, end }: { start?: Point, control1: Point, control2: Point, end: Point }): void {
-    //     let bezierPoint: BezierPoint = [start === undefined ? null : start, control1, control2, end];
-    //     this._bezierPoints.push(bezierPoint);
-    // }
 
     textOnEdge(text: string, position: number, direction: Point = DOWN()): Text {
         return this._textOnEdge(text, position, direction, false);
@@ -583,20 +504,13 @@ class PointShape implements Shape, SelectableShape {
         let maxY = -Infinity;
 
         for (const pt of this._points) {
-            if (isBezier(pt)) {
-                for (const p of pt) {
-                    if (p !== null) {
-                        minX = Math.min(minX, p[0]);
-                        minY = Math.min(minY, p[1]);
-                        maxX = Math.max(maxX, p[0]);
-                        maxY = Math.max(maxY, p[1]);
-                    }
+            for (const p of pt) {
+                if (p !== null) {
+                    minX = Math.min(minX, p[0]);
+                    minY = Math.min(minY, p[1]);
+                    maxX = Math.max(maxX, p[0]);
+                    maxY = Math.max(maxY, p[1]);
                 }
-            } else {
-                minX = Math.min(minX, pt[0]);
-                minY = Math.min(minY, pt[1]);
-                maxX = Math.max(maxX, pt[0]);
-                maxY = Math.max(maxY, pt[1]);
             }
         }
 

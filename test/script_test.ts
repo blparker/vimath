@@ -1,25 +1,26 @@
-import { Scene } from '../src/scene';
-// import { Line } from '../src/shapes/primitives/line';
-import { BaseAnimation, Create } from '../src/animation';
-import { FadeIn } from '../src/animation/fade_in';
-// import { Arc } from '../src/shapes/primitives/arc';
-import { Arrow } from '../src/shapes/composed/arrow';
-import { Triangle } from '../src/shapes/derived/triangle';
-import { Tex } from '../src/shapes/derived/tex';
-import { NumberLine } from '../src/shapes/composed/number_line';
-import { Text } from '../src/shapes/primitives/text';
-import { LEFT, DOWN, UP, RIGHT, UL, UR, DL, DR, ORIGIN } from '../src/base';
-import { Axes } from '../src/shapes/composed/axes';
-import { Colors } from '../src/colors';
-import { GridLines } from '../src/shapes/composed/grid_lines';
-// import { Brace } from '../src/shapes/composed/brace';
-// import { Circle, Dot, PointShape } from '../src/shapes';
-import { TangentLine } from '../src/shapes/derived/tangent_line';
-// import { Square } from '../src/shapes/derived/square';
-// import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
-import { PointShape, Dot, Circle } from '../src/shapes'
-import { GrowFromCenter } from '../src/animation/grow_from_center';
-import math from '../src/math';
+// import { Scene } from '../src/scene';
+// // import { Line } from '../src/shapes/primitives/line';
+// import { BaseAnimation, Create } from '../src/animation';
+// import { FadeIn } from '../src/animation/fade_in';
+// // import { Arc } from '../src/shapes/primitives/arc';
+// import { Arrow } from '../src/shapes/composed/arrow';
+// import { Triangle } from '../src/shapes/derived/triangle';
+// import { Tex } from '../src/shapes/derived/tex';
+// import { NumberLine } from '../src/shapes/composed/number_line';
+// import { Text } from '../src/shapes/primitives/text';
+// import { LEFT, DOWN, UP, RIGHT, UL, UR, DL, DR, ORIGIN } from '../src/base';
+// import { Axes } from '../src/shapes/composed/axes';
+// import { Colors } from '../src/colors';
+// import { GridLines } from '../src/shapes/composed/grid_lines';
+// // import { Brace } from '../src/shapes/composed/brace';
+// // import { Circle, Dot, PointShape } from '../src/shapes';
+// import { TangentLine } from '../src/shapes/derived/tangent_line';
+// // import { Square } from '../src/shapes/derived/square';
+// // import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
+// import { PointShape, Dot, Circle } from '../src/shapes'
+// import { GrowFromCenter } from '../src/animation/grow_from_center';
+// import math from '../src/math';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex } from '../src';
 
 
 const cvs = document.getElementById('cvs') as HTMLCanvasElement;
@@ -148,8 +149,58 @@ class TestScene extends Scene {
 
         // this.add(a);
 
-        this.add(new Square());
-        this.add(new Circle());
+        // const s = this.add(new Square().moveTo([3, 2]));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, UP()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, RIGHT()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, DOWN()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, LEFT()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, UR()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, DR()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, DL()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s, UL()));
+
+        // const s2 = this.add(new Square().moveTo([-3, 2]));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, UP()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, RIGHT()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, DOWN()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, LEFT()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, UR()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, DR()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, DL()));
+        // this.add(new Tex({ text: 'hello' }).nextTo(s2, UL()));
+
+        // const s3 = this.add(new Square().moveTo([3, -2]));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, UP()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, RIGHT()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, DOWN()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, LEFT()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, UR()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, DR()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, DL()));
+        // this.add(new Text({ text: 'hello' }).nextTo(s3, UL()));
+
+        // const s = new Square({ size: 1 });
+
+        // const locs = [[-3, 3], [3, 3], [3, -3], [-3, -3]];
+
+        // for (const loc of locs) {
+        //     const sc = s.copy().moveTo(loc)
+        //     this.add(sc);
+
+
+        // }
+        const dirs = [UP(), RIGHT(), DOWN(), LEFT(), UR(), DR(), DL(), UL()];
+        // const dirs = [UP()];
+
+        const s1 = this.add(new Square({ size: 2, center: [-3, 2], selectable: true }));
+        for (const dir of dirs) {
+            this.add(new Text({ text: 'hello', align: 'left' }).nextTo(s1, dir));
+        }
+
+        const s2 = this.add(new Square({ size: 2, center: [3, 2] }));
+        for (const dir of dirs) {
+            this.add(new Text({ text: 'hello', align: 'right' }).nextTo(s2, dir));
+        }
     }
 }
 

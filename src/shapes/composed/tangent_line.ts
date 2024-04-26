@@ -1,7 +1,7 @@
 import { Line, LineStyles } from '@/shapes/primitives/line';
 import { Plot } from '@/shapes/composed/plot';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { Shape, ShapeStyles } from '../shape';
+import { ShapeStyles } from '../shape';
 import { Point, Prettify } from '@/base';
 
 
@@ -23,7 +23,7 @@ class TangentLine extends ComposedShape {
         this._length = length || 3;
     }
 
-    compose(): Shape {
+    compose(): this {
         const y1 = this._plot.valueAtX(this._x);
         const y2 = this._plot.valueAtX(this._x + this._delta);
 

@@ -1,10 +1,11 @@
 import { BezierSegment, ORIGIN, Point } from '@/base';
 import { Locatable, ShapeStyles, locatableToPoint } from '@/shapes/shape';
-import { PointShape } from '@/shapes/primitives/point_shape';
+import { PointShape } from '../primitives/point_shape';
 
 
 class Square extends PointShape {
     constructor();
+    constructor(args: { size?: number; x?: number; y?: number; center?: Locatable } & ShapeStyles);
     constructor(args?: { size?: number; x?: number; y?: number; center?: Locatable } & ShapeStyles) {
         const points = Square.squarePoints(args?.size ?? 2, Square.getCenter(args ?? {}));
         super({ points, ...args });

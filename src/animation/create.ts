@@ -22,7 +22,7 @@ class Create extends BaseAnimation {
     update(pctComplete: number, starting: boolean): void {
         if (this._target instanceof PointShape && this._targetCopy instanceof PointShape) {
             // this._target.partial(this._targetCopy, pctComplete);
-            this._target.bezierPartial(this._targetCopy, pctComplete);
+            this._target.partial(this._targetCopy, pctComplete);
 
             if (pctComplete >= 1) {
                 // console.log(this._target.bezierPoints());

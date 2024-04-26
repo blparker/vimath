@@ -2,15 +2,14 @@ import { expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { Scene } from '../src/scene';
 import { Line } from '../src/shapes/primitives/line';
 import { Canvas } from '../src/canvas';
-import { BezierCurve, PointShape, Shape } from '../src/shapes';
+import { BezierCurve, Shape, PointShape } from '../src/shapes';
 import { BaseAnimation } from '../src/animation/animation';
 import { Arc } from '../src/shapes/primitives/arc';
-import { PointShape as BezierPointShape } from '../src/shapes/primitives/bezier_point_shape';
 
 
 function getTestCanvas() {
     return new class implements Canvas {
-        connectedPathBezier(path: BezierPointShape): void {}
+        connectedPathBezier(path: PointShape): void {}
         renderShape(shape: Shape): Promise<void> { return Promise.resolve(); }
         text(text: Text): Promise<void> { return Promise.resolve();}
         bezierCurve(curve: BezierCurve): void { }

@@ -38,7 +38,6 @@ class Text implements Shape {
     private _angle = 0;
     private _scale = 1;
 
-    // constructor({ text, x = 0, y = 0, center, size = 20, font = 'monospace', baseline = 'middle', align = 'center', tex = false, ...styleArgs }: TextArgs & Prettify<ShapeStyles> = { text: '' }) {
     constructor();
     constructor(text: string);
     constructor(args: Prettify<TextArgs & ShapeStyles>);
@@ -67,12 +66,6 @@ class Text implements Shape {
         this._textMeasurement = new TextMeasurement(config.canvasInstance!, this._tex);
         this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
         this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
-
-        // if (this._align === 'center' && this._tex) {
-        //     this._x -= this._textWidth / 2;
-        // } else if (this._align === 'right' && this._tex) {
-        //     this._x -= this._textWidth;
-        // }
     }
 
     center(): Point {
@@ -166,6 +159,14 @@ class Text implements Shape {
             }
         }
 
+        if (dY === 0 && dX !== 0) {
+            if (this._baseline === 'top') {
+                toY += h / 2;
+            } else if (this._baseline === 'bottom') {
+                toY -= h / 2;
+            }
+        }
+
         if (dY > 0) {
             toY += sH / 2 + config.standoff;
 
@@ -184,132 +185,13 @@ class Text implements Shape {
             }
         }
 
-        if (dX > 0 && dY === 0) {
-            // Right
-            // toX += sW / 2 + config.standoff;
-
-            // if (this._align === 'center') {
-            //     toX += w / 2;
-            // } else if (this._align === 'right') {
-            //     toX += w;
-            // }
-
-            if (this._baseline === 'top') {
-                toY += h / 2;
-            } else if (this._baseline === 'bottom') {
-                toY -= h / 2;
-            }
-        } else if (dX < 0 && dY === 0) {
-            // Left
-            // toX -= sW / 2 + config.standoff;
-
-            // if (this._align === 'center') {
-            //     toX -= w / 2;
-            // } else if (this._align === 'left') {
-            //     toX -= w;
-            // }
-
-            if (this._baseline === 'top') {
-                toY += h / 2;
-            } else if (this._baseline === 'bottom') {
-                toY -= h / 2;
-            }
-        } else if (dX === 0 && dY > 0) {
-            // Up
-            // toY += sH / 2 + config.standoff;
-
-            // if (this._baseline === 'middle') {
-            //     toY += h / 2;
-            // } else if (this._baseline === 'top') {
-            //     toY += h;
-            // }
-
-            if (this._align === 'right') {
+        if (dX === 0 && dY !== 0) {
+            if (this._align === 'left') {
+                toX -= w / 2;;
+            } else if (this._align === 'right') {
                 toX += w / 2;
-            } else if (this._align === 'left') {
-                toX -= w / 2;
             }
-        } else if (dX === 0 && dY < 0) {
-            // Down
-            // toY -= sH / 2 + config.standoff;
-
-            // if (this._baseline === 'middle') {
-            //     toY -= h / 2;
-            // } else if (this._baseline === 'bottom') {
-            //     toY -= h;
-            // }
-
-            if (this._align === 'right') {
-                toX += w / 2;
-            } else if (this._align === 'left') {
-                toX -= w / 2;
-            }
-        } else if (dX > 0 && dY > 0) {
-            // Upper right
-            // toY += sH / 2 + config.standoff;
-
-            // if (this._baseline === 'middle') {
-            //     toY += h / 2;
-            // } else if (this._baseline === 'top') {
-            //     toY += h;
-            // }
-
-            // toX += sW / 2 + config.standoff;
-
-            // if (this._align === 'center') {
-            //     toX += w / 2;
-            // } else if (this._align === 'right') {
-            //     toX += w;
-            // }
-        } else if (dX > 0 && dY < 0) {
-            // Lower right
-            // toX += w + config.standoff;
-            // toY += h + config.standoff;
-        } else if (dX < 0 && dY > 0) {
-            // Upper left
-            // toX -= w + config.standoff;
-            // toY -= h + config.standoff;
-        } else if (dX < 0 && dY < 0) {
-            // Lower left
-            // toX -= w + config.standoff;
-            // toY += h + config.standoff;
         }
-
-
-
-
-
-        // if (direction[0] > 0) {
-        //     toX += sW / 2 + config.standoff;
-
-        //     if (this._align === 'center') {
-        //         toX += w / 2;
-        //     } else if (this._align === 'right') {
-        //         toX += w;
-        //     }
-        // } else if (direction[0] < 0) {
-        //     toX -= sW / 2 + config.standoff;
-
-        //     if (this._align === 'center') {
-        //         toX -= w / 2;
-        //     } else if (this._align === 'left') {
-        //         toX -= w;
-        //     }
-        // }
-
-        // if (direction[1] > 0) {
-        //     toY += sH / 2 + config.standoff;
-
-        //     if (this._baseline === 'middle') {
-        //         toY += h / 2;
-        //     }
-
-        //     // toY += h / 2 + sH + config.standoff;
-        //     // toY += config.standoff;
-        // } else if (direction[1] < 0) {
-        //     // toY -= h / 2 + sH + config.standoff;
-        //     // toY -= config.standoff;
-        // }
 
         const adjStandoff = Math.sqrt(config.standoff ** 2 / 2);
 

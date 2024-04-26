@@ -9,7 +9,7 @@ export * from './derived/brace';
 export * from './derived/circle';
 export * from './derived/square';
 export * from './derived/dot';
-export * from './derived/tangent_line';
+export * from './composed/tangent_line';
 export * from './derived/tex';
 export * from './derived/triangle';
 export * from './primitives/arc';

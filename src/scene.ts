@@ -93,7 +93,7 @@ abstract class Scene {
 
     render(): void {
         const loop = (time: number) => {
-            // this._rafId = requestAnimationFrame(loop);
+            this._rafId = requestAnimationFrame(loop);
 
             try {
                 this.nextTick(time);
@@ -111,12 +111,16 @@ abstract class Scene {
         this._canvas.clear();
 
         let activeAnimations = false;
+        let selectableShapes = false;
 
         for (let i = 0; i < this._scheduled.length; i++) {
             const el = this._scheduled[i];
 
             if (isShape(el)) {
                 await this._canvas.renderShape(el);
+                if (isSelectableShape(el)) {
+                    selectableShapes = true;
+                }
             } else if (isAnimation(el)) {
                 if (!el.isRunning() && !el.isComplete()) {
                     this._scheduled.splice(i, 0, ...el.renderDependencies());
@@ -133,7 +137,7 @@ abstract class Scene {
             }
         }
 
-        if (!activeAnimations) {
+        if (!activeAnimations && !selectableShapes) {
             console.log('Cancelling requestAnimationFrame')
             cancelAnimationFrame(this._rafId);
         }

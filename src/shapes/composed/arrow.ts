@@ -1,5 +1,5 @@
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { Locatable, Shape, locatableToPoint } from '@/shapes/shape';
+import { Locatable, locatableToPoint } from '@/shapes/shape';
 import { Line } from '@/shapes/primitives/line';
 import { Point } from '@/base';
 import { Triangle } from '@/shapes/derived/triangle';
@@ -22,7 +22,7 @@ class Arrow extends ComposedShape {
         this._bothEnds = bothEnds;
     }
 
-    compose(): Shape {
+    compose(): this {
         /*
          * Might be an easier way to do this. Need to "pull in" the ends so that the ends don't peek out of the arrowhead. Calculate the unit vector and 
          * move the "to" and "from" point in the direction of the unit vector by the "contractBy" amount

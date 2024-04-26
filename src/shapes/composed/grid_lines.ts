@@ -1,4 +1,3 @@
-import { Shape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Colors, RGBA } from '@/colors';
 import { config } from '@/config';
@@ -13,7 +12,7 @@ class GridLines extends ComposedShape {
         // this._lineColor = lineColor;
     }
 
-    compose(): Shape {
+    compose(): this {
         const lineStyles = { lineWidth: 1, lineColor: this.styles().lineColor };
         // const axisColor = colorWithOpacity(this.lineColor, this.lineColor[3] + 0.1);
         const axisColor = structuredClone(lineStyles.lineColor!)

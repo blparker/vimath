@@ -1,7 +1,5 @@
-import { Shape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { PointShape } from '@/shapes/primitives/point_shape';
-import { Point } from '@/base';
 
 
 class Plot extends ComposedShape {
@@ -17,7 +15,7 @@ class Plot extends ComposedShape {
         this._subplots.push(shape);
     }
 
-    compose(): Shape {
+    compose(): this {
         for (const subplot of this._subplots) {
             this.add(subplot);
         }

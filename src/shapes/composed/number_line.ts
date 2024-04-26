@@ -1,6 +1,6 @@
 import { ORIGIN, Point, Prettify, DOWN } from '@/base';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { Shape, ShapeStyles } from '@/shapes/shape';
+import { ShapeStyles } from '@/shapes/shape';
 import { Text } from '@/shapes/primitives/text';
 import { Arrow } from '@/shapes/composed/arrow';
 import math from '@/math';
@@ -82,7 +82,7 @@ class NumberLine extends ComposedShape {
         this._lineStyles = lineStyles;
     }
 
-    compose(): Shape {
+    compose(): this {
         const hl = this._length / 2;
         const from = [this._center[0] - hl, this._center[1]] as Point;
         const to = [this._center[0] + hl, this._center[1]] as Point;
