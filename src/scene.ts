@@ -1,4 +1,4 @@
-import { Config, config } from '@/config';
+import { Config, config, globalConfig } from '@/config';
 import { Canvas, HtmlCanvas, isCanvas } from '@/canvas';
 import { PointShape, Shape, isSelectableShape, isShape } from '@/shapes';
 import { Animation, BaseAnimation, isAnimation } from '@/animation/animation'
@@ -11,9 +11,6 @@ type SceneElement = Shape | Animation | ((pctComplete: number, starting: boolean
 
 abstract class Scene {
     private _canvas: Canvas;
-    // private _shapes: Shape[] = [];
-    // private _shapes: Set<Shape> = new Set();
-    // private _animations: Set<Animation> = new Set();
     private _scheduled: (Shape | Animation)[] = [];
     private _rafId: number = 0;
 
@@ -26,6 +23,7 @@ abstract class Scene {
             throw new Error(`Unsupported renderer ${config.renderer}`);
         }
 
+        globalConfig(userConfig ?? {});
         config.canvasInstance = this._canvas;
 
         this._canvas.onClick(e => {
@@ -43,10 +41,52 @@ abstract class Scene {
         this._canvas.onResize(() => this.nextTick(0));
     }
 
+    /**
+     * Add a shape to the scene
+     * @param shape the shape to add
+     * @returns the shape that was added
+     * @example
+     * ```ts
+     * class TestScene {
+     *     compose() {
+     *         const square = this.add(new Square())
+     *     }
+     * }
+     * ```
+     */
     add(shape: Shape): Shape;
+    /**
+     * Add an animation to the scene (to be played)
+     * @param shape the animation to add
+     * @returns the animation that was added
+     * @example
+     * ```ts
+     * class TestScene {
+     *     compose() {
+     *         const square = this.add(new Square())
+     *         // Adds the animation
+     *         this.add(new FadeIn(square));
+     *     }
+     * }
+     * ```
+     */
     add(animation: Animation): Animation;
+    /**
+     * Adds a function to be executed on each tick
+     * @param animation 
+     */
     add(animation: (pctComplete: number, starting: boolean) => void): Animation;
+    /**
+     * Adds a mixture of shapes, animations, and functions to the scene
+     * @param els the elements to add to the scene
+     * @returns an array containing the elements that were added
+     */
     add(...els: SceneElement[]): SceneElement[];
+    /**
+     * Adds a mixture of shapes, animations, and functions to the scene
+     * @param els the element(s) to add to the scene
+     * @returns the element(s) that were added to the scene. If only one element was added, that element is returned. Otherwise, an array of elements is returned
+     */
     add(...els: SceneElement[]): SceneElement | SceneElement[] {
         if (els.length === 0) {
             return [];
@@ -73,14 +113,11 @@ abstract class Scene {
             }
         }
 
-        // this._scheduled.unshift(...shapes);
         this._scheduled.push(...shapes);
 
         if (animations.length === 1) {
-            // this._scheduled.unshift(animations[0]);
             this._scheduled.push(animations[0]);
         } else if (animations.length > 1) {
-            // this._scheduled.unshift(new AnimationGroup({ animations }));
             this._scheduled.push(new AnimationGroup({ animations }));
         }
 
@@ -91,6 +128,9 @@ abstract class Scene {
         }
     }
 
+    /**
+     * Renders the scene. If animations are involved, the scene will continue to render until all animations are complete (using requestAnimationFrame)
+     */
     render(): void {
         const loop = async (time: number) => {
             this._rafId = requestAnimationFrame(loop);
@@ -146,18 +186,31 @@ abstract class Scene {
         }
     }
 
+    /**
+     * Method implemented by subclasses to compose the scene. This is where shapes and animations are added to the scene
+     * @example
+     * ```ts
+     * class TestScene {
+     *     compose() {
+     *         // Add in all your shapes and animations here. For example, adding a square and fading it in
+     *         const square = this.add(new Square())
+     *         // Fade in the square
+     *         this.add(new FadeIn(square));
+     *     }
+     * }
+     * ```
+     */
     abstract compose(): void;
 }
 
 
-// function createScene(fn: () => void): Scene {
-//     return new class extends Scene {
-//         compose(): void {
-//             fn.bind(this)();
-//         }
-//     };
-// }
+function createScene(fn: () => void): Scene {
+    return new class extends Scene {
+        compose(): void {
+            fn.bind(this)();
+        }
+    };
+}
 
 
-// export { Scene, createScene };
-export { Scene };
+export { Scene, createScene };

@@ -1,4 +1,3 @@
-import { Point } from '@/base';
 import { Colors, rgbaToString } from '@/colors';
 import { config } from '@/config';
 import { Shape } from '@/shapes/shape';
@@ -25,13 +24,8 @@ type MouseState = {
 interface Canvas {
     renderShape(shape: Shape): Promise<void>;
 
-    // line(line: Line): void;
-    // connectedPath(path: PointShape): void;
-    connectedPathBezier(path: PointShape): void;
-    // arc(arc: Arc): void;
+    connectedPath(path: PointShape): void;
     text(text: Text): Promise<void>;
-    // bezierCurve(curve: BezierCurve): void;
-    // drawable(drawable: Drawable): void;
 
     clear(): void;
 
@@ -64,104 +58,20 @@ class HtmlCanvas implements Canvas {
     }
 
     async renderShape(shape: Shape) {
-        // if (shape instanceof Line) {
-        //     this.line(shape);
-        // } else if (shape instanceof Arc) {
-        //     this.arc(shape);
-        // } else if (shape instanceof BezierCurve) {
-        //     this.bezierCurve(shape);
         if (shape instanceof ComposedShape) {
             for (const s of shape.composedShapes()) {
                 this.renderShape(s);
             }
-        // } else if (shape instanceof PointShape) {
-        //     this.connectedPath(shape);
         } else if (shape instanceof PointShape) {
-            this.connectedPathBezier(shape);
+            this.connectedPath(shape);
         } else if (shape instanceof Text) {
             await this.text(shape);
-        // } else if (shape instanceof Drawable) {
-        //     this.drawable(shape);
         } else {
             throw new Error(`Unsupported shape ${shape}`);
         }
     }
 
-    // drawable(drawable: Drawable): void {
-    //     this._ctx.save();
-
-    //     const path = new Path2D();
-
-    //     for (const command of drawable.commands()) {
-    //         if ('point' in command) {
-    //             path.moveTo(...this.t.translateRelative(command.point));
-    //             // path.moveTo(...command.point);
-    //         } else if ('control1' in command) {
-    //             path.bezierCurveTo(...this.t.translateRelative(command.control1), ...this.t.translateRelative(command.control2), ...this.t.translateRelative(command.end));
-    //             // path.bezierCurveTo(...command.control1, ...command.control2, ...command.end);
-    //         } else if ('type' in command) {
-    //             if (command.type === 'fill') {
-    //                 this._ctx.fillStyle = rgbaToString(command.color);
-    //                 this._ctx.fill(path);
-    //             } else if (command.type === 'stroke') {
-    //                 this._ctx.strokeStyle = rgbaToString(command.color);
-    //                 this._ctx.stroke(path);
-    //             }
-    //         }
-    //     }
-
-    //     this._ctx.restore();
-    // }
-
-    // connectedPath(shape: PointShape): void {
-    //     if (shape.smooth()) {
-    //         this.smoothPath(shape);
-    //         return;
-    //     }
-
-    //     this._ctx.save();
-    //     this.setContextStyles(shape);
-
-    //     const p = new Path2D();
-    //     const points = shape.points()
-
-    //     const styles = shape.styles();
-    //     if (styles.adjustForLineWidth && styles.lineWidth) {
-    //         const relLineWidth = this.t.translateAbsWidth(styles.lineWidth);
-
-    //         const innerWidth = shape.width() - relLineWidth;
-    //         const innerHeight = shape.height() - relLineWidth;
-
-    //         const [sX, sY] = [innerWidth / shape.width(), innerHeight / shape.height()];
-    //         const [cX, cY] = shape.center();
-
-    //         for (const p of points) {
-    //             const dX = p[0] - cX;
-    //             const dY = p[1] - cY;
-
-    //             p[0] = cX + dX * sX;
-    //             p[1] = cY + dY * sY;
-    //         }
-    //     }
-
-    //     p.moveTo(...this.t.translateRelative(points[0]));
-    //     for (let i = 1; i < points.length; i++) {
-    //         p.lineTo(...this.t.translateRelative(points[i]));
-    //     }
-    //     p.closePath();
-
-    //     if (styles.color) {
-    //         this._ctx.fill(p);
-    //     }
-
-    //     if (styles.lineColor) {
-    //         this._ctx.stroke(p);
-    //     }
-
-    //     this._ctx.restore();
-    // }
-
-    connectedPathBezier(shape: PointShape): void {
+    connectedPath(shape: PointShape): void {
         this._ctx.save();
         this.setContextStyles(shape);
 
@@ -201,7 +111,7 @@ class HtmlCanvas implements Canvas {
         this._ctx.restore();
     }
 
-    private smoothPath(shape: PointShape): void {
+    /*private smoothPath(shape: PointShape): void {
         this._ctx.save();
         this.setContextStyles(shape);
 
@@ -223,56 +133,7 @@ class HtmlCanvas implements Canvas {
         this._ctx.stroke(p);
 
         this._ctx.restore();
-    }
-
-    // line(line: Line): void {
-    //     this._ctx.save();
-    //     this.setContextStyles(line);
-
-    //     const p = new Path2D();
-    //     const [from, to] = line.points();
-
-    //     p.moveTo(...this.t.translateRelative(from));
-    //     p.lineTo(...this.t.translateRelative(to));
-
-    //     this._ctx.lineCap = line.lineCap();
-    //     this._ctx.fill(p);
-    //     this._ctx.stroke(p);
-
-    //     this._ctx.restore();
-    // }
-
-    // line2({ from, to, ...styles }: { from: Point, to: Point } & ShapeStyles): void {
-    //     this._ctx.save();
-    //     // this.setContextStyles(styles);
-
-    //     const p = new Path2D();
-    //     p.moveTo(...this.t.translateRelative(from));
-    //     p.lineTo(...this.t.translateRelative(to));
-    //     this._ctx.fill(p);
-    //     this._ctx.stroke(p);
-
-    //     this._ctx.restore();
-    // }
-
-    // arc(arc: Arc): void {
-    //     this._ctx.save();
-    //     this.setContextStyles(arc);
-
-    //     const p = new Path2D();
-    //     const origin = this.t.translateRelative([0, 0]);
-    //     const r = this.t.translateRelative([arc.radius(), 0])[0] - origin[0];
-
-    //     p.arc(...this.t.translateRelative(arc.center()), r, arc.startAngle(), arc.endAngle());
-
-    //     if (arc.styles().color) {
-    //         this._ctx.fill(p);
-    //     }
-
-    //     this._ctx.stroke(p);
-
-    //     this._ctx.restore();
-    // }
+    }*/
 
     async text(text: Text) {
         const showBoundingBox = false;
@@ -317,30 +178,6 @@ class HtmlCanvas implements Canvas {
 
         this._ctx.restore();
     }
-
-    // bezierCurve(curve: BezierCurve): void {
-    //     this._ctx.save();
-    //     this.setContextStyles(curve);
-
-    //     const p = new Path2D();
-    //     const { start, control1, control2, end } = curve.points();
-
-    //     if (start !== undefined) {
-    //         p.moveTo(...this.t.translateRelative(start));
-    //     }
-
-    //     p.bezierCurveTo(...this.t.translateRelative(control1), ...this.t.translateRelative(control2), ...this.t.translateRelative(end));
-
-    //     if (curve.styles().color) {
-    //         this._ctx.fill(p);
-    //     }
-
-    //     if (curve.styles().lineColor) {
-    //         this._ctx.stroke(p);
-    //     }
-
-    //     this._ctx.restore();
-    // }
 
     clear(): void {
         this._ctx.fillStyle = 'white';

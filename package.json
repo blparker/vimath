@@ -1,7 +1,10 @@
 {
-  "name": "vimath2",
+  "name": "vimath",
+  "description": "${npm_package_name} is a library for creating interactive math content in the browser.",
   "private": true,
   "version": "0.0.0",
+  "author": "blparker",
+  "license": "ISC",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +22,7 @@
   "outDir": "./dist",
   "main": "${npm_package_outDir}/${npm_package_name}.umd.js",
   "module": "${npm_package_outDir}/${npm_package_name}.es.js",
+  "browser": "${npm_package_outDir}/${npm_package_name}.iife.js",
   "files": [
     "${npm_package_outDir}/**/*"
   ],

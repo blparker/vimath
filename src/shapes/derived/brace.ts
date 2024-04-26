@@ -16,7 +16,6 @@ class Brace extends PointShape {
     private _standoff: number;
     private _direction: Point;
 
-
     constructor(from: Point, to: Point, direction?: Point);
     constructor(shape: Shape, direction?: Point);
     constructor(args: BraceArgs);
@@ -88,6 +87,22 @@ class Brace extends PointShape {
         this._to = to;
         this._standoff = standoff;
         this._direction = direction;
+    }
+
+    from(): Point {
+        return this._from;
+    }
+
+    to(): Point {
+        return this._to;
+    }
+
+    standoff(): number {
+        return this._standoff;
+    }
+
+    direction(): Point {
+        return this._direction;
     }
 
     private static calculateBezierPoints(from: Point, to: Point, direction: Point): BezierSegment[] {

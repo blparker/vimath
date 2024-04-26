@@ -81,7 +81,7 @@ class PointShape implements Shape, SelectableShape {
         return [xSum / sampleCount, ySum / sampleCount];
     }
 
-    private meanCenter(): Point {
+    /*private meanCenter(): Point {
         let xMean = 0;
         let yMean = 0;
 
@@ -99,7 +99,7 @@ class PointShape implements Shape, SelectableShape {
         }
 
         return [xMean, yMean];
-    }
+    }*/
 
     top(): Point {
         const { minX, maxX, maxY } = this.boundingBox();
