@@ -2,7 +2,7 @@ import { Point } from '@/base';
 import { Colors, rgbaToString } from '@/colors';
 import { config } from '@/config';
 import { Shape } from '@/shapes/shape';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape } from '@/shapes/primitives/point_shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Text } from '@/shapes/primitives/text';
 import { TexGenerator } from '@/tex_generator';

@@ -1,6 +1,6 @@
 import { BezierSegment, Point } from '@/base';
 import math from '@/math';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape } from '@/shapes/primitives/point_shape';
 import { Shape, isShape, ShapeStyles, defaultShapeStyles } from '@/shapes';
 import { config } from '@/config';
 import utils from '@/utils';

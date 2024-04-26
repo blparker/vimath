@@ -4,7 +4,7 @@ import { Shape, ShapeStyles } from '@/shapes/shape';
 import { Text } from '@/shapes/primitives/text';
 import { Arrow } from '@/shapes/composed/arrow';
 import math from '@/math';
-import { Line, LineStyles } from '@/shapes/primitives/bezier_line';
+import { Line, LineStyles } from '@/shapes/primitives/line';
 import { config } from '@/config';
 
 

@@ -1,7 +1,7 @@
 import { Locatable, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import { ORIGIN, Prettify } from '@/base';
 import { Colors } from '@/colors';
-import { Circle } from './bezier_circle';
+import { Circle } from './circle';
 
 
 type DotArgs = { x?: number; y?: number; center?: Locatable; size?: number; selectable?: boolean; };

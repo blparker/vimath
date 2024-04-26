@@ -1,6 +1,6 @@
 import { AnimationArgs, BaseAnimation } from '@/animation/animation';
 import { Shape, isShape } from '@/shapes';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape } from '@/shapes/primitives/point_shape';
 
 
 class GrowFromCenter extends BaseAnimation {

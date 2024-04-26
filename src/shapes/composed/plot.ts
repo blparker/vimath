@@ -1,6 +1,6 @@
 import { Shape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape } from '@/shapes/primitives/point_shape';
 import { Point } from '@/base';
 
 

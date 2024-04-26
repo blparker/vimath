@@ -1,5 +1,5 @@
 import { ORIGIN, Prettify } from '@/base';
-import { Arc } from '../primitives/bezier_arc';
+import { Arc } from '../primitives/arc';
 import { Locatable, ShapeStyles } from '@/shapes/shape';
 
 

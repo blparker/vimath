@@ -1,6 +1,6 @@
 import { BezierSegment, ORIGIN, Point, Prettify } from '@/base';
 import { Locatable, ShapeStyles, locatableToPoint } from '@/shapes/shape';
-import { PointShape} from './bezier_point_shape';
+import { PointShape} from './point_shape';
 
 
 type ArcArgs = {

@@ -2,7 +2,7 @@ import { Shape } from '@/shapes/shape';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Colors, RGBA } from '@/colors';
 import { config } from '@/config';
-import { Line } from '@/shapes/primitives/bezier_line';
+import { Line } from '@/shapes/primitives/line';
 
 
 class GridLines extends ComposedShape {

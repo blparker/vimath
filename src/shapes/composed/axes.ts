@@ -3,10 +3,10 @@ import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Shape } from '@/shapes/shape';
 import { NumberLine } from '@/shapes/composed/number_line';
 import { config } from '@/config';
-import { PointShape } from '@/shapes/primitives/bezier_point_shape';
+import { PointShape } from '@/shapes/primitives/point_shape';
 import { Plot } from '@/shapes/composed/plot';
 import math from '@/math';
-import { Line } from '../primitives/bezier_line';
+import { Line } from '../primitives/line';
 import { Colors } from '@/colors';
 
 

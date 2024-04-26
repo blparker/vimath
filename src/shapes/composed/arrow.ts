@@ -1,6 +1,6 @@
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Locatable, Shape, locatableToPoint } from '@/shapes/shape';
-import { Line } from '@/shapes/primitives/bezier_line';
+import { Line } from '@/shapes/primitives/line';
 import { Point } from '@/base';
 import { Triangle } from '@/shapes/derived/triangle';
 import { config } from '@/config';

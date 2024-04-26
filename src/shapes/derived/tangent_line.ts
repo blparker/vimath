@@ -1,4 +1,4 @@
-import { Line, LineStyles } from '@/shapes/primitives/bezier_line';
+import { Line, LineStyles } from '@/shapes/primitives/line';
 import { Plot } from '@/shapes/composed/plot';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Shape, ShapeStyles } from '../shape';
