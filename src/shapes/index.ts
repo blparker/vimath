@@ -7,7 +7,7 @@ export * from './composed/number_line';
 export * from './composed/plot';
 export * from './derived/brace';
 export * from './derived/circle';
-export * from './derived/bezier_square';
+export * from './derived/square';
 export * from './derived/dot';
 export * from './derived/tangent_line';
 export * from './derived/tex';

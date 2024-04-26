@@ -3,7 +3,6 @@ import { Scene } from '../src/scene';
 import { BaseAnimation, Create } from '../src/animation';
 import { FadeIn } from '../src/animation/fade_in';
 // import { Arc } from '../src/shapes/primitives/arc';
-import { Arc as Arc2 } from '../src/shapes/primitives/bezier_arc';
 import { Arrow } from '../src/shapes/composed/arrow';
 import { Triangle } from '../src/shapes/derived/triangle';
 import { Tex } from '../src/shapes/derived/tex';
@@ -17,12 +16,9 @@ import { GridLines } from '../src/shapes/composed/grid_lines';
 // import { Circle, Dot, PointShape } from '../src/shapes';
 import { TangentLine } from '../src/shapes/derived/tangent_line';
 // import { Square } from '../src/shapes/derived/square';
-import { Square } from '../src/shapes/derived/bezier_square';
-import { Brace } from '../src/shapes/derived/bezier_brace';
 // import { PointShape as PointShape2 } from '../src/shapes/primitives/bezier_point_shape';
 import { PointShape, Dot, Circle } from '../src/shapes'
 import { GrowFromCenter } from '../src/animation/grow_from_center';
-import { Line as Line2 } from '../src/shapes/primitives/bezier_line';
 import math from '../src/math';
 
 
