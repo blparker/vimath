@@ -8,6 +8,7 @@ type ShapeStyles = {
     lineColor?: RGBA;
     lineWidth?: number;
     lineStyle?: 'solid' | 'dashed' | 'dotted' | 'dashedsmall';
+    lineCap?: 'butt' | 'round' | 'square';
     adjustForLineWidth?: boolean;
 };
 
@@ -19,6 +20,7 @@ const defaultShapeStyles: ShapeStyles = {
     lineColor: Colors.black(),
     lineWidth: config.lineWidth,
     lineStyle: 'solid',
+    lineCap: 'butt',
     adjustForLineWidth: false,
 };
 

@@ -526,17 +526,17 @@ class PointShape implements Shape, SelectableShape {
             return points as BezierSegment[];
         } else if (points.every(pt => !isBezier(pt))) {
             if (n === 1) {
-                const pt = points[0] as Point;
-                return [[pt, pt, pt, pt]];
+                const [x, y] = points[0] as Point;
+                return [[[x, y], [x, y], [x, y], [x, y]]];
             } else if (n === 2) {
-                const [pt1, pt2] = points as [Point, Point];
-                return [[pt1, pt1, pt2, pt2]];
+                const [[x1, y1], [x2, y2]] = points as [Point, Point];
+                return [[[x1, y1], [x1, y1], [x2, y2], [x2, y2]]];
             }
 
             for (let i = 0; i < n - 1; i++) {
                 const curr = points[i] as Point;
                 const next = points[(i + 1) % n] as Point;
-                segments.push([i > 0 ? null : curr, curr, next, next]);
+                segments.push([i > 0 ? null : structuredClone(curr), structuredClone(curr), structuredClone(next), structuredClone(next)]);
             }
 
             // const first = points[0] as Point;
@@ -557,7 +557,7 @@ class PointShape implements Shape, SelectableShape {
                 const start = isBezier(curr) ? curr[1] : curr;
                 const end = isBezier(next) ? next[3] : next;
 
-                segments.push([i > 0 ? null : start, start, end, end]);
+                segments.push([i > 0 ? null : structuredClone(start), structuredClone(start), structuredClone(end), structuredClone(end)]);
             }
         }
 

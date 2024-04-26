@@ -1,4 +1,4 @@
-import { LEFT, Point, Prettify } from '@/base';
+import { LEFT, Point, Prettify, RIGHT, UR } from '@/base';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { Shape } from '@/shapes/shape';
 import { NumberLine } from '@/shapes/composed/number_line';
@@ -8,6 +8,7 @@ import { Plot } from '@/shapes/composed/plot';
 import math from '@/math';
 import { Line } from '../primitives/line';
 import { Colors } from '@/colors';
+import { Text } from '../primitives/text';
 
 
 type AxesArgs = {
@@ -27,6 +28,9 @@ type AxesArgs = {
     xStep?: number;
     yStep?: number;
     showGrid?: boolean;
+    xLabel?: string;
+    yLabel?: string;
+    tips?: boolean;
 };
 
 
@@ -45,6 +49,9 @@ class Axes extends ComposedShape {
     private _xStep: number;
     private _yStep: number;
     private _showGrid: boolean;
+    private _xLabel?: string;
+    private _yLabel?: string;
+    private _showTips?: boolean;
 
     constructor({
         xRange = [-7, 7],
@@ -63,6 +70,9 @@ class Axes extends ComposedShape {
         xStep = 1,
         yStep = 1,
         showGrid = false,
+        tips = false,
+        xLabel,
+        yLabel,
         ...styleArgs
     }: AxesArgs & Prettify<{}> = {}) {
         super({ ...styleArgs });
@@ -81,6 +91,9 @@ class Axes extends ComposedShape {
         this._xStep = xStep;
         this._yStep = yStep;
         this._showGrid = showGrid;
+        this._xLabel = xLabel;
+        this._yLabel = yLabel;
+        this._showTips = tips;
     }
 
     compose(): this {
@@ -90,13 +103,14 @@ class Axes extends ComposedShape {
             range: this._xRange,
             length: this._xLength,
             excludeNumbers: [0],
-            lineStyles: { lineCap: 'square' },
             showTicks: this._showXTicks,
             showLabels: this._showXLabels,
             tickSize: this._tickSize,
             tickLabelStandoff: this._labelStandoff,
             labelSize: this._labelSize,
             tickStep: this._xStep,
+            // lineCap: 'round',
+            rightTip: this._showTips,
         }).shift([0, oY]);
 
         const yAxis = new NumberLine({
@@ -105,13 +119,14 @@ class Axes extends ComposedShape {
             rotation: Math.PI / 2,
             labelDirection: LEFT(),
             excludeNumbers: [0],
-            lineStyles: { lineCap: 'square' },
             showTicks: this._showYTicks,
             showLabels: this._showYLabels,
             tickSize: this._tickSize,
             tickLabelStandoff: this._labelStandoff,
             labelSize: this._labelSize,
             tickStep: this._yStep,
+            // lineCap: 'round',
+            rightTip: this._showTips,
         }).shift([oX, 0]);
 
         if (this._showGrid) {
@@ -119,6 +134,18 @@ class Axes extends ComposedShape {
         }
 
         this.add(xAxis, yAxis)
+
+        if (this._xLabel) {
+            const x = xAxis.right()[0] - 0.2;
+            const y = xAxis.top()[1] + 0.2;
+            this.add(new Text({ text: this._xLabel, x, y, align: 'left', baseline: 'bottom', size: this._labelSize }));
+        }
+
+        if (this._yLabel) {
+            const x = yAxis.right()[0];
+            const y = yAxis.top()[1] + 0.1;
+            this.add(new Text({ text: this._yLabel, x, y, align: 'left', baseline: 'bottom', size: this._labelSize }));
+        }
 
         return this;
     }

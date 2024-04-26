@@ -22,9 +22,11 @@ type NumberLineArgs = {
     axisLabel?: string;
     axisLabelSize?: number;
     excludeNumbers?: number[];
-    includeTip?: boolean;
+    includeTips?: boolean;
     labelDirection?: [number, number];
     lineStyles?: LineStyles;
+    leftTip?: boolean;
+    rightTip?: boolean;
 };
 
 
@@ -40,9 +42,10 @@ class NumberLine extends ComposedShape {
     private _tickStep: number;
     private _rotation: number;
     private _excludeNums: number[];
-    private _includeTip: boolean;
     private _labelDirection: [number, number];
     private _lineStyles: LineStyles;
+    private _leftTip: boolean;
+    private _rightTip: boolean;
 
     constructor({
         length = 8,
@@ -58,7 +61,9 @@ class NumberLine extends ComposedShape {
         axisLabel,
         axisLabelSize,
         excludeNumbers = [],
-        includeTip = false,
+        includeTips = false,
+        leftTip = false,
+        rightTip = false,
         labelDirection = DOWN(),
         lineStyles = {},
         ...styleArgs
@@ -77,7 +82,8 @@ class NumberLine extends ComposedShape {
         this._tickStep = tickStep;
         this._rotation = rotation;
         this._excludeNums = excludeNumbers;
-        this._includeTip = includeTip;
+        this._leftTip = includeTips || leftTip;
+        this._rightTip = includeTips || rightTip;
         this._labelDirection = labelDirection;
         this._lineStyles = lineStyles;
     }
@@ -120,6 +126,10 @@ class NumberLine extends ComposedShape {
             });
         };
 
+        const tick = (num: number): Line => {
+            return new Line({ from: pointWithRotation([num, tickSize]), to: pointWithRotation([num, -tickSize]), ...this.styles() })
+        };
+
         const tickSize = this._tickSize;
 
         for (let i = 0; i <= numTicks; i++) {
@@ -128,10 +138,12 @@ class NumberLine extends ComposedShape {
                 continue;
             }
 
-            const rNum = math.remap(this._range[0], this._range[1], -hl, hl, num);
+            const lContraction = this._leftTip ? 0.5 : 0;
+            const rContraction = this._rightTip ? 0.5 : 0;
+            const rNum = math.remap(this._range[0], this._range[1], -hl + lContraction, hl - rContraction, num);
 
             if (this._showTicks) {
-                this.add(new Line({ from: pointWithRotation([rNum, tickSize]), to: pointWithRotation([rNum, -tickSize]), ...this.styles() }));
+                this.add(tick(rNum));
             }
 
             if (this._showLabels) {
@@ -139,8 +151,9 @@ class NumberLine extends ComposedShape {
             }
         }
 
-        if (this._includeTip) {
-            this.add(new Arrow({ from: pointWithRotation(from), to: pointWithRotation(to), bothEnds: true, ...this.styles() }));
+        if (this._leftTip || this._rightTip) {
+            const bothEnds = this._leftTip && this._rightTip;
+            this.add(new Arrow({ from: pointWithRotation(from), to: pointWithRotation(to), bothEnds, ...this.styles() }));
         } else {
             this.add(new Line({ from: pointWithRotation(from), to: pointWithRotation(to), ...Object.assign({}, this._lineStyles, this.styles()) }));
         }

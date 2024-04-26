@@ -20,7 +20,7 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex } from '../src';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle } from '../src';
 
 
 const cvs = document.getElementById('cvs') as HTMLCanvasElement;
@@ -189,18 +189,32 @@ class TestScene extends Scene {
 
 
         // }
-        const dirs = [UP(), RIGHT(), DOWN(), LEFT(), UR(), DR(), DL(), UL()];
-        // const dirs = [UP()];
+        // const dirs = [UP(), RIGHT(), DOWN(), LEFT(), UR(), DR(), DL(), UL()];
+        // // const dirs = [UP()];
 
-        const s1 = this.add(new Square({ size: 2, center: [-3, 2], selectable: true }));
-        for (const dir of dirs) {
-            this.add(new Text({ text: 'hello', align: 'left' }).nextTo(s1, dir));
-        }
+        // const s1 = this.add(new Square({ size: 2, center: [-3, 2], selectable: true }));
+        // for (const dir of dirs) {
+        //     this.add(new Text({ text: 'hello', align: 'left' }).nextTo(s1, dir));
+        // }
 
-        const s2 = this.add(new Square({ size: 2, center: [3, 2] }));
-        for (const dir of dirs) {
-            this.add(new Text({ text: 'hello', align: 'right' }).nextTo(s2, dir));
-        }
+        // const s2 = this.add(new Square({ size: 2, center: [3, 2] }));
+        // for (const dir of dirs) {
+        //     this.add(new Text({ text: 'hello', align: 'right' }).nextTo(s2, dir));
+        // }
+
+        const axes = this.add(new Axes({
+            xLength: 10,
+            yLength: 6,
+            xRange: [0, 1],
+            xStep: 0.25,
+            yRange: [0, 50],
+            yStep: 5,
+            xLabel: 'test',
+            yLabel: 'test',
+            tips: true,
+        }));
+
+        // this.add(new Triangle());
     }
 }
 

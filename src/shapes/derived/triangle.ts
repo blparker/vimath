@@ -11,14 +11,15 @@ class Triangle extends PointShape {
         super({ points: Triangle.trianglePoints(x, y, width, height), ...styleArgs });
     }
 
-    private static trianglePoints(x: number, y: number, width: number, height: number): [Point, Point, Point] {
+    private static trianglePoints(x: number, y: number, width: number, height: number): [Point, Point, Point, Point] {
         const hw = width / 2;
         const hh = height / 2;
 
         return [
             [x - hw, y - hh],
             [x + hw, y - hh],
-            [x, y + hh]
+            [x, y + hh],
+            [x - hw, y - hh]
         ];
     }
 }

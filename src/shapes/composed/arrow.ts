@@ -29,7 +29,9 @@ class Arrow extends ComposedShape {
          */
         const contractBy = 0.1;
         const u = math.unitVec(this._from, this._to);
-        const from = math.addVec(this._from, math.multScalar(u, contractBy));
+
+        // Only contract the from end if we want arrows on both ends
+        const from = this._bothEnds ? math.addVec(this._from, math.multScalar(u, contractBy)) : this._from;
         const to = math.subVec(this._to, math.multScalar(u, contractBy));
 
         // The angle of the line

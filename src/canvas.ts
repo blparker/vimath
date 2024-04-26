@@ -297,6 +297,10 @@ class HtmlCanvas implements Canvas {
             this._ctx.lineWidth = styles.lineWidth;
         }
 
+        if (styles.lineCap) {
+            this._ctx.lineCap = styles.lineCap;
+        }
+
         if (styles.lineStyle === 'dashed') {
             this._ctx.setLineDash([5, 5]);
         } else if (styles.lineStyle === 'dotted') {
