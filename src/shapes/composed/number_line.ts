@@ -46,6 +46,8 @@ class NumberLine extends ComposedShape {
     private _lineStyles: LineStyles;
     private _leftTip: boolean;
     private _rightTip: boolean;
+    private _from: Point;
+    private _to: Point;
 
     constructor({
         length = 8,
@@ -86,13 +88,17 @@ class NumberLine extends ComposedShape {
         this._rightTip = includeTips || rightTip;
         this._labelDirection = labelDirection;
         this._lineStyles = lineStyles;
-    }
 
-    compose(): this {
         const hl = this._length / 2;
         const from = [this._center[0] - hl, this._center[1]] as Point;
         const to = [this._center[0] + hl, this._center[1]] as Point;
 
+        this._from = from;
+        this._to = to;
+    }
+
+    compose(): this {
+        const [from, to] = [this._from, this._to];
         const numTicks = Math.ceil((this._range[1] - this._range[0]) / this._tickStep);
 
         const pointWithRotation = (p: Point): Point => {
@@ -131,6 +137,7 @@ class NumberLine extends ComposedShape {
         };
 
         const tickSize = this._tickSize;
+        const hl = this._length / 2;
 
         for (let i = 0; i <= numTicks; i++) {
             const num = this._range[0] + i * this._tickStep;
@@ -167,6 +174,14 @@ class NumberLine extends ComposedShape {
             math.lerp(-this._length / 2, this._length / 2, p),
             0
         ];
+    }
+
+    from(): Point {
+        return this._from;
+    }
+
+    to(): Point {
+        return this._to;
     }
 }
 

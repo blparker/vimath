@@ -223,7 +223,7 @@ class ComposedShape implements Shape {
      * @returns the composed shapes
      */
     composedShapes(): Shape[] {
-        if (!this._composed) {
+        if (!this._composed && this._shapes.length === 0) {
             this.compose();
             this._composed = true;
         }

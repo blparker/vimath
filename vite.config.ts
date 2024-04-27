@@ -34,6 +34,10 @@ export default defineConfig({
                 '@': resolve(__dirname, './src'),
             },
         },
+        setupFiles: ['./test/mock_offscreen_canvas.ts'],
     },
-    plugins: [dts({ rollupTypes: true })],
+    plugins: [dts({
+        // rollupTypes: true,
+        // insertTypesEntry: true
+    })],
 });

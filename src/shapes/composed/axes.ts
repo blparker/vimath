@@ -1,5 +1,5 @@
-import { LEFT, Point, Prettify, RIGHT, UR } from '@/base';
-import { ComposedShape } from '@/shapes/composed/composed_shape';
+import { LEFT, Point, Prettify } from '@/base';
+import { ComposedShape } from './composed_shape';
 import { Shape } from '@/shapes/shape';
 import { NumberLine } from '@/shapes/composed/number_line';
 import { config } from '@/config';

@@ -10,10 +10,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest --config vite.config.ts"
+    "test": "vitest --config vite.config.ts",
+    "docs": "typedoc --out docs --excludePrivate --excludeProtected --excludeInternal --readme README.md src"
   },
   "devDependencies": {
     "jsdom": "^24.0.0",
+    "typedoc": "^0.25.13",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-dts": "^3.8.1",
