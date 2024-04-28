@@ -1,10 +1,19 @@
 import { ComposedShape } from '@/shapes/composed/composed_shape';
-import { Locatable, locatableToPoint } from '@/shapes/shape';
+import { Locatable, ShapeStyles, locatableToPoint } from '@/shapes/shape';
 import { Line } from '@/shapes/primitives/line';
-import { Point } from '@/base';
+import { Point, Prettify } from '@/base';
 import { Triangle } from '@/shapes/derived/triangle';
 import { config } from '@/config';
 import math from '@/math';
+
+
+type ArrowArgs = {
+    from?: Locatable;
+    to?: Locatable;
+    tipSize?: number;
+    bothEnds?: boolean;
+    standoff?: number;
+};
 
 
 class Arrow extends ComposedShape {
@@ -12,14 +21,22 @@ class Arrow extends ComposedShape {
     private _to: Point;
     private _tipSize: number;
     private _bothEnds: boolean;
+    private _standoff: number;
 
-    constructor({ from = [-1, 0], to = [1, 0], tipSize = config.arrowTipSize, bothEnds = false, ...styleArgs }: { from?: Locatable; to?: Locatable; tipSize?: number; bothEnds?: boolean; } = {}) {
+    constructor({ from = [-1, 0], to = [1, 0], tipSize = config.arrowTipSize, bothEnds = false, standoff = config.standoff, ...styleArgs }: Prettify<ArrowArgs & ShapeStyles> = {}) {
         super({ ...styleArgs });
 
         this._from = locatableToPoint(from);
         this._to = locatableToPoint(to);
         this._tipSize = tipSize;
         this._bothEnds = bothEnds;
+        this._standoff = standoff;
+
+        // Move the `to` location back by the standoff amount so that the arrow doesn't land awkwardly directly on whatever it's pointing to
+        const u = math.unitVec(this._from, this._to);
+        const t = math.subVec(this._to, math.multScalar(u, this._standoff));
+
+        this._to = t;
     }
 
     compose(): this {

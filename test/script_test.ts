@@ -20,7 +20,8 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line } from '../src';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow } from '../src';
+import math from '../src/math';
 
 
 const cvs = document.getElementById('cvs') as HTMLCanvasElement;
@@ -202,29 +203,75 @@ class TestScene extends Scene {
         //     this.add(new Text({ text: 'hello', align: 'right' }).nextTo(s2, dir));
         // }
 
-        const axes = this.add(new Axes({
-            xLength: 10,
-            yLength: 6,
-            xRange: [0, 1],
-            xStep: 0.25,
-            yRange: [0, 50],
-            yStep: 5,
-            xLabel: 'test',
-            yLabel: 'test',
-            tips: true,
-        }));
+        // const axes = this.add(new Axes({
+        //     xLength: 10,
+        //     yLength: 6,
+        //     xRange: [0, 1],
+        //     xStep: 0.25,
+        //     yRange: [0, 50],
+        //     yStep: 5,
+        //     xLabel: 'test',
+        //     yLabel: 'test',
+        //     tips: true,
+        // }));
 
-        const p = this.add(axes.plot(x => 50 * x).changeLineColor(Colors.red()));
-        const area = this.add(axes.area(p, [0, 0.5]).changeColor(Colors.red({ opacity: 0.3 })).changeLineColor(Colors.transparent()));
-        console.log('-------')
+        // const p = this.add(axes.plot(x => 50 * x).changeLineColor(Colors.red()));
+        // const area = this.add(axes.area(p, [0, 0.5]).changeColor(Colors.red({ opacity: 0.3 })).changeLineColor(Colors.transparent()));
+        // console.log('-------')
 
-        for (let i = 0.25; i <= 1; i += 0.25) {
-            const d = new Dot(axes.point(i, p.valueAtX(i))).changeColor(Colors.red()).changeLineColor(Colors.transparent());
-            this.add(d);
-        }
+        // for (let i = 0.25; i <= 1; i += 0.25) {
+        //     const d = new Dot(axes.point(i, p.valueAtX(i))).changeColor(Colors.red()).changeLineColor(Colors.transparent());
+        //     this.add(d);
+        // }
 
         // this.add(new Line({ from: axes.point(0.5, 0), to: axes.point(0.5, p.valueAtX(0.5)), lineColor: Colors.blue() }))
         // console.log(axes.point(0.5, 25));
+
+        const axes = this.add(new Axes({
+            xRange: [-8, 8],
+            yRange: [-4, 10],
+            xLength: 12,
+            yLength: 6,
+            xStep: 2,
+            yStep: 2,
+        }));
+
+        const p1 = this.add(axes.plot(x => x * x - 2 * x + 3).changeLineColor(Colors.green()));
+        const p2 = this.add(axes.plot(x => 2 * x - 2).changeLineColor(Colors.blue()));
+
+        // const a1 = this.add(new Arrow())
+        const pt1e = axes.point(-1, p1.valueAtX(-1));
+        const pt1s = math.subVec(pt1e, [1, 0]);
+        const a1 = this.add(new Arrow({ from: pt1s, to: pt1e }));
+        // this.add(new Tex(String.raw`f(x) = x^2 - 2x + 3`).nextTo(a1, LEFT()));
+        this.add(new Text({ text: String.raw`f(x) = x^2 - 2x + 3`, tex: true }).nextTo(a1, LEFT()));
+
+        // this.add(new Tex('\\lim f(x)'));
+        // this.add(new Tex('\\text{foo bar biz baz qux quoo keep going}').moveTo([-3, 0]));
+        // this.add(new Tex('\\text{foo}').moveTo([-3, 1]));
+        // const size = 30;
+
+        // this.add(new Text({ text: 'hello world, how are you?', size }).moveTo([-3, 3]))
+        // // this.add(new Tex('\\text{hello world, how are you?}').moveTo([3, 3]))
+        // this.add(new Tex({ text: '\\text{hello world, how are you?}', size }).moveTo([1, 3]))
+
+        // this.add(new Text({ text: 'f(x) = x^2 - 2x + 3', size }).moveTo([-3, 1]))
+        // this.add(new Tex({ text: 'f(x) = x^2 - 2x + 3', size }).moveTo([3, 1]))
+
+        // const words = ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog'];
+
+        // for (let i = 0; i < words.length; i++) {
+        //     const w = words.slice(0, i + 1).join(' ');
+
+        //     const t = new Text({ text: w, size, align: 'left', x: -7, y: 4 - i });
+        //     this.add(t)
+
+        //     const t2 = new Text({ text: '\\text{' + w + '}', size, align: 'left', x: 0, y: 4 - i, tex: true });
+        //     this.add(t2)
+        // }
+
+        // this.add(new Text({ text: 'f(x) = x^2 - 2x + 3', size }).moveTo([-3, 3]))
+        // this.add(new Text({ text: 'f(x) = x^2 - 2x + 3', size, tex: true }).moveTo([3, 3]))
     }
 }
 

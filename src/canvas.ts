@@ -170,13 +170,15 @@ class HtmlCanvas implements Canvas {
             this._ctx.fillText(text.text(), ...this.t.translateRelative([xDraw, yDraw]));
         }
 
+        this._ctx.restore();
+
         if (showBoundingBox) {
+            this._ctx.save();
             const bb = new Path2D();
             bb.rect(...this.t.translateRelative([text.left()[0], text.top()[1]]), this.t.translateRelWidth(w), this.t.translateRelHeight(h));
             this._ctx.stroke(bb);
+            this._ctx.restore();
         }
-
-        this._ctx.restore();
     }
 
     clear(): void {

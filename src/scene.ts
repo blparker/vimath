@@ -54,7 +54,7 @@ abstract class Scene {
      * }
      * ```
      */
-    add(shape: Shape): Shape;
+    add<T extends Shape>(shape: T): T;
     /**
      * Add an animation to the scene (to be played)
      * @param shape the animation to add
@@ -70,7 +70,7 @@ abstract class Scene {
      * }
      * ```
      */
-    add(animation: Animation): Animation;
+    add<T extends Animation>(animation: T): T;
     /**
      * Adds a function to be executed on each tick
      * @param animation 

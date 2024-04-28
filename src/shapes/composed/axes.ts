@@ -195,7 +195,7 @@ class Axes extends ComposedShape {
         return this;
     }
 
-    plot(fn: (x: number) => number | null): Shape {
+    plot(fn: (x: number) => number | null): Plot {
         const stepSize = (this._xRange[1] - this._xRange[0]) / MIN_NUM_STEPS;
         // const origin = this.origin();
 
@@ -316,11 +316,6 @@ class Axes extends ComposedShape {
     point(x: number, y: number): Point {
         // const [oX, oY] = this.origin();
         // return [x + oX, y + oY];
-
-        console.log("### X BEFORE:",  math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x)),
-        console.log("#### Y BEFORE:", math.remap(this._yRange[0], this._yRange[1], -this._yLength / 2, this._yLength / 2, y))
-        console.log('### X:', this._xAxis.pointOnLine(x));
-        console.log('### y:', this._yAxis.pointOnLine(y));
 
         return [
             // math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x),
