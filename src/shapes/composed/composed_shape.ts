@@ -29,6 +29,7 @@ class ComposedShape implements Shape {
     private _shapes: Shape[] = [];
     private _composed: boolean = false;
     private _styles: ShapeStyles;
+    private _updatedStyles: Partial<ShapeStyles> = {};
     private _angle = 0;
     private _scale = 1;
 
@@ -38,6 +39,7 @@ class ComposedShape implements Shape {
      */
     constructor({ ...styleArgs }: Prettify<ShapeStyles> = {}) {
         this._styles = Object.assign({}, defaultShapeStyles, styleArgs);
+        // this._styles = Object.assign({}, styleArgs);
     }
 
     center(): Point {
@@ -186,13 +188,24 @@ class ComposedShape implements Shape {
         return this._styles;
     }
 
+    setStyles(newStyles: ShapeStyles): this {
+        this._styles = newStyles;
+        return this;
+    }
+
     changeColor(color: RGBA): this {
         this.styles().color = color;
+        this._shapes.forEach(s => s.changeColor(color));
+        this._updatedStyles.color = color;
+
         return this;
     }
 
     changeLineColor(color: RGBA): this {
         this.styles().lineColor = color;
+        this._shapes.forEach(s => s.changeLineColor(color));
+        this._updatedStyles.lineColor = color;
+
         return this;
     }
 
@@ -228,12 +241,21 @@ class ComposedShape implements Shape {
             this._composed = true;
         }
 
+        // Need to do something better here
+        for (const s of this._shapes) {
+            for (const [key, value] of Object.entries(this._updatedStyles)) {
+                if (key === 'color') {
+                    s.changeColor(value as RGBA);
+                } else if (key === 'lineColor') {
+                    s.changeLineColor(value as RGBA);
+                }
+            }
+        }
+
         return this._shapes;
     }
 
     private boundingBox(): { minX: number, minY: number, maxX: number, maxY: number } {
-        // const xs = this._points.map(p => p[0]);
-        // const ys = this._points.map(p => p[1]);
         const lefts = this.composedShapes().map(s => s.left()[0]);
         const rights = this.composedShapes().map(s => s.right()[0]);
         const tops = this.composedShapes().map(s => s.top()[1]);

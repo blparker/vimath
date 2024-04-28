@@ -20,7 +20,7 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle } from '../src';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line } from '../src';
 
 
 const cvs = document.getElementById('cvs') as HTMLCanvasElement;
@@ -214,7 +214,17 @@ class TestScene extends Scene {
             tips: true,
         }));
 
-        // this.add(new Triangle());
+        const p = this.add(axes.plot(x => 50 * x).changeLineColor(Colors.red()));
+        const area = this.add(axes.area(p, [0, 0.5]).changeColor(Colors.red({ opacity: 0.3 })).changeLineColor(Colors.transparent()));
+        console.log('-------')
+
+        for (let i = 0.25; i <= 1; i += 0.25) {
+            const d = new Dot(axes.point(i, p.valueAtX(i))).changeColor(Colors.red()).changeLineColor(Colors.transparent());
+            this.add(d);
+        }
+
+        // this.add(new Line({ from: axes.point(0.5, 0), to: axes.point(0.5, p.valueAtX(0.5)), lineColor: Colors.blue() }))
+        // console.log(axes.point(0.5, 25));
     }
 }
 

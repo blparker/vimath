@@ -11,6 +11,10 @@ import { Colors } from '@/colors';
 import { Text } from '../primitives/text';
 
 
+// The number of discrete points that make up the plot function
+const MIN_NUM_STEPS = 200;
+
+
 type AxesArgs = {
     xRange?: [number, number];
     yRange?: [number, number];
@@ -52,18 +56,20 @@ class Axes extends ComposedShape {
     private _xLabel?: string;
     private _yLabel?: string;
     private _showTips?: boolean;
+    private _xAxis: NumberLine;
+    private _yAxis: NumberLine;
 
     constructor({
         xRange = [-7, 7],
         yRange = [-4, 4],
         xLength = config.xTicks,
         yLength = config.yTicks,
-        showTicks = true,
-        showXTicks = true,
-        showYTicks = true,
-        showLabels = true,
-        showXLabels = true,
-        showYLabels = true,
+        showTicks,
+        showXTicks,
+        showYTicks,
+        showLabels,
+        showXLabels,
+        showYLabels,
         tickSize = 0.1,
         labelStandoff = 0.3,
         labelSize = config.text.size,
@@ -81,10 +87,10 @@ class Axes extends ComposedShape {
         this._yRange = yRange;
         this._xLength = xLength;
         this._yLength = yLength;
-        this._showXTicks = showXTicks;
-        this._showYTicks = showYTicks;
-        this._showXLabels = showXLabels;
-        this._showYLabels = showYLabels;
+        this._showXTicks = showXTicks ?? showTicks ?? true;
+        this._showYTicks = showYTicks ?? showTicks ?? true;
+        this._showXLabels = showXLabels ?? showLabels ?? true;
+        this._showYLabels = showXLabels ?? showLabels ?? true;
         this._tickSize = tickSize;
         this._labelStandoff = labelStandoff;
         this._labelSize = labelSize;
@@ -94,9 +100,11 @@ class Axes extends ComposedShape {
         this._xLabel = xLabel;
         this._yLabel = yLabel;
         this._showTips = tips;
+
+        [this._xAxis, this._yAxis] = this.initializeNumberlines();
     }
 
-    compose(): this {
+    private initializeNumberlines(): [NumberLine, NumberLine] {
         const [oX, oY] = this.origin();
 
         const xAxis = new NumberLine({
@@ -129,6 +137,43 @@ class Axes extends ComposedShape {
             rightTip: this._showTips,
         }).shift([oX, 0]);
 
+        return [xAxis, yAxis];
+    }
+
+    compose(): this {
+        // const [oX, oY] = this.origin();
+
+        // const xAxis = new NumberLine({
+        //     range: this._xRange,
+        //     length: this._xLength,
+        //     excludeNumbers: [0],
+        //     showTicks: this._showXTicks,
+        //     showLabels: this._showXLabels,
+        //     tickSize: this._tickSize,
+        //     tickLabelStandoff: this._labelStandoff,
+        //     labelSize: this._labelSize,
+        //     tickStep: this._xStep,
+        //     // lineCap: 'round',
+        //     rightTip: this._showTips,
+        // }).shift([0, oY]);
+
+        // const yAxis = new NumberLine({
+        //     range: this._yRange,
+        //     length: this._yLength,
+        //     rotation: Math.PI / 2,
+        //     labelDirection: LEFT(),
+        //     excludeNumbers: [0],
+        //     showTicks: this._showYTicks,
+        //     showLabels: this._showYLabels,
+        //     tickSize: this._tickSize,
+        //     tickLabelStandoff: this._labelStandoff,
+        //     labelSize: this._labelSize,
+        //     tickStep: this._yStep,
+        //     // lineCap: 'round',
+        //     rightTip: this._showTips,
+        // }).shift([oX, 0]);
+        const [xAxis, yAxis] = [this._xAxis, this._yAxis];
+
         if (this._showGrid) {
             this.drawGrid(xAxis, yAxis);
         }
@@ -151,9 +196,8 @@ class Axes extends ComposedShape {
     }
 
     plot(fn: (x: number) => number | null): Shape {
-        const minNumSteps = 200;
-        const stepSize = (this._xRange[1] - this._xRange[0]) / minNumSteps;
-        const origin = this.origin();
+        const stepSize = (this._xRange[1] - this._xRange[0]) / MIN_NUM_STEPS;
+        // const origin = this.origin();
 
         let lastValidPoint: Point | null = null;
         const [yLow, yHigh] = this._yRange;
@@ -186,13 +230,17 @@ class Axes extends ComposedShape {
         const plot = new Plot(origFn);
         let segmentPoints: Point[] = [];
 
-        function finalizeSegment() {
+        const finalizeSegment = () => {
             if (segmentPoints.length > 0) {
-                const transformedPoints = segmentPoints.map(pt => math.addVec(pt, origin));
+                const transformedPoints = segmentPoints.map(pt => {
+                    // const [pX, pY] = math.addVec(pt, origin);
+                    return this.point(...pt);
+                });
+
                 plot.addSubplot(new PointShape({ points: transformedPoints, smooth: true, }));
                 segmentPoints = [];
             }
-        }
+        };
 
         const addPoint = (x: number) => {
             let y = fn(x);
@@ -248,9 +296,38 @@ class Axes extends ComposedShape {
         return plot;
     }
 
+    area(plot: Plot, range?: [number, number]): Shape {
+        const [rS, rE] = range ?? this._xRange;
+
+        const points = [this.point(rS, 0)];
+        const stepSize = (rE - rS) / MIN_NUM_STEPS;
+        for (let x = rS; x <= rE; x += stepSize) {
+            const y = plot.valueAtX(x);
+
+            if (y !== null) {
+                points.push(this.point(x, y));
+            }
+        }
+
+        points.push(this.point(rE, 0));
+        return new PointShape({ points });
+    }
+
     point(x: number, y: number): Point {
-        const [oX, oY] = this.origin();
-        return [x + oX, y + oY];
+        // const [oX, oY] = this.origin();
+        // return [x + oX, y + oY];
+
+        console.log("### X BEFORE:",  math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x)),
+        console.log("#### Y BEFORE:", math.remap(this._yRange[0], this._yRange[1], -this._yLength / 2, this._yLength / 2, y))
+        console.log('### X:', this._xAxis.pointOnLine(x));
+        console.log('### y:', this._yAxis.pointOnLine(y));
+
+        return [
+            // math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x),
+            // math.remap(this._yRange[0], this._yRange[1], -this._yLength / 2, this._yLength / 2, y)
+            this._xAxis.pointOnLine(x)[0],
+            this._yAxis.pointOnLine(y)[0]
+        ];
     }
 
     private origin(): Point {

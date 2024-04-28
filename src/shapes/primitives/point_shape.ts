@@ -259,6 +259,12 @@ class PointShape implements Shape, SelectableShape {
         return this._allStyles[this._allStyles.length - 1];
     }
 
+    setStyles(newStyles: ShapeStyles): this {
+        this._styles = newStyles;
+        this._allStyles[this._allStyles.length - 1] = newStyles;
+        return this;
+    }
+
     changeColor(color: RGBA): this {
         this.styles().color = color;
         return this;

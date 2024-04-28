@@ -1,3 +1,4 @@
+import { BezierSegment } from '@/base';
 import { ComposedShape } from '@/shapes/composed/composed_shape';
 import { PointShape } from '@/shapes/primitives/point_shape';
 
@@ -27,13 +28,13 @@ class Plot extends ComposedShape {
         return this._fn(x)[1];
     }
 
-    // *points(): Generator<Point> {
-    //     for (const subplot of this._subplots) {
-    //         for (const point of subplot.points()) {
-    //             yield point;
-    //         }
-    //     }
-    // }
+    *points(): Generator<BezierSegment> {
+        for (const subplot of this._subplots) {
+            for (const point of subplot.points()) {
+                yield point;
+            }
+        }
+    }
 }
 
 

@@ -237,6 +237,12 @@ interface Shape {
     styles(): ShapeStyles;
 
     /**
+     * Sets the styles of the shape
+     * @param newStyles the new styles to apply to the shape
+     */
+    setStyles(newStyles: ShapeStyles): this;
+
+    /**
      * Changes the current color of the shape. For shapes that are fillable, this is the fill color, for others, it's the singular color (.e.g., `Dot`, `Text`)
      * @param color the new color to change the shape to
      * @returns this (used for chaining)

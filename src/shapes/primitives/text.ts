@@ -223,6 +223,11 @@ class Text implements Shape {
         return this._styles;
     }
 
+    setStyles(newStyles: ShapeStyles): this {
+        this._styles = newStyles;
+        return this;
+    }
+
     changeColor(color: RGBA): this {
         this.styles().color = color;
         return this;

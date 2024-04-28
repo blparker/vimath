@@ -1,5 +1,5 @@
 import { ORIGIN, Point, Prettify, DOWN } from '@/base';
-import { ComposedShape } from '@/shapes/composed/composed_shape';
+import { ComposedShape } from './composed_shape';
 import { ShapeStyles } from '@/shapes/shape';
 import { Text } from '@/shapes/primitives/text';
 import { Arrow } from '@/shapes/composed/arrow';
@@ -169,11 +169,18 @@ class NumberLine extends ComposedShape {
     }
 
     pointOnLine(x: number): Point {
-        const p = Math.abs(x - this._range[0]) / Math.abs(this._range[1] - this._range[0]);
-        return [
-            math.lerp(-this._length / 2, this._length / 2, p),
-            0
-        ];
+        // const p = Math.abs(x - this._range[0]) / Math.abs(this._range[1] - this._range[0]);
+        // return [
+        //     math.lerp(-this._length / 2, this._length / 2, p),
+        //     0
+        // ];
+
+        const lContraction = this._leftTip ? 0.5 : 0;
+        const rContraction = this._rightTip ? 0.5 : 0;
+        const hl = this._length / 2;
+
+        const rNum = math.remap(this._range[0], this._range[1], -hl + lContraction, hl - rContraction, x);
+        return [rNum, 0];
     }
 
     from(): Point {
