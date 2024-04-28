@@ -3,6 +3,7 @@ export * from './composed/arrow';
 export * from './composed/axes';
 export * from './composed/composed_shape';
 export * from './composed/grid_lines';
+export * from './composed/group';
 export * from './composed/number_line';
 export * from './composed/plot';
 export * from './derived/brace';

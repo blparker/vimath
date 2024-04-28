@@ -201,7 +201,7 @@ class PointShape implements Shape, SelectableShape {
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point = RIGHT()): this {
+    nextTo(other: Locatable, direction: Point = RIGHT(), standoff: number = config.standoff): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -214,25 +214,25 @@ class PointShape implements Shape, SelectableShape {
         const [dX, dY] = direction;
 
         if (dX > 0) {
-            toX += sW / 2 + w / 2 + config.standoff;
+            toX += sW / 2 + w / 2 + standoff;
         } else if (dX < 0) {
-            toX -= sW / 2 + w / 2 + config.standoff;
+            toX -= sW / 2 + w / 2 + standoff;
         }
 
         if (dY > 0) {
-            toY += sH / 2 + h / 2 + config.standoff;
+            toY += sH / 2 + h / 2 + standoff;
         } else if (dY < 0) {
-            toY -= sH / 2 + h / 2 + config.standoff;
+            toY -= sH / 2 + h / 2 + standoff;
         }
 
-        const adjStandoff = Math.sqrt(config.standoff ** 2 / 2);
+        const adjStandoff = Math.sqrt(standoff ** 2 / 2);
 
         if (direction[0] !== 0 && direction[1] !== 0) {
             const xDir = Math.sign(direction[0]);
             const yDir = Math.sign(direction[1]);
 
-            toX += -xDir * config.standoff;
-            toY += -yDir * config.standoff;
+            toX += -xDir * standoff;
+            toY += -yDir * standoff;
 
             toX += xDir * adjStandoff;
             toY += yDir * adjStandoff;

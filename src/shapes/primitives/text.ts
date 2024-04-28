@@ -129,7 +129,7 @@ class Text implements Shape {
         return this;
     }
 
-    nextTo(other: Locatable, direction: Point = RIGHT()): this {
+    nextTo(other: Locatable, direction: Point = RIGHT(), standoff: number = config.standoff): this {
         let [toX, toY] = locatableToPoint(other);
         let [sW, sH] = [0, 0];
         const [w, h] = [this.width(), this.height()];
@@ -142,7 +142,7 @@ class Text implements Shape {
         const [dX, dY] = direction;
 
         if (dX > 0) {
-            toX += sW / 2 + config.standoff;
+            toX += sW / 2 + standoff;
 
             if (this._align === 'center') {
                 toX += w / 2;
@@ -150,7 +150,7 @@ class Text implements Shape {
                 toX += w;
             }
         } else if (dX < 0) {
-            toX -= sW / 2 + config.standoff;
+            toX -= sW / 2 + standoff;
 
             if (this._align === 'center') {
                 toX -= w / 2;
@@ -168,7 +168,7 @@ class Text implements Shape {
         }
 
         if (dY > 0) {
-            toY += sH / 2 + config.standoff;
+            toY += sH / 2 + standoff;
 
             if (this._baseline === 'middle') {
                 toY += h / 2;
@@ -176,7 +176,7 @@ class Text implements Shape {
                 toY += h;
             }
         } else if (dY < 0) {
-            toY -= sH / 2 + config.standoff;
+            toY -= sH / 2 + standoff;
 
             if (this._baseline === 'middle') {
                 toY -= h / 2;
@@ -193,14 +193,14 @@ class Text implements Shape {
             }
         }
 
-        const adjStandoff = Math.sqrt(config.standoff ** 2 / 2);
+        const adjStandoff = Math.sqrt(standoff ** 2 / 2);
 
         if (direction[0] !== 0 && direction[1] !== 0) {
             const xDir = Math.sign(direction[0]);
             const yDir = Math.sign(direction[1]);
 
-            toX += -xDir * config.standoff;
-            toY += -yDir * config.standoff;
+            toX += -xDir * standoff;
+            toY += -yDir * standoff;
 
             toX += xDir * adjStandoff;
             toY += yDir * adjStandoff;

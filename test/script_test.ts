@@ -20,7 +20,7 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow } from '../src';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group } from '../src';
 import math from '../src/math';
 
 
@@ -227,24 +227,24 @@ class TestScene extends Scene {
         // this.add(new Line({ from: axes.point(0.5, 0), to: axes.point(0.5, p.valueAtX(0.5)), lineColor: Colors.blue() }))
         // console.log(axes.point(0.5, 25));
 
-        const axes = this.add(new Axes({
-            xRange: [-8, 8],
-            yRange: [-4, 10],
-            xLength: 12,
-            yLength: 6,
-            xStep: 2,
-            yStep: 2,
-        }));
+        // const axes = this.add(new Axes({
+        //     xRange: [-8, 8],
+        //     yRange: [-4, 10],
+        //     xLength: 12,
+        //     yLength: 6,
+        //     xStep: 2,
+        //     yStep: 2,
+        // }));
 
-        const p1 = this.add(axes.plot(x => x * x - 2 * x + 3).changeLineColor(Colors.green()));
-        const p2 = this.add(axes.plot(x => 2 * x - 2).changeLineColor(Colors.blue()));
+        // const p1 = this.add(axes.plot(x => x * x - 2 * x + 3).changeLineColor(Colors.green()));
+        // const p2 = this.add(axes.plot(x => 2 * x - 2).changeLineColor(Colors.blue()));
 
-        // const a1 = this.add(new Arrow())
-        const pt1e = axes.point(-1, p1.valueAtX(-1));
-        const pt1s = math.subVec(pt1e, [1, 0]);
-        const a1 = this.add(new Arrow({ from: pt1s, to: pt1e }));
-        // this.add(new Tex(String.raw`f(x) = x^2 - 2x + 3`).nextTo(a1, LEFT()));
-        this.add(new Text({ text: String.raw`f(x) = x^2 - 2x + 3`, tex: true }).nextTo(a1, LEFT()));
+        // // const a1 = this.add(new Arrow())
+        // const pt1e = axes.point(-1, p1.valueAtX(-1));
+        // const pt1s = math.subVec(pt1e, [1, 0]);
+        // const a1 = this.add(new Arrow({ from: pt1s, to: pt1e }));
+        // // this.add(new Tex(String.raw`f(x) = x^2 - 2x + 3`).nextTo(a1, LEFT()));
+        // this.add(new Text({ text: String.raw`f(x) = x^2 - 2x + 3`, tex: true }).nextTo(a1, LEFT()));
 
         // this.add(new Tex('\\lim f(x)'));
         // this.add(new Tex('\\text{foo bar biz baz qux quoo keep going}').moveTo([-3, 0]));
@@ -272,6 +272,12 @@ class TestScene extends Scene {
 
         // this.add(new Text({ text: 'f(x) = x^2 - 2x + 3', size }).moveTo([-3, 3]))
         // this.add(new Text({ text: 'f(x) = x^2 - 2x + 3', size, tex: true }).moveTo([3, 3]))
+
+
+        const s = new Square();
+        const c = new Circle();
+
+        this.add(new Group(s, c).arrange(RIGHT()));
     }
 }
 

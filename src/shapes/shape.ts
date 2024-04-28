@@ -214,7 +214,7 @@ interface Shape {
      * s2.nextTo(s1, RIGHT());
      * ```
      */
-    nextTo(other: Locatable, direction: Point): this;
+    nextTo(other: Locatable, direction: Point, standoff?: number): this;
 
     /**
      * Gets the current angle of the shape (defaults to 0). The angle gets updated when the shape is rotated
