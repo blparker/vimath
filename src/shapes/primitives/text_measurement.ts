@@ -1,22 +1,7 @@
 import { Canvas } from '@/canvas';
 import { Text } from '@/shapes/primitives/text';
 import { Translation } from '@/translation';
-import { mathjax } from 'mathjax-full/js/mathjax';
-import { TeX } from 'mathjax-full/js/input/tex';
-import { SVG } from 'mathjax-full/js/output/svg';
-import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor';
-import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
-import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 import { TexGenerator } from '@/tex_generator';
-
-
-const adaptor = liteAdaptor()
-RegisterHTMLHandler(adaptor);
-
-const mjDocument = mathjax.document('', {
-    InputJax: new TeX(),
-    OutputJax: new SVG({ fontCache: 'local' })
-});
 
 
 class TextMeasurement {
@@ -112,30 +97,6 @@ class TextMeasurement {
     }
 
     private texTextDimensions(text: string, size: number, scale: number = 1): { width: number; height: number; } {
-        // const node = mjDocument.convert(text, { display: false });
-        // const svgNode = node.children[0] as LiteElement;
-        // const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
-        // const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
-
-        // const scaleFactor = 0.415;
-        // const adjustedWidth = width * size * scaleFactor;
-        // const adjustedHeight = height * size * scaleFactor;
-
-        // return { width: this.t.translateAbsWidth(adjustedWidth), height: this.t.translateAbsHeight(adjustedHeight) };
-        // const node = mjDocument.convert(text);
-        // const svgNode = node.children[0] as LiteElement;
-        // const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
-        // const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
-
-        // const exToPixels = 1.25;
-        // const scaleFactor = size / (height * exToPixels);
-
-        // const adjustedWidth = width * scale * scaleFactor
-        // const adjustedHeight = height * scale * scaleFactor
-        // const f = 0.075;
-        // const adjustedWidth = width * f * size * exToPixels;
-        // const adjustedHeight = height * f * size * exToPixels;
-
         const { width, height } = TexGenerator.getImage({ text, size, scale });
 
         return {

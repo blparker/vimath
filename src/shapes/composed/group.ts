@@ -1,7 +1,6 @@
 import { Shape } from '@/shapes/shape'
 import { ComposedShape } from './composed_shape';
 import { ORIGIN, Point, RIGHT } from '@/base';
-import math from '@/math';
 import { config } from '@/config';
 
 
