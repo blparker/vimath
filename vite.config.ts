@@ -28,35 +28,6 @@ export default defineConfig({
         },
     },
     test: {
-<<<<<<< HEAD
-        // resolve: {
-        //     alias: {
-        //         '@': resolve(__dirname, './src'),
-        //     },
-        // },
-        environment: 'jsdom',
-        setupFiles: ['./test/mock_offscreen_canvas.ts', './vitest.setup.ts'],
-        deps: {
-            inline: ['vitest-canvas-mock'],
-        },
-        // For this config, check https://github.com/vitest-dev/vitest/issues/740
-        threads: false,
-        environmentOptions: {
-            jsdom: {
-                resources: 'usable',
-            },
-        },
-        exclude: [
-            '**/node_modules/**',
-            '**/dist/**',
-            '**/utils/**',
-            '**/*.ignore.ts',
-            '**/*.spec.js',
-        ],
-    },
-    plugins: [dts({ rollupTypes: true })],
-    // plugins: [dts()],
-=======
         environment: 'jsdom',
         resolve: {
             alias: {
@@ -69,5 +40,4 @@ export default defineConfig({
         rollupTypes: true,
         // insertTypesEntry: true
     })],
->>>>>>> refactor/master
 });

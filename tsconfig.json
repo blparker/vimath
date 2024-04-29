@@ -3,16 +3,6 @@
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
-<<<<<<< HEAD
-    "baseUrl": ".",
-    "lib": ["ES2022", "ESNext.Array", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": false,
-=======
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
@@ -22,32 +12,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
->>>>>>> refactor/master
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-<<<<<<< HEAD
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["jest", "offscreencanvas", "jsdom", "jest-canvas-mock"],
-
-    // "allowJs": true,
-    "outDir": "./dist",
-    "declaration": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    // "esModuleInterop": true,
-    // "forceConsistentCasingInFileNames": true,
-
-    "paths": {
-      "@/*": ["./src/*"],
-      // "*": ["./node_modules/*"]
-    },
-  },
-  "exclude": ["test", "test-cases", "esbuild.config.js", "jest.config.js", "jest.setup.ts"],
-  "include": ["src/**/*"],
-=======
     // TODO: Enable this rule
     // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -63,5 +31,4 @@
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
->>>>>>> refactor/master
 }

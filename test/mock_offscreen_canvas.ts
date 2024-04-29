@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-=======
 import { vi } from 'vitest';
 
 
->>>>>>> refactor/master
 export class OffscreenCanvas {
     constructor(public width: number, public height: number) {}
 
@@ -36,20 +33,12 @@ export class OffscreenCanvas {
             "{": 0.4833333194255829, "|": 0.20000000298023224, "}": 0.4833333194255829, "~": 0.5333333611488342
         };
 
-<<<<<<< HEAD
-        const mockContext = jest.mocked(CanvasRenderingContext2D);
-        // @ts-ignore
-        mockContext.clearRect = jest.fn((x, y, w, h) => {});
-        // @ts-ignore
-        mockContext.measureText = jest.fn((text) => {
-=======
         // const mockContext = jest.mocked(CanvasRenderingContext2D);
         const mockContext = {} as CanvasRenderingContext2D;
         // @ts-ignore
         mockContext.clearRect = vi.fn((x, y, w, h) => {});
         // @ts-ignore
         mockContext.measureText = vi.fn((text) => {
->>>>>>> refactor/master
             let fontSize = 0;
             // @ts-ignore
             let matched;
@@ -87,8 +76,4 @@ export class OffscreenCanvas {
 }
 
 // @ts-ignore
-<<<<<<< HEAD
 globalThis.OffscreenCanvas = OffscreenCanvas;
-=======
-globalThis.OffscreenCanvas = OffscreenCanvas;
->>>>>>> refactor/master

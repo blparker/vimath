@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-export * from './primitives/index';
-export * from './arrow';
-export * from './axes';
-export * from './brace';
-export * from './composable_shape';
-export * from './dot';
-export * from './grid_lines';
-export * from './group';
-export * from './line_through_points';
-export * from './number_line';
-export * from './shape';
-export * from './tangent_line';
-=======
 export * from './shape';
 export * from './composed/arrow';
 export * from './composed/axes';
@@ -32,4 +18,3 @@ export * from './primitives/bezier_curve';
 export * from './primitives/line';
 export * from './primitives/point_shape';
 export * from './primitives/text';
->>>>>>> refactor/master
