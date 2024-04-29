@@ -1,14 +1,39 @@
 {
   "name": "vimath",
+<<<<<<< HEAD
   "version": "0.0.34",
   "description": "Vimath is a library for creating interactive math content in the browser.",
   "author": "Bryan Parker",
   "license": "ISC",
   "type": "module",
+=======
+  "description": "${npm_package_name} is a library for creating interactive math content in the browser.",
+  "private": true,
+  "version": "0.0.0",
+  "author": "blparker",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest --config vite.config.ts",
+    "docs": "typedoc --out docs --excludePrivate --excludeProtected --excludeInternal --readme README.md src"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.1",
+    "vitest": "^1.4.0"
+  },
+>>>>>>> refactor/master
   "outDir": "./dist",
   "main": "dist/vimath.umd.js",
   "module": "dist/vimath.es.js",
   "browser": "dist/vimath.iife.js",
+<<<<<<< HEAD
   "files": [
     "dist/"
   ],
@@ -55,6 +80,13 @@
   "dependencies": {
     "@types/offscreencanvas": "^2019.7.1",
     "decimal.js": "^10.4.3",
+=======
+  "types": "dist/index.d.ts",
+  "files": [
+    "${npm_package_outDir}/**/*"
+  ],
+  "dependencies": {
+>>>>>>> refactor/master
     "mathjax-full": "^3.2.2"
   }
 }

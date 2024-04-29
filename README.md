@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 ![vimath logo](assets/logo.png)
 
+=======
+>>>>>>> refactor/master
 # Vimath (VIsual MATH)
 
 Vimath is a browser library for creating animatable and interactive visualizations. While it's general and flexible enough for any visualizations
@@ -31,12 +34,19 @@ class TestScene extends Scene {
             .scale(0.5);   // Scale down by 50%
 
         this.add(s, t);
+<<<<<<< HEAD
 
         return this;
     }
 }
 
 new TestScene().compose().render();
+=======
+    }
+}
+
+new TestScene().render();
+>>>>>>> refactor/master
 ```
 
 #### Output

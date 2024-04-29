@@ -28,6 +28,7 @@ export default defineConfig({
         },
     },
     test: {
+<<<<<<< HEAD
         // resolve: {
         //     alias: {
         //         '@': resolve(__dirname, './src'),
@@ -55,4 +56,18 @@ export default defineConfig({
     },
     plugins: [dts({ rollupTypes: true })],
     // plugins: [dts()],
+=======
+        environment: 'jsdom',
+        resolve: {
+            alias: {
+                '@': resolve(__dirname, './src'),
+            },
+        },
+        setupFiles: ['./test/mock_offscreen_canvas.ts'],
+    },
+    plugins: [dts({
+        rollupTypes: true,
+        // insertTypesEntry: true
+    })],
+>>>>>>> refactor/master
 });
