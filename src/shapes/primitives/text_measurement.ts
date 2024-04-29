@@ -36,7 +36,6 @@ class TextMeasurement {
 
             const tm = ctx.measureText(text);
 
-            console.log(`text: "${text}", height: ${tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent}`)
             return {
                 width: this.t.translateAbsWidth(tm.width),
                 height: this.t.translateAbsHeight(tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent)

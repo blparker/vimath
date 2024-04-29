@@ -61,7 +61,6 @@ class TexGenerator {
 
         adaptor.setAttribute(svgNode, 'width', adjustedWidth + 'px');
         adaptor.setAttribute(svgNode, 'height', adjustedHeight + 'px');
-        console.log(`text: "${text}", width: ${adjustedWidth}, height: ${adjustedHeight}`)
 
         const image64 = 'data:image/svg+xml;base64,' + btoa(adaptor.outerHTML(svgNode));
         return { width: adjustedWidth, height: adjustedHeight, imageData: image64 };
