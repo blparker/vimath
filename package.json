@@ -11,7 +11,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest --config vite.config.ts",
-    "docs": "typedoc --out docs --excludePrivate --excludeProtected --excludeInternal --readme README.md src"
+    "docs": "typedoc --out docs --excludePrivate --excludeProtected --excludeInternal --readme README.md src",
+    "publish": "vite build && cp package.json dist && npm version patch && npm publish --access public && git push --follow-tags"
   },
   "devDependencies": {
     "jsdom": "^24.0.0",
