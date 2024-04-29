@@ -1,8 +1,8 @@
 {
   "name": "vimath",
   "description": "${npm_package_name} is a library for creating interactive math content in the browser.",
-  "private": true,
-  "version": "0.0.1",
+  "private": false,
+  "version": "0.0.0",
   "author": "blparker",
   "license": "ISC",
   "type": "module",
