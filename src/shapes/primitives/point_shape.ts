@@ -46,13 +46,38 @@ class PointShape implements Shape, SelectableShape {
     }
 
     center(): Point {
-        return this.centerWithSampling();
+        // return this.centerWithSampling();
+        // return this.meanCenter();
+        return this.geometricCenter();
     }
 
-    private centerWithSampling(): Point {
-        let xSum = 0, ySum = 0;
-        let sampleCount = 0;
-        const samplesPerCurve = 100;
+    private geometricCenter(): Point {
+        let totalMinX = Infinity, totalMaxX = -Infinity, totalMinY = Infinity, totalMaxY = -Infinity;
+
+        function linerizeBezier(segment: BezierSegment, divisions: number): Point[] {
+            const [start, cp1, cp2, end] = segment;
+            const points = [];
+
+            for (let i = 0; i <= divisions; i++) {
+                const t = i / divisions;
+                points.push(math.evalBezier(start!, cp1, cp2, end, t));
+            }
+
+            return points;
+        }
+
+        function boundingBox(points: Point[]): { minX: number, maxX: number, minY: number, maxY: number } {
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+            for (const [x, y] of points) {
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+
+            return { minX, maxX, minY, maxY };
+        }
 
         for (let i = 0; i < this._points.length; i++) {
             let [start, cp1, cp2, end] = this._points[i];
@@ -67,39 +92,70 @@ class PointShape implements Shape, SelectableShape {
                 start = this._points[i - 1][3];
             }
 
-            for (let j = 0; j <= samplesPerCurve; j++) {
-                const t = j / samplesPerCurve;
-                const [x, y] = math.evalBezier(start, cp1, cp2, end, t);
+            const points = linerizeBezier([start, cp1, cp2, end], 100);
+            const box = boundingBox(points);
 
-                xSum += x;
-                ySum += y;
-            }
-
-            sampleCount += samplesPerCurve + 1;
+            if (box.minX < totalMinX) totalMinX = box.minX;
+            if (box.maxX > totalMaxX) totalMaxX = box.maxX;
+            if (box.minY < totalMinY) totalMinY = box.minY;
+            if (box.maxY > totalMaxY) totalMaxY = box.maxY;
         }
 
-        return [xSum / sampleCount, ySum / sampleCount];
+        return [(totalMinX + totalMaxX) / 2, (totalMinY + totalMaxY) / 2];
     }
 
-    /*private meanCenter(): Point {
-        let xMean = 0;
-        let yMean = 0;
+    // private centerWithSampling(): Point {
+    //     let xSum = 0, ySum = 0;
+    //     let sampleCount = 0;
+    //     const samplesPerCurve = 100;
 
-        for (let i = 0, count = 0; i < this._points.length; i++) {
-            const pt = this._points[i];
+    //     for (let i = 0; i < this._points.length; i++) {
+    //         let [start, cp1, cp2, end] = this._points[i];
 
-            for (let j = 0; j < pt.length; j++) {
-                if (pt[j] !== null) {
-                    xMean += (pt[j]![0] - xMean) / (count + 1);
-                    yMean += (pt[j]![1] - yMean) / (count + 1);
+    //         // If the start point is null, make sure this isn't the first point
+    //         if (start === null) {
+    //             if (i === 0) {
+    //                 throw new Error('Invalid bezier curve. Expect the initial point to define a starting point');
+    //             }
 
-                    count++;
-                }
-            }
-        }
+    //             // Set the start point of the current curve to the end point of the previous curve
+    //             start = this._points[i - 1][3];
+    //         }
 
-        return [xMean, yMean];
-    }*/
+    //         for (let j = 0; j <= samplesPerCurve; j++) {
+    //             const t = j / samplesPerCurve;
+    //             const [x, y] = math.evalBezier(start, cp1, cp2, end, t);
+
+    //             xSum += x;
+    //             ySum += y;
+    //         }
+
+    //         sampleCount += samplesPerCurve + 1;
+    //     }
+
+    //     console.log(xSum / sampleCount, ySum / sampleCount);
+    //     return [xSum / sampleCount, ySum / sampleCount];
+    // }
+
+    // private meanCenter(): Point {
+    //     let xMean = 0;
+    //     let yMean = 0;
+
+    //     for (let i = 0, count = 0; i < this._points.length; i++) {
+    //         const pt = this._points[i];
+
+    //         for (let j = 0; j < pt.length; j++) {
+    //             if (pt[j] !== null) {
+    //                 xMean += (pt[j]![0] - xMean) / (count + 1);
+    //                 yMean += (pt[j]![1] - yMean) / (count + 1);
+
+    //                 count++;
+    //             }
+    //         }
+    //     }
+
+    //     return [xMean, yMean];
+    // }
 
     top(): Point {
         const { minX, maxX, maxY } = this.boundingBox();

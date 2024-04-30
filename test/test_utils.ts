@@ -2,6 +2,7 @@ import { Line } from '../src/shapes/primitives/line';
 import { Canvas } from '../src/canvas';
 import { BezierCurve, Shape, PointShape } from '../src/shapes';
 import { Arc } from '../src/shapes/primitives/arc';
+import { expect } from 'vitest';
 
 
 export function getTestCanvas() {
@@ -27,4 +28,17 @@ export function getTestCanvas() {
             return 600;
         }
     };
+}
+
+
+export function expectArraysToBeClose(arr1: number[] | number[][], arr2: number[] | number[][], precision = 2) {
+    expect(arr1.length).toEqual(arr2.length);
+
+    arr1.forEach((value: number | number[], index: number) => {
+        if (Array.isArray(value) && Array.isArray(arr2[index])) {
+            expectArraysToBeClose(value, arr2[index] as number[], precision);
+        } else {
+            expect(value).toBeCloseTo(arr2[index] as number, precision);
+        }
+    });
 }

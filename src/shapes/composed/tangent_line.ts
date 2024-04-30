@@ -24,24 +24,30 @@ class TangentLine extends ComposedShape {
     }
 
     compose(): this {
+        // Before transforming the points, we need to calculate the slope
         const y1 = this._plot.valueAtX(this._x);
         const y2 = this._plot.valueAtX(this._x + this._delta);
 
-        if (y1 !== null && y2 !== null) {
-            const m = (y2 - y1) / this._delta;
-
-            const from = [
-                this._x + (this._length / (2 * Math.sqrt(1 + m ** 2))),
-                m * (this._length / (2 * Math.sqrt(1 + m ** 2))) + y1
-            ] as Point;
-
-            const to = [
-                this._x - (this._length / (2 * Math.sqrt(1 + m ** 2))),
-                y1 - m * (this._length / (2 * Math.sqrt(1 + m ** 2)))
-            ] as Point;
-
-            this.add(new Line({ from, to, ...this.styles() }));
+        if (y1 === null || y2 === null) {
+            // Find other points?
+            return this;
         }
+
+        const m = (y2 - y1) / this._delta;
+
+        const [tx1, ty1] = this._plot.pointAtX(this._x)!;
+
+        const from = [
+            tx1 - (this._length / (2 * Math.sqrt(1 + m ** 2))),
+            ty1 - m * (this._length / (2 * Math.sqrt(1 + m ** 2)))
+        ] as Point;
+
+        const to = [
+            tx1 + (this._length / (2 * Math.sqrt(1 + m ** 2))),
+            m * (this._length / (2 * Math.sqrt(1 + m ** 2))) + ty1
+        ] as Point;
+
+        this.add(new Line({ from, to, ...this.styles() }));
 
         return this;
     }

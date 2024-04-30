@@ -1,6 +1,6 @@
 import { ORIGIN, Prettify } from '@/base';
 import { Arc } from '../primitives/arc';
-import { Locatable, ShapeStyles } from '@/shapes/shape';
+import { Locatable, ShapeStyles, isLocatable } from '@/shapes/shape';
 
 
 type CircleArgs = { center?: Locatable; radius?: number; selectable?: boolean; };
@@ -13,13 +13,19 @@ class Circle extends Arc {
     constructor(radius: number);
     constructor(args: Prettify<CircleArgs & ShapeStyles>);
     constructor(args?: Locatable | number | Prettify<CircleArgs & ShapeStyles>) {
-        if (args === undefined) {
-            super(defaultCircleArgs);
-        } else if (typeof args === 'number') {
-            super(Object.assign({}, defaultCircleArgs, { radius: args }));
-        } else {
-            super(Object.assign({}, defaultCircleArgs, args));
+        let circleArgs = structuredClone(defaultCircleArgs);
+
+        if (args !== undefined) {
+            if (isLocatable(args)) {
+                circleArgs.center = args;
+            } else if (typeof args === 'number') {
+                circleArgs.radius = args;
+            } else {
+                circleArgs = { ...circleArgs, ...args };
+            }
         }
+
+        super(circleArgs);
     }
 }
 
