@@ -104,6 +104,8 @@ class PointShape implements Shape, SelectableShape {
         return [(totalMinX + totalMaxX) / 2, (totalMinY + totalMaxY) / 2];
     }
 
+    /* Experimenting with different techniques for determining center */
+
     // private centerWithSampling(): Point {
     //     let xSum = 0, ySum = 0;
     //     let sampleCount = 0;
