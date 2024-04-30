@@ -1,4 +1,4 @@
-import { BezierSegment, Point } from '@/base';
+import { Point } from '@/base';
 import { ComposedShape } from './composed_shape';
 import { PointShape } from '@/shapes/primitives/point_shape';
 
