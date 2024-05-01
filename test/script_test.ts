@@ -24,7 +24,7 @@ import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, U
 import math from '../src/math';
 
 
-const cvs = document.getElementById('cvs') as HTMLCanvasElement;
+// const cvs = document.getElementById('cvs') as HTMLCanvasElement;
 
 class TestAnimation extends BaseAnimation {
     update(pctComplete: number, starting: boolean): void {
@@ -373,4 +373,5 @@ class TestScene extends Scene {
     }
 }
 
-new TestScene({ canvas: cvs }).render();
+// new TestScene({ canvas: cvs }).render();
+new TestScene().render();

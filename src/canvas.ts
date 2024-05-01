@@ -264,9 +264,20 @@ class HtmlCanvas implements Canvas {
 
     private static getCanvas(canvas?: HTMLCanvasElement | string): HTMLCanvasElement {
         if (canvas === undefined) {
+            const ratio = config.canvasHeight / config.canvasWidth;
+            const bodyWidth = document.body.clientWidth;
+            let [width, height] = [config.canvasWidth, config.canvasHeight];
+
+            if (bodyWidth < config.canvasWidth) {
+                width = bodyWidth;
+                height = bodyWidth * ratio;
+                config.canvasWidth = width;
+                config.canvasHeight = height;
+            }
+
             const canvas = document.createElement('canvas');
-            canvas.width = config.canvasWidth;
-            canvas.height = config.canvasHeight;
+            canvas.width = width;
+            canvas.height = height;
             document.body.appendChild(canvas);
 
             return canvas;
