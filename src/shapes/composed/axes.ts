@@ -215,9 +215,14 @@ class Axes extends ComposedShape {
         return new PointShape({ points });
     }
 
-    point(x: number, y: number): Point {
-        // const [oX, oY] = this.origin();
-        // return [x + oX, y + oY];
+    point(x: number, y: number): Point;
+    point(p: Point): Point;
+    point(xOrPt: number | Point, maybeY?: number): Point {
+        let [x, y] = Array.isArray(xOrPt) ? xOrPt : [xOrPt, maybeY];
+
+        if (y === undefined) {
+            throw new Error('Invalid arguments. Y value must be provided');
+        }
 
         return [
             // math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x),

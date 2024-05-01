@@ -308,6 +308,34 @@ class TestScene extends Scene {
         // this.add(new Dot(shape.center()));
         // console.log(shape.center());
 
+        // const axes = new Axes({
+        //     xLength: 8,
+        //     yLength: 6,
+        //     xRange: [0, 1],
+        //     xStep: 0.25,
+        //     yRange: [0, 35],
+        //     yStep: 5,
+        //     xLabel: 'time (h)',
+        //     yLabel: 'distance (miles)'
+        // });
+
+        // const p = axes.plot(x => 25 * x * x).changeLineColor(Colors.green());
+
+        // this.add(axes, p);
+
+        // const p1 = axes.point(0.25, 1.5625);
+        // const p2 = axes.point(0.5, 6.25);
+        // const p3 = axes.point(0.75, 14.0625);
+        // const p4 = axes.point(1, 25);
+
+        // this.add(
+        //     new TangentLine({ plot: p, x: 0.5, length: 4, color: Colors.pink() }),
+        //     new Dot({ center: p1, color: Colors.green() }),
+        //     new Dot({ center: p2, color: Colors.green() }),
+        //     new Dot({ center: p3, color: Colors.green() }),
+        //     new Dot({ center: p4, color: Colors.green() }),
+        // );
+
         const axes = new Axes({
             xLength: 8,
             yLength: 6,
@@ -318,22 +346,29 @@ class TestScene extends Scene {
             xLabel: 'time (h)',
             yLabel: 'distance (miles)'
         });
-
+        
         const p = axes.plot(x => 25 * x * x).changeLineColor(Colors.green());
-
-        this.add(axes, p);
-
+        
         const p1 = axes.point(0.25, 1.5625);
         const p2 = axes.point(0.5, 6.25);
         const p3 = axes.point(0.75, 14.0625);
         const p4 = axes.point(1, 25);
-
+        
+        const pText = new Text({ text: 'P' }).nextTo(p2, UP(), 0.3);
+        const qText = new Text({ text: 'Q' }).nextTo(p3, UP(), 0.3);
+        
         this.add(
+            axes, p,
             new TangentLine({ plot: p, x: 0.5, length: 4, color: Colors.pink() }),
+            new Line({ from: p2, to: p3, length: 5, lineColor: Colors.blue() }),
+        
             new Dot({ center: p1, color: Colors.green() }),
-            new Dot({ center: p2, color: Colors.green() }),
+            new Dot({ center: p2, color: Colors.pink() }),
             new Dot({ center: p3, color: Colors.green() }),
             new Dot({ center: p4, color: Colors.green() }),
+        
+            new Dot({ center: p3, color: Colors.blue() }),
+            pText, qText
         );
     }
 }
