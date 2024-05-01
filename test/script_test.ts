@@ -336,7 +336,7 @@ class TestScene extends Scene {
         //     new Dot({ center: p4, color: Colors.green() }),
         // );
 
-        this.add(new Dot({ center: [0, 0], color: Colors.blue() }));
+        this.add(new Dot({ center: [0, 0], color: Colors.white(), lineColor: Colors.blue() }));
         this.add(new Dot().moveTo([0, 1]));
     }
 }
