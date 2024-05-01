@@ -17,7 +17,6 @@ class Dot extends Circle {
         let radius = DEFAULT_SIZE;
         let isSelectable = false;
         let styles: ShapeStyles = Object.assign({}, defaultShapeStyles, { color: defaultShapeStyles.lineColor ?? Colors.black() });
-        console.log("### Styles = ", styles);
 
         if (args === undefined) {
             // do nothing
