@@ -44,6 +44,14 @@ class Line extends PointShape {
         return this._lineCap;
     }
 
+    from(): Point {
+        return this.points()[0][0]!;
+    }
+
+    to(): Point {
+        return this.points()[0][3]!;
+    }
+
     private static fromPoints(from: Locatable, to: Locatable, length?: number): Point[] {
         if (length === undefined) {
             return [locatableToPoint(from), locatableToPoint(to)];
