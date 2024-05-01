@@ -2,7 +2,7 @@
   "name": "vimath",
   "description": "${npm_package_name} is a library for creating interactive math content in the browser.",
   "private": false,
-  "version": "0.0.59",
+  "version": "0.0.58",
   "author": "blparker",
   "license": "ISC",
   "type": "module",
@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "test": "vitest --config vite.config.ts",
     "docs": "typedoc --out docs --excludePrivate --excludeProtected --excludeInternal --readme README.md src",
-    "prod:build": "vite build && cp package.json dist && npm version patch && npm publish --access public && git push --follow-tags"
+    "build:prod": "vite build && cp package.json dist && npm version patch && npm publish --access public && git push --follow-tags"
   },
   "devDependencies": {
     "jsdom": "^24.0.0",
