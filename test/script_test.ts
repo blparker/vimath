@@ -339,42 +339,55 @@ class TestScene extends Scene {
         // const l = this.add(new Line([-1, 0], [1, 0]));
         // const l = this.add(new Line());
 
-        const axesArgs = {
-            xLength: 4,
-            yLength: 4,
-            xRange: [-1, 2],
-            yRange: [-1, 2],
-            showLabels: false,
-            showTicks: false,
-        };
+        // const axesArgs = {
+        //     xLength: 4,
+        //     yLength: 4,
+        //     xRange: [-1, 2],
+        //     yRange: [-1, 2],
+        //     showLabels: false,
+        //     showTicks: false,
+        // };
 
-        const a1 = new Axes(axesArgs);
-        const a2 = new Axes(axesArgs);
-        const a3 = new Axes(axesArgs);
+        // const a1 = new Axes(axesArgs);
+        // const a2 = new Axes(axesArgs);
+        // const a3 = new Axes(axesArgs);
 
-        this.add(new Group(a1, a2, a3).arrange(RIGHT(), 0.7));
+        // this.add(new Group(a1, a2, a3).arrange(RIGHT(), 0.7));
 
-        this.add(a1.plot(x => x));
-        this.add(new Dot(a1.point(1, 1)).changeColor(Colors.white()));
+        // this.add(a1.plot(x => x));
+        // this.add(new Dot(a1.point(1, 1)).changeColor(Colors.white()));
 
-        this.add(a2.plot(x => x <= 1 ? x : null));
-        this.add(a2.plot(x => x > 1 ? 0.5 : null));
-        this.add(new Dot(a2.point(1, 1)).changeColor(Colors.white()));
-        this.add(new Dot(a2.point(1, 0.5)));
+        // this.add(a2.plot(x => x <= 1 ? x : null));
+        // this.add(a2.plot(x => x > 1 ? 0.5 : null));
+        // this.add(new Dot(a2.point(1, 1)).changeColor(Colors.white()));
+        // this.add(new Dot(a2.point(1, 0.5)));
 
-        this.add(a3.plot(x => 1 / Math.pow(10 * (x - 0.5), 2)));
-        this.add(new Line({
-            from: a3.point(0.5, -1),
-            to: a3.point(0.5, 2),
-            lineStyle: 'dashed',
-            lineColor: Colors.gray()
-        }));
+        // this.add(a3.plot(x => 1 / Math.pow(10 * (x - 0.5), 2)));
+        // this.add(new Line({
+        //     from: a3.point(0.5, -1),
+        //     to: a3.point(0.5, 2),
+        //     lineStyle: 'dashed',
+        //     lineColor: Colors.gray()
+        // }));
 
         // const nl = this.add(new NumberLine({ range: [-3, 3], length: 4, rotation: Math.PI / 2 }));
         // const nl = this.add(new NumberLine({ range: [-3, 3], length: 4 }));
         // nl.shift(RIGHT(3), UP(2));
 
         // this.add(new Dot(nl.pointOnLine(-1)));
+        const a = this.add(new Axes({
+            xRange: [0, 14],
+            yRange: [0, 18],
+            xStep: 2,
+            yStep: 2,
+            xLength: 10,
+            yLength: 7,
+        }));
+
+        const p = this.add(a.plot(x => x <= 12 ? 10 + 2 * x - 0.2 * x * x : null).changeLineColor(Colors.blue()));
+        this.add(new Dot(p.pointAtX(2)).changeColor(Colors.white()).changeLineColor(Colors.transparent()));
+        this.add(new Dot(a.point(10, 16)).changeColor(Colors.blue()).changeLineColor(Colors.blue()));
+        this.add(new Dot(p.pointAtX(10)).changeColor(Colors.white()).changeLineColor(Colors.transparent()));
     }
 }
 

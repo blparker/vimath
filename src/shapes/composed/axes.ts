@@ -58,6 +58,7 @@ class Axes extends ComposedShape {
     private _showTips?: boolean;
     private _xAxis: NumberLine;
     private _yAxis: NumberLine;
+    private _initialCenter: Point;
 
     constructor({
         xRange = [-7, 7],
@@ -102,6 +103,8 @@ class Axes extends ComposedShape {
         this._showTips = tips;
 
         [this._xAxis, this._yAxis] = this.initializeNumberlines();
+
+        this._initialCenter = this.center();
     }
 
     private initializeNumberlines(): [NumberLine, NumberLine] {
@@ -224,10 +227,12 @@ class Axes extends ComposedShape {
             throw new Error('Invalid arguments. Y value must be provided');
         }
 
+        const adjustedCenter = math.subVec(this.center(), this._initialCenter);
+
         return math.addVec([
             this._xAxis.pointOnLine(x)[0],
             this._yAxis.pointOnLine(y)[0]
-        ], this.center());
+        ], adjustedCenter);
     }
 
     private origin(): Point {
