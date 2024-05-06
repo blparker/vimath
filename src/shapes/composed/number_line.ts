@@ -169,18 +169,36 @@ class NumberLine extends ComposedShape {
     }
 
     pointOnLine(x: number): Point {
-        // const p = Math.abs(x - this._range[0]) / Math.abs(this._range[1] - this._range[0]);
-        // return [
-        //     math.lerp(-this._length / 2, this._length / 2, p),
-        //     0
-        // ];
-
         const lContraction = this._leftTip ? 0.5 : 0;
         const rContraction = this._rightTip ? 0.5 : 0;
         const hl = this._length / 2;
 
         const rNum = math.remap(this._range[0], this._range[1], -hl + lContraction, hl - rContraction, x);
+        // // console.log([rNum, 0], this._center, math.addVec([rNum, 0], this._center));
+
+        // const [cX, cY] = this._center;
+        // const [xT, yT] = [rNum, 0];
+
+        // const [xR, yR] = [
+        //     xT * Math.cos(this._rotation) - yT * Math.sin(this._rotation),
+        //     xT * Math.sin(this._rotation) + yT * Math.cos(this._rotation)
+        // ];
+
+        // return [xR + cX, yR + cY] as Point;
         return [rNum, 0];
+        // console.log(this._center);
+        // return math.addVec([rNum, 0], this._center);
+    }
+
+    shift(...shifts: Point[]): this {
+        super.shift(...shifts);
+
+        const totalShift = shifts.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
+        this._center = math.addVec(this._center, totalShift);
+        this._from = math.addVec(this._from, totalShift);
+        this._to = math.addVec(this._to, totalShift);
+
+        return this;
     }
 
     from(): Point {

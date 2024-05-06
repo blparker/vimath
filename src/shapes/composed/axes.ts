@@ -224,12 +224,10 @@ class Axes extends ComposedShape {
             throw new Error('Invalid arguments. Y value must be provided');
         }
 
-        return [
-            // math.remap(this._xRange[0], this._xRange[1], -this._xLength / 2, this._xLength / 2, x),
-            // math.remap(this._yRange[0], this._yRange[1], -this._yLength / 2, this._yLength / 2, y)
+        return math.addVec([
             this._xAxis.pointOnLine(x)[0],
             this._yAxis.pointOnLine(y)[0]
-        ];
+        ], this.center());
     }
 
     private origin(): Point {
