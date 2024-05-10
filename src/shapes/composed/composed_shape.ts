@@ -1,6 +1,6 @@
 import { Point, Prettify } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
+import { LineStyle, Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import math from '@/math';
 import utils from '@/utils';
 import { config } from '@/config';
@@ -206,6 +206,20 @@ class ComposedShape implements Shape {
         this._shapes.forEach(s => s.changeLineColor(color));
         this._updatedStyles.lineColor = color;
 
+        return this;
+    }
+
+    changeLineStyle(style: LineStyle): this {
+        this.styles().lineStyle = style;
+        this._shapes.forEach(s => s.changeLineStyle(style));
+        this._updatedStyles.lineStyle = style;
+        return this;
+    }
+
+    changeLineWidth(width: number): this {
+        this.styles().lineWidth = width;
+        this._shapes.forEach(s => s.changeLineWidth(width));
+        this._updatedStyles.lineWidth = width;
         return this;
     }
 

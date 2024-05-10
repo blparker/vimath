@@ -24,24 +24,30 @@ class TangentLine extends ComposedShape {
     }
 
     compose(): this {
+        const {from, to} = this.endpoints();
+        this.add(new Line({ from, to, ...this.styles() }));
+
+        return this;
+    }
+
+    from(): Point {
+        return this.endpoints().from;
+    }
+
+    to(): Point {
+        return this.endpoints().to;
+    }
+
+    private endpoints(): { from: Point; to: Point } {
         const [x1, y1] = this._plot.pointAtX(this._x)!;
         const [x2, y2] = this._plot.pointAtX(this._x + this._delta)!;
         const m = (y2 - y1) / (x2 - x1);
         const p = this._length / (2 * Math.sqrt(1 + m ** 2));
 
-        const from = [
-            x1 - p,
-            y1 - m * p
-        ] as Point;
-
-        const to = [
-            x1 + p,
-            m * p + y1
-        ] as Point;
-
-        this.add(new Line({ from, to, ...this.styles() }));
-
-        return this;
+        return {
+            from: [x1 - p, y1 - m * p] as Point,
+            to: [x1 + p, m * p + y1] as Point
+        };
     }
 }
 

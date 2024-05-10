@@ -1,6 +1,6 @@
 import { BezierSegment, DOWN, Point, Prettify, RIGHT } from '@/base';
 import { Colors, RGBA } from '@/colors';
-import { Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
+import { LineStyle, Locatable, SelectableShape, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import { Text } from '@/shapes/primitives/text';
 import utils from '@/utils';
 import math from '@/math';
@@ -330,6 +330,11 @@ class PointShape implements Shape, SelectableShape {
 
     changeLineColor(color: RGBA): this {
         this.styles().lineColor = color;
+        return this;
+    }
+
+    changeLineStyle(style: LineStyle): this {
+        this.styles().lineStyle = style;
         return this;
     }
 

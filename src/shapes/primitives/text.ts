@@ -1,6 +1,6 @@
 import { Point, Prettify, RIGHT } from '@/base';
 import { RGBA } from '@/colors';
-import { Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
+import { LineStyle, Locatable, Shape, ShapeStyles, defaultShapeStyles, isShape, locatableToPoint } from '@/shapes/shape';
 import { config } from '@/config';
 import { TextMeasurement } from '@/shapes/primitives/text_measurement';
 import utils from '@/utils';
@@ -235,6 +235,16 @@ class Text implements Shape {
 
     changeLineColor(color: RGBA): this {
         this.styles().lineColor = color;
+        return this;
+    }
+
+    changeLineStyle(style: LineStyle): this {
+        this.styles().lineStyle = style;
+        return this;
+    }
+
+    changeLineWidth(width: number): this {
+        this.styles().lineWidth = width;
         return this;
     }
 

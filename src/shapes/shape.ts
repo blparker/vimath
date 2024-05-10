@@ -3,11 +3,13 @@ import { Colors, RGBA } from '@/colors';
 import { config } from '@/config';
 
 
+type LineStyle = 'solid' | 'dashed' | 'dotted' | 'dashedsmall';
+
 type ShapeStyles = {
     color?: RGBA;
     lineColor?: RGBA;
     lineWidth?: number;
-    lineStyle?: 'solid' | 'dashed' | 'dotted' | 'dashedsmall';
+    lineStyle?: LineStyle;
     lineCap?: 'butt' | 'round' | 'square';
     adjustForLineWidth?: boolean;
 };
@@ -257,6 +259,20 @@ interface Shape {
     changeLineColor(color: RGBA): this;
 
     /**
+     * Changes the line style of the shape for shapes that are strokeable. The available line styles are `'solid'`, `'dashed'`, `'dotted'`, and `'dashedsmall'`
+     * @param style the new line style to change the shape to
+     * @returns this (used for chaining)
+     */
+    changeLineStyle(style: LineStyle): this;
+
+    /**
+     * Changes the width of the line of the shape for shapes that are strokeable
+     * @param width the new line width
+     * @returns this (used for chaining)
+     */
+    changeLineWidth(width: number): this;
+
+    /**
      * Creates a deep copy of the shape
      * @returns a deep copy of the shape
      */
@@ -301,4 +317,4 @@ function isShape(o: any): o is Shape {
 }
 
 
-export { type Shape, type ShapeStyles, type Locatable, type SelectableShape, defaultShapeStyles, isShape, isSelectableShape, isLocatable, locatableToPoint };
+export { type Shape, type ShapeStyles, type Locatable, type SelectableShape, type LineStyle, defaultShapeStyles, isShape, isSelectableShape, isLocatable, locatableToPoint };
