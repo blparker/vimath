@@ -364,6 +364,11 @@ class PointShape implements Shape, SelectableShape {
         });
     }
 
+    changePoints(points: (Point | BezierSegment)[]): this {
+        this._points = PointShape.pointsToSegments(points);
+        return this;
+    }
+
     // isPointOnEdge(point: Point): boolean {
     //     function dist(a: Point, b: Point) {
     //         const [x1, y1] = a;

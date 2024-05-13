@@ -10,6 +10,7 @@ class TangentLine extends ComposedShape {
     private _x: number;
     private _length: number;
     private _delta: number = 0.01;
+    private _tangentLine: Line;
 
     constructor({ plot, x, length, ...styles }: { plot: Plot; x: number; length?: number } & Prettify<ShapeStyles & LineStyles>) {
         if (!styles.lineColor && styles.color) {
@@ -21,11 +22,12 @@ class TangentLine extends ComposedShape {
         this._plot = plot;
         this._x = x;
         this._length = length || 3;
+
+        this._tangentLine = this.createTangentLine();
     }
 
     compose(): this {
-        const {from, to} = this.endpoints();
-        this.add(new Line({ from, to, ...this.styles() }));
+        this.add(this._tangentLine);
 
         return this;
     }
@@ -36,6 +38,20 @@ class TangentLine extends ComposedShape {
 
     to(): Point {
         return this.endpoints().to;
+    }
+
+    updateX(x: number): this {
+        this._x = x;
+        const {from, to} = this.endpoints();
+
+        this._tangentLine.changeEndpoints(from, to);
+
+        return this;
+    }
+
+    private createTangentLine(): Line {
+        const {from, to} = this.endpoints();
+        return new Line({ from, to, ...this.styles() });
     }
 
     private endpoints(): { from: Point; to: Point } {

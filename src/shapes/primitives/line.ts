@@ -78,6 +78,16 @@ class Line extends PointShape {
         return this.points()[0][3]!;
     }
 
+    changeEndpoints(from: Locatable, to: Locatable): this {
+        const currentFrom = this.from();
+        const currentTo = this.to();
+
+        const length = math.dist(currentFrom, currentTo);
+        this.changePoints(Line.fromPoints(from, to, length));
+
+        return this;
+    }
+
     private static fromPoints(from: Locatable, to: Locatable, length?: number): Point[] {
         if (length === undefined) {
             return [locatableToPoint(from), locatableToPoint(to)];
