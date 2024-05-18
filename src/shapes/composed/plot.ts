@@ -71,17 +71,20 @@ class Plot extends ComposedShape {
             if (y >= yLow && y <= yHigh) {
                 /* The point is within the Y-range, but the previous point was outside. In order to avoid leaving a gap between the top of the Y-range and the
                  * start of the plot, we interpolate a point between the last valid point and the current point. */
-                if (lastValidPoint === null) {
+                if (lastValidPoint === null && x > this._xRange[0]) {
                     // Last point was invalid
                     const lastX = x - stepSize;
                     const lastY = this._fn(lastX);
 
                     if (lastY !== null) {
+                        // console.log(lastX, lastY, x, y)
                         const tY = lastY > yHigh ? yHigh : yLow;
                         const slope = (y - lastY) / stepSize;
                         let b = lastY - (slope * lastX);
                         let interpolatedX = (tY - b) / slope;
-                        if (interpolatedX >= this._xRange[0] && interpolatedX <= this._xRange[1]) {
+                        if (interpolatedX >= this._xRange[0] && interpolatedX <= this._xRange[1] && tY >= yLow && tY <= yHigh) {
+                            console.log(lastX, lastY, x, y)
+                            // console.log(interpolatedX, tY)
                             segmentPoints.push([interpolatedX, tY] as Point);
                         }
                     }

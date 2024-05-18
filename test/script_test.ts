@@ -40,25 +40,40 @@ class TestScene extends Scene {
     compose() {
         this.add(new GridLines());
 
+        // const a = this.add(new Axes({
+        //     xRange: [-1, 5],
+        //     yRange: [-1, 4],
+        // }));
+
+        // const f = x => Math.sin(2 * (x + 2)) + 0.5 * (x + 1);
+        // const p = this.add(a.plot(x => f(x)).changeLineColor(Colors.red()));
+
+        // const tangent = this.add(new TangentLine({ plot: p, x: 1.5, length: 5 }));
+        // const dot = this.add(new Dot(p.pointAtX(1.5)));
+
+        // const fromX = 1.5;
+        // const toX = 2.5;
+
+        // this.add((pctComplete: number, starting: boolean) => {
+        //     const newX = math.lerp(fromX, toX, pctComplete);
+        //     dot.moveTo(p.pointAtX(newX));
+        //     tangent.updateX(newX);
+        // });
+
         const a = this.add(new Axes({
-            xRange: [-1, 5],
-            yRange: [-1, 4],
+            xRange: [-0.5, 2],
+            yRange: [-0.5, 3],
+            xStep: 0.5,
+            yStep: 0.5,
+            xLength: 10,
         }));
 
-        const f = x => Math.sin(2 * (x + 2)) + 0.5 * (x + 1);
-        const p = this.add(a.plot(x => f(x)).changeLineColor(Colors.red()));
+        const p1 = this.add(a.plot(x => 2 * x).changeLineColor(Colors.red()));
+        const p2 = this.add(a.plot(x => 3 * x * x).changeLineColor(Colors.blue()));
+        const p3 = this.add(a.plot(x => 2 * x + 3 * x * x).changeLineColor(Colors.green()));
 
-        const tangent = this.add(new TangentLine({ plot: p, x: 1.5, length: 5 }));
-        const dot = this.add(new Dot(p.pointAtX(1.5)));
-
-        const fromX = 1.5;
-        const toX = 2.5;
-
-        this.add((pctComplete: number, starting: boolean) => {
-            const newX = math.lerp(fromX, toX, pctComplete);
-            dot.moveTo(p.pointAtX(newX));
-            tangent.updateX(newX);
-        });
+        // const a = this.add(new Axes());
+        // this.add(a.plot(x => 1 / x));
     }
 }
 
