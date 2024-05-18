@@ -77,14 +77,11 @@ class Plot extends ComposedShape {
                     const lastY = this._fn(lastX);
 
                     if (lastY !== null) {
-                        // console.log(lastX, lastY, x, y)
                         const tY = lastY > yHigh ? yHigh : yLow;
                         const slope = (y - lastY) / stepSize;
                         let b = lastY - (slope * lastX);
                         let interpolatedX = (tY - b) / slope;
                         if (interpolatedX >= this._xRange[0] && interpolatedX <= this._xRange[1] && tY >= yLow && tY <= yHigh) {
-                            console.log(lastX, lastY, x, y)
-                            // console.log(interpolatedX, tY)
                             segmentPoints.push([interpolatedX, tY] as Point);
                         }
                     }
