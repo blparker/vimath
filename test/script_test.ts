@@ -20,7 +20,7 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group, TangentLine, PointShape, Point } from '../src';
+import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group, TangentLine, PointShape, Point, Updater, Easing, Brace } from '../src';
 import math from '../src/math';
 
 
@@ -60,20 +60,56 @@ class TestScene extends Scene {
         //     tangent.updateX(newX);
         // });
 
-        const a = this.add(new Axes({
-            xRange: [-0.5, 2],
-            yRange: [-0.5, 3],
-            xStep: 0.5,
-            yStep: 0.5,
-            xLength: 10,
-        }));
+        // const a = this.add(new Axes({
+        //     xRange: [-0.5, 1],
+        //     yRange: [-0.5, 3],
+        //     xStep: 0.25,
+        //     yStep: 0.5,
+        //     xLength: 10,
+        // }));
 
-        const p1 = this.add(a.plot(x => 2 * x).changeLineColor(Colors.red()));
-        const p2 = this.add(a.plot(x => 3 * x * x).changeLineColor(Colors.blue()));
-        const p3 = this.add(a.plot(x => 2 * x + 3 * x * x).changeLineColor(Colors.green()));
+        // const p1 = this.add(a.plot(x => 2 * x).changeLineColor(Colors.red()));
+        // const p2 = this.add(a.plot(x => 3 * x * x).changeLineColor(Colors.blue()));
+        // const p3 = this.add(a.plot(x => 2 * x + 3 * x * x).changeLineColor(Colors.green()));
+
+        // this.add((pctComplete: number, starting: boolean) => {
+        //     const x = math.lerp(0, 2, pctComplete);
+
+        //     p1.setDomain([-0.5, x]);
+        //     p2.setDomain([-0.5, x]);
+        // });
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const x = math.lerp(0, 2, pctComplete);
+        //     p1.setDomain([-0.5, x]);
+        //     p2.setDomain([-0.5, x]);
+        // }, 5000, x => Easing.easeStep(x, 20)));
+
+        // p1.setDomain([-0.5, 0]);
+        // p2.setDomain([-0.5, 0.5]);
 
         // const a = this.add(new Axes());
         // this.add(a.plot(x => 1 / x));
+
+        function rectangle(w: number, h: number): PointShape {
+            return new PointShape({
+                points: [
+                    [-w / 2, h / 2],
+                    [w / 2, h / 2],
+                    [w / 2, -h / 2],
+                    [-w / 2, -h / 2],
+                    [-w / 2, h / 2],
+                ],
+            })
+        }
+
+        const rect = rectangle(3, 3);
+
+        this.add(rect);
+        const b = this.add(new Brace(rect, LEFT()));
+        this.add(b.tex('x'))
+
+        const b2 = this.add(new Brace(rect, RIGHT()));
+        this.add(new Text({ text: 'Y', baseline: 'top' }).nextTo(b2, RIGHT()));
     }
 }
 

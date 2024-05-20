@@ -245,6 +245,12 @@ class ComposedShape implements Shape {
         return this;
     }
 
+    recompose(): this {
+        this._composed = false;
+        this._shapes = [];
+        return this;
+    }
+
     /**
      * Returns a list of the composed shapes built in the `compose` method and added in the `add` method
      * @returns the composed shapes

@@ -1,7 +1,7 @@
 import { BezierSegment, Point } from '@/base';
 import math from '@/math';
 import { PointShape } from '@/shapes/primitives/point_shape';
-import { Shape, isShape, ShapeStyles, defaultShapeStyles } from '@/shapes';
+import { Shape, isShape, ShapeStyles, defaultShapeStyles, Text, Tex } from '@/shapes';
 import { config } from '@/config';
 import utils from '@/utils';
 import { Colors } from '@/colors';
@@ -103,6 +103,14 @@ class Brace extends PointShape {
 
     direction(): Point {
         return this._direction;
+    }
+
+    text(text: string): Text {
+        return new Text(text).nextTo(this, this._direction, this._standoff);
+    }
+
+    tex(text: string): Text {
+        return new Tex(text).nextTo(this, this._direction, this._standoff);
     }
 
     private static calculateBezierPoints(from: Point, to: Point, direction: Point): BezierSegment[] {

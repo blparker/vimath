@@ -66,6 +66,13 @@ class Easing {
     static linear(x: number): number {
         return x;
     }
+
+    static easeStep(x: number, steps: number = 10): number {
+        if (steps <= 0) return 0;  // At least one step
+        const stepSize = 1 / steps;
+        return Math.floor(x / stepSize) * stepSize;
+    }
 }
+
 
 export { type EasingFunction, Easing };

@@ -13,6 +13,7 @@ class Plot extends ComposedShape {
     private _xRange: [number, number];
     private _yRange: [number, number];
     private _pointTransformer: (x: number, y: number) => Point;
+    private _domain: [number, number];
 
     constructor(fn: (x: number) => number | null, xRange: [number, number], yRange: [number, number], pointTransformer: (x: number, y: number) => Point) {
         super();
@@ -20,10 +21,13 @@ class Plot extends ComposedShape {
         this._xRange = xRange;
         this._yRange = yRange;
         this._pointTransformer = pointTransformer;
+        this._domain = xRange;
     }
 
     compose(): this {
-        const stepSize = (this._xRange[1] - this._xRange[0]) / MIN_NUM_STEPS;
+        const [xLow, xHigh] = this._domain;
+
+        const stepSize = (xHigh - xLow) / MIN_NUM_STEPS;
         const [yLow, yHigh] = this._yRange;
 
         let lastValidPoint: Point | null = null;
@@ -41,7 +45,7 @@ class Plot extends ComposedShape {
             let b = lastY - (slope * lastX);
             let interpolatedX = (targetY - b) / slope;
 
-            if (interpolatedX >= this._xRange[0] && interpolatedX <= this._xRange[1]) {
+            if (interpolatedX >= xLow && interpolatedX <= xHigh) {
                 return [interpolatedX, targetY];
             } else {
                 return null;
@@ -71,7 +75,7 @@ class Plot extends ComposedShape {
             if (y >= yLow && y <= yHigh) {
                 /* The point is within the Y-range, but the previous point was outside. In order to avoid leaving a gap between the top of the Y-range and the
                  * start of the plot, we interpolate a point between the last valid point and the current point. */
-                if (lastValidPoint === null && x > this._xRange[0]) {
+                if (lastValidPoint === null && x > xLow) {
                     // Last point was invalid
                     const lastX = x - stepSize;
                     const lastY = this._fn(lastX);
@@ -81,7 +85,7 @@ class Plot extends ComposedShape {
                         const slope = (y - lastY) / stepSize;
                         let b = lastY - (slope * lastX);
                         let interpolatedX = (tY - b) / slope;
-                        if (interpolatedX >= this._xRange[0] && interpolatedX <= this._xRange[1] && tY >= yLow && tY <= yHigh) {
+                        if (interpolatedX >= xLow && interpolatedX <= xHigh && tY >= yLow && tY <= yHigh) {
                             segmentPoints.push([interpolatedX, tY] as Point);
                         }
                     }
@@ -101,12 +105,12 @@ class Plot extends ComposedShape {
             }
         };
 
-        for (let x = this._xRange[0]; x <= this._xRange[1]; x += stepSize) {
+        for (let x = xLow; x <= xHigh; x += stepSize) {
             addPoint(x);
         }
 
         // If the step size doesn't land directly on the end of the range, add the last point in the range
-        addPoint(this._xRange[1]);
+        addPoint(xHigh);
         finalizeSegment();
 
         return this;
@@ -119,6 +123,25 @@ class Plot extends ComposedShape {
     pointAtX(x: number): Point | null {
         const y = this._fn(x);
         return y !== null ? this._pointTransformer(x, y) : null;
+    }
+
+    setDomain(domain: [number, number]): this {
+        if (domain[0] >= domain[1]) {
+            throw new Error('Invalid domain');
+        }
+
+        let [dX, dY] = domain;
+        if (dX >= this._xRange[0]) {
+            dX = this._xRange[0];
+        }
+
+        if (dY >= this._xRange[1]) {
+            dY = this._xRange[1];
+        }
+
+        this._domain = [dX, dY];
+        this.recompose();
+        return this;
     }
 
     // *points(): Generator<BezierSegment> {
