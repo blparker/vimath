@@ -268,6 +268,13 @@ class Text implements Shape {
         return this._size;
     }
 
+    changeFontSize(size: number): this {
+        this._size = size;
+        this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
+        this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
+        return this;
+    }
+
     fontFamily(): string {
         return this._font;
     }
