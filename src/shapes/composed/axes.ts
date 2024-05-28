@@ -58,7 +58,6 @@ class Axes extends ComposedShape {
     private _showTips?: boolean;
     private _xAxis: NumberLine;
     private _yAxis: NumberLine;
-    private _initialCenter: Point;
 
     constructor({
         xRange = [-7, 7],
