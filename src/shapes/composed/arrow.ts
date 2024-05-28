@@ -1,7 +1,8 @@
-import { ComposedShape } from '@/shapes/composed/composed_shape';
+import { ComposedShape } from './composed_shape';
 import { Locatable, ShapeStyles, locatableToPoint } from '@/shapes/shape';
+import { Text } from '@/shapes/primitives/text';
 import { Line } from '@/shapes/primitives/line';
-import { Point, Prettify } from '@/base';
+import { LEFT, Point, Prettify } from '@/base';
 import { Triangle } from '@/shapes/derived/triangle';
 import { config } from '@/config';
 import math from '@/math';
@@ -76,6 +77,10 @@ class Arrow extends ComposedShape {
         }
 
         return this;
+    }
+
+    text(text: string, direction: Point = LEFT(), standoff: number = config.standoff): Text {
+        return new Text({ text }).nextTo(this, direction, standoff);
     }
 }
 

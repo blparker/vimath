@@ -1,3 +1,6 @@
+import math from '@/math';
+
+
 type EasingFunction = (x: number) => number;
 
 
@@ -70,7 +73,7 @@ class Easing {
     static easeStep(x: number, steps: number = 10): number {
         if (steps <= 0) return 0;  // At least one step
         const stepSize = 1 / steps;
-        return Math.floor(x / stepSize) * stepSize;
+        return Math.floor(math.clamp(x, 0, 1) / stepSize) * stepSize;
     }
 }
 

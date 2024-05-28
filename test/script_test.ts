@@ -20,7 +20,7 @@
 // import { PointShape, Dot, Circle } from '../src/shapes'
 // import { GrowFromCenter } from '../src/animation/grow_from_center';
 // import math from '../src/math';
-import { Scene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group, TangentLine, PointShape, Point, Updater, Easing, Brace } from '../src';
+import { Scene, createScene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group, TangentLine, PointShape, Point, Updater, Easing, Brace, ORIGIN, Arc } from '../src';
 import math from '../src/math';
 
 
@@ -90,28 +90,149 @@ class TestScene extends Scene {
         // const a = this.add(new Axes());
         // this.add(a.plot(x => 1 / x));
 
-        function rectangle(w: number, h: number): PointShape {
-            return new PointShape({
-                points: [
-                    [-w / 2, h / 2],
-                    [w / 2, h / 2],
-                    [w / 2, -h / 2],
-                    [-w / 2, -h / 2],
-                    [-w / 2, h / 2],
-                ],
-            })
+        // function rectangle(w: number, h: number): PointShape {
+        //     return new PointShape({
+        //         points: [
+        //             [-w / 2, h / 2],
+        //             [w / 2, h / 2],
+        //             [w / 2, -h / 2],
+        //             [-w / 2, -h / 2],
+        //             [-w / 2, h / 2]
+        //         ],
+        //     })
+        // }
+
+        // const rect = rectangle(3, 3);
+
+        // this.add(rect);
+        // const b = this.add(new Brace(rect, LEFT()));
+        // this.add(b.tex('x'))
+
+        // const b2 = this.add(new Brace(rect, RIGHT()));
+        // this.add(new Text({ text: 'Y', baseline: 'top' }).nextTo(b2, RIGHT()));
+
+        // const t = new Tex('\\text{HELLO}');
+        // this.add(t);
+
+        // t.changeFontSize(12);
+
+
+        // const config = { length: 8, range: [0, 30], tickStep: 2, labelSize: 16, }
+        // const n1 = new NumberLine(config);
+        // const n2 = new NumberLine(config);
+        // const n3 = new NumberLine(config);
+
+        // this.add(new Group(n1, n2, n3).arrange(UP(), 2));
+
+        // this.add(new Tex('x').nextTo(n3, LEFT(), 0.5))
+        // this.add(new Tex('x^2 + 2').nextTo(n2, LEFT(), 0.5))
+        // this.add(new Tex('(x^2 + 2)^3').nextTo(n1, LEFT(), 0.5))
+
+        // const f1 = x => x;
+        // const f2 = x => x * x + 2;
+        // const f3 = x => Math.pow(f2(x), 3);
+
+        // const d3 = this.add(new Dot(n1.pointOnLine(8)));
+        // const d2 = this.add(new Dot(n2.pointOnLine(2)));
+        // const d1 = this.add(new Dot(n3.pointOnLine(0)));
+
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const x = math.lerp(0, 1, pctComplete);
+
+        //     console.log(pctComplete, x, f1(x), f2(x), f3(x));
+
+        //     d1.moveTo(n3.pointOnLine(f1(x)));
+        //     d2.moveTo(n2.pointOnLine(f2(x)));
+        //     d3.moveTo(n1.pointOnLine(f3(x)));
+        // }, 5000, x => Easing.easeStep(x, 10)));
+
+
+        // const n = this.add(new NumberLine({
+        //     showLabels: false,
+        //     length: 6,
+        //     range: [0, 6],
+        //     rotation: Math.PI / 2,
+        // }));
+
+        // this.add(new Dot(n.pointOnLine(0)));
+
+        // console.log(n.from());
+
+        // const c = this.add(new Circle(4).changeLineColor(Colors.gray()));
+        const c = this.add(new Circle({ radius: 4, lineWidth: 2, lineColor: Colors.gray() }));
+        const segment = this.add(new Arc({ radius: 4, startAngle: 0, endAngle: Math.PI / 4 }).changeLineColor(Colors.blue()));
+
+        this.add(new Tex('\\theta').nextTo(segment.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
+        // segment.changeAngle(Math.PI / 8);
+
+        const o = this.add(new Dot());
+        const p = this.add(new Dot(c.pointAtAngle(Math.PI / 4)));
+
+        function triangle(p: Point) {
+            return [o.center(), p, [p[0], 0], o.center()];
         }
 
-        const rect = rectangle(3, 3);
+        const t = this.add(new PointShape({
+            points: triangle(p.center()),
+        }));
 
-        this.add(rect);
-        const b = this.add(new Brace(rect, LEFT()));
-        this.add(b.tex('x'))
+        const hypText = this.add(t.texOnEdge('1', 0, UP(), 0.2));
+        const sineText = this.add(t.texOnEdge('\\sin \\theta', 1, LEFT(), 0.2));
+        const angleText = this.add(new Tex('\\theta').shift(RIGHT(0.5), UP(0.25)));
 
-        const b2 = this.add(new Brace(rect, RIGHT()));
-        this.add(new Text({ text: 'Y', baseline: 'top' }).nextTo(b2, RIGHT()));
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);
+        //     p.moveTo(c.pointAtAngle(x));
+        //     t.changePoints(triangle(p.center()));
+        //     hypText.nextTo(t.edgeMidpoint(0), UP(), 0.2);
+        //     sineText.nextTo(t.edgeMidpoint(1), RIGHT(), 0.2);
+        // }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, }));
+
+        // this.add(new Arrow({ from: DOWN(), to: ORIGIN }).shift(RIGHT(0.25), UP(0.25)));
+
+
+        // const n1 = new NumberLine({ length: 4, range: [0, 10], center: [2, 2], showLabels: false, showTicks: false, });
+        // this.add(n1);
+
+        // // n1.shift(UP(2));
+
+        // this.add(new Dot(n1.pointOnLine(0)));
+
+        // const n2 = new NumberLine({ length: 4, range: [0, 10], center: [-2, 1], rotation: Math.PI / 2, showLabels: false, showTicks: false, });
+        // // const n2 = new NumberLine({ length: 4, range: [0, 10], center: [-2, 1], });
+        // this.add(n2);
+        // this.add(new Dot(n2.pointOnLine(0)));
+
+        // const a = this.add(new Axes({
+        //     xRange: [-1, 5],
+        //     yRange: [-1, 4],
+        //     xLength: 8,
+        //     yLength: 6,
+        // }));
+
+        // this.add(a.plot(x => x));
+
+        // const a = this.add(new Axes({
+        //     xLength: 8,
+        //     yLength: 8,
+        //     yRange: [-1, 5],
+        // }));
+
+        // this.add(a.plot(x => x * x));
     }
 }
 
 // new TestScene({ canvas: cvs }).render();
 new TestScene().render();
+
+// createScene(() => {
+//     this.add(new GridLines());
+// });
+
+// createScene(scene => {
+//     scene.add(new GridLines());
+// });
+
+// createScene(function(scene) {
+//     scene.add(new GridLines());
+// });

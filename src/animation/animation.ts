@@ -82,10 +82,20 @@ abstract class BaseAnimation implements Animation {
 
         let pctComplete = math.invlerp(this._startTime, this._startTime + this._duration, time);
         this.update(this._easing(pctComplete), starting);
+        console.log("### ", this._easing(pctComplete));
 
         // Not done yet?
-        if (pctComplete < 1) {
+        // if (pctComplete < 1) {
+        //     return;
+        // }
+
+        if (pctComplete < 1 && time < this._startTime + this._duration) {
             return;
+        }
+
+        // Trigger one last update call with pctComplete set to 1
+        if (!this._complete) {
+            this.update(this._easing(1), false);
         }
 
         this._handleCompletion(time);

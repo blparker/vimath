@@ -312,7 +312,8 @@ function locatableToPoint(locatable: Locatable): Point {
  * @returns a boolean indicating whether the object is a shape (intended to be used as a type guard)
  */
 function isShape(o: any): o is Shape {
-    return 'shift' in o && typeof o.shift === 'function' && 
+    return typeof o === 'object' && o !== null &&
+           'shift' in o && typeof o.shift === 'function' && 
            'moveTo' in o && typeof o.moveTo === 'function';
 }
 

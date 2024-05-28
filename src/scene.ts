@@ -13,6 +13,7 @@ abstract class Scene {
     private _canvas: Canvas;
     private _scheduled: (Shape | Animation)[] = [];
     private _rafId: number = 0;
+    private _needsFinalRender: boolean = false;
 
     constructor({ canvas, userConfig }: { canvas?: string | HTMLCanvasElement | Canvas, userConfig?: Config } = { canvas: undefined, userConfig: config }) {
         if (canvas !== undefined && isCanvas(canvas)) {
@@ -148,6 +149,7 @@ abstract class Scene {
 
         this.compose();
         this._rafId = requestAnimationFrame(loop);
+        this._needsFinalRender = false;
     }
 
     private async nextTick(time: number) {
@@ -155,6 +157,7 @@ abstract class Scene {
 
         let activeAnimations = false;
         let selectableShapes = false;
+        let numAnimations = 0;
 
         for (let i = 0; i < this._scheduled.length; i++) {
             const el = this._scheduled[i];
@@ -165,6 +168,8 @@ abstract class Scene {
                     selectableShapes = true;
                 }
             } else if (isAnimation(el)) {
+                ++numAnimations;
+
                 if (!el.isRunning() && !el.isComplete()) {
                     this._scheduled.splice(i, 0, ...el.renderDependencies());
                 }
@@ -180,9 +185,18 @@ abstract class Scene {
             }
         }
 
+
+        if (!activeAnimations && numAnimations > 0) {
+            this._needsFinalRender = true;
+        }
+
         if (!activeAnimations && !selectableShapes) {
-            console.log('Cancelling requestAnimationFrame')
-            cancelAnimationFrame(this._rafId);
+            if (this._needsFinalRender) {
+                this._needsFinalRender = false;
+            } else {
+                console.log('Cancelling requestAnimationFrame')
+                cancelAnimationFrame(this._rafId);
+            }
         }
     }
 
@@ -204,12 +218,16 @@ abstract class Scene {
 }
 
 
-function createScene(fn: () => void): Scene {
-    return new class extends Scene {
+function createScene(fn: (scene: Scene) => void, { canvas, userConfig }: { canvas?: string | HTMLCanvasElement | Canvas, userConfig?: Config } = { canvas: undefined, userConfig: config }): Scene {
+    const scene = new class extends Scene {
         compose(): void {
-            fn.bind(this)();
+            fn(this);
         }
-    };
+    }({ canvas, userConfig });
+
+    scene.render();
+
+    return scene;
 }
 
 

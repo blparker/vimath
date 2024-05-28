@@ -32,28 +32,7 @@ class TexGenerator {
         const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
         const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
 
-        // const exToPixels = 1.25;
         const pixelsPerEx = 2;
-        // const scaleFactor = size / (height * exToPixels);
-        // console.log(`${text} has width ${width}, height ${height}, scale factor ${scaleFactor}`)
-        // console.log(`text: "${text}", height: ${height}`);
-        // console.log(svgNode);
-
-        // const f = 0.075;
-        // adaptor.setAttribute(svgNode, 'width', (width * f * size) + 'ex');
-        // adaptor.setAttribute(svgNode, 'height', (height * f * size) + 'ex');
-
-
-        // adaptor.setAttribute(svgNode, 'viewBox', `0 0 ${width} ${height}`);
-        // const adjustedWidth = (width * scale * scaleFactor);
-        // const adjustedHeight = (height * scale * scaleFactor);
-
-        // adaptor.setAttribute(svgNode, 'width', adjustedWidth + 'px');
-        // adaptor.setAttribute(svgNode, 'height', adjustedHeight + 'px');
-        // adaptor.setAttribute(svgNode, 'width', '50%');
-        // adaptor.setAttribute(svgNode, 'height', '50%');
-        // adaptor.removeAttribute(svgNode, 'viewBox');
-        // const scaleFactor = size / (height * pixelsPerEx)
         const scaleFactor = size / pixelsPerEx;
 
         const adjustedWidth = width * scaleFactor;
@@ -67,32 +46,11 @@ class TexGenerator {
     }
 
     static async generate({ text, size, color, scale = 1, angle = 0 }: { text: string; size: number; color?: RGBA; scale?: number; angle?: number;}): Promise<HTMLImageElement> {
-        // if (color) {
-        //     text = String.raw`\color{${rgbaToString(color)}}{${text}}`;
-        // }
+        const cacheKey = `${text}-${size}-${color}-${scale}-${angle}`;
+        if (this._cache.has(cacheKey)) {
+            return Promise.resolve(this._cache.get(cacheKey)!);
+        }
 
-        // const node = mjDocument.convert(text);
-        // const svgNode = node.children[0] as LiteElement;
-        // const width = parseFloat(adaptor.getAttribute(svgNode, 'width'));
-        // const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
-
-        // const exToPixels = 1.25;
-        // const scaleFactor = size / (height * exToPixels);
-        // console.log(`${text} has width ${width}, height ${height}, scale factor ${scaleFactor}`)
-
-        // // const f = 0.075;
-        // // adaptor.setAttribute(svgNode, 'width', (width * f * size) + 'ex');
-        // // adaptor.setAttribute(svgNode, 'height', (height * f * size) + 'ex');
-
-
-        // // adaptor.setAttribute(svgNode, 'viewBox', `0 0 ${width} ${height}`);
-        // adaptor.setAttribute(svgNode, 'width', (width * scale * scaleFactor) + 'px');
-        // adaptor.setAttribute(svgNode, 'height', (height * scale * scaleFactor) + 'px');
-        // // adaptor.setAttribute(svgNode, 'width', '50%');
-        // // adaptor.setAttribute(svgNode, 'height', '50%');
-        // // adaptor.removeAttribute(svgNode, 'viewBox');
-
-        // const image64 = 'data:image/svg+xml;base64,' + btoa(adaptor.outerHTML(svgNode));
         const { imageData } = this.getImage({ text, size, color, scale, angle });
 
         const image = new Image();
@@ -100,6 +58,7 @@ class TexGenerator {
         return new Promise((resolve, reject) => {
             image.onload = () => {
                 // this.imageCache.set(tex, image);
+                this._cache.set(cacheKey, image);
                 resolve(image)
             };
 

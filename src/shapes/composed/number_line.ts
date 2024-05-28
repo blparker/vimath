@@ -46,8 +46,6 @@ class NumberLine extends ComposedShape {
     private _lineStyles: LineStyles;
     private _leftTip: boolean;
     private _rightTip: boolean;
-    private _from: Point;
-    private _to: Point;
 
     constructor({
         length = 8,
@@ -70,7 +68,6 @@ class NumberLine extends ComposedShape {
         lineStyles = {},
         ...styleArgs
     }: NumberLineArgs & Prettify<ShapeStyles> = {}) {
-        // super(Object.assign({}, styleArgs, { adjustForLineWidth: true }));
         super({ ...styleArgs });
 
         this._length = length;
@@ -88,31 +85,20 @@ class NumberLine extends ComposedShape {
         this._rightTip = includeTips || rightTip;
         this._labelDirection = labelDirection;
         this._lineStyles = lineStyles;
-
-        const hl = this._length / 2;
-        const from = [this._center[0] - hl, this._center[1]] as Point;
-        const to = [this._center[0] + hl, this._center[1]] as Point;
-
-        this._from = from;
-        this._to = to;
     }
 
     compose(): this {
-        const [from, to] = [this._from, this._to];
         const numTicks = Math.ceil((this._range[1] - this._range[0]) / this._tickStep);
 
         const pointWithRotation = (p: Point): Point => {
-            const [cX, cY] = this._center;
-
             const [x, y] = p;
-            const [xT, yT] = [x - cX, y - cY];
 
             const [xR, yR] = [
-                xT * Math.cos(this._rotation) - yT * Math.sin(this._rotation),
-                xT * Math.sin(this._rotation) + yT * Math.cos(this._rotation)
+                x * Math.cos(this._rotation) - y * Math.sin(this._rotation),
+                x * Math.sin(this._rotation) + y * Math.cos(this._rotation)
             ];
 
-            return [xR + cX, yR + cY] as Point;
+            return [xR, yR] as Point;
         };
 
         const textLabel = (label: number, pos: number): Text => {
@@ -158,12 +144,17 @@ class NumberLine extends ComposedShape {
             }
         }
 
+        const from = [-hl, 0] as Point;
+        const to = [hl, 0] as Point;
+
         if (this._leftTip || this._rightTip) {
             const bothEnds = this._leftTip && this._rightTip;
             this.add(new Arrow({ from: pointWithRotation(from), to: pointWithRotation(to), bothEnds, ...this.styles() }));
         } else {
             this.add(new Line({ from: pointWithRotation(from), to: pointWithRotation(to), ...Object.assign({}, this._lineStyles, this.styles()) }));
         }
+
+        this.shift(this._center);
 
         return this;
     }
@@ -174,39 +165,40 @@ class NumberLine extends ComposedShape {
         const hl = this._length / 2;
 
         const rNum = math.remap(this._range[0], this._range[1], -hl + lContraction, hl - rContraction, x);
-        // // console.log([rNum, 0], this._center, math.addVec([rNum, 0], this._center));
-
-        // const [cX, cY] = this._center;
-        // const [xT, yT] = [rNum, 0];
-
-        // const [xR, yR] = [
-        //     xT * Math.cos(this._rotation) - yT * Math.sin(this._rotation),
-        //     xT * Math.sin(this._rotation) + yT * Math.cos(this._rotation)
-        // ];
-
-        // return [xR + cX, yR + cY] as Point;
-        return [rNum, 0];
-        // console.log(this._center);
-        // return math.addVec([rNum, 0], this._center);
+        return math.addVec(this.rotatePoint([rNum, 0]), this._center);
     }
 
     shift(...shifts: Point[]): this {
         super.shift(...shifts);
-
         const totalShift = shifts.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
         this._center = math.addVec(this._center, totalShift);
-        this._from = math.addVec(this._from, totalShift);
-        this._to = math.addVec(this._to, totalShift);
 
         return this;
     }
 
     from(): Point {
-        return this._from;
+        const hl = this._length / 2;
+        const from = [-hl, 0] as Point;
+
+        return math.addVec(this.rotatePoint(from), this._center);
     }
 
     to(): Point {
-        return this._to;
+        const hl = this._length / 2;
+        const to = [hl, 0] as Point;
+        return math.addVec(this.rotatePoint(to), this._center);
+    }
+
+    private rotatePoint(p: Point): Point {
+        const [x, y] = p;
+        const cosTheta = Math.cos(this._rotation);
+        const sinTheta = Math.sin(this._rotation);
+
+        // Rotating point around the origin
+        const xR = x * cosTheta - y * sinTheta;
+        const yR = x * sinTheta + y * cosTheta;
+
+        return [xR, yR];
     }
 }
 

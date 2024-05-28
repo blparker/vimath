@@ -500,15 +500,15 @@ class PointShape implements Shape, SelectableShape {
         } // else {
     }
 
-    textOnEdge(text: string, position: number, direction: Point = DOWN()): Text {
-        return this._textOnEdge(text, position, direction, false);
+    textOnEdge(text: string, position: number, direction: Point = DOWN(), standoff: number = config.standoff): Text {
+        return this._textOnEdge(text, position, direction, false, standoff);
     }
 
-    texOnEdge(text: string, position: number, direction: Point = DOWN()): Text {
-        return this._textOnEdge(text, position, direction, true);
+    texOnEdge(text: string, position: number, direction: Point = DOWN(), standoff: number = config.standoff): Text {
+        return this._textOnEdge(text, position, direction, true, standoff);
     }
 
-    private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean): Text {
+    edgeMidpoint(position: number): Point {
         function approxCurveLength(p0: Point, p1: Point, p2: Point, p3: Point, samples: number = 1000): number {
             let length = 0;
             let prevPoint = p0;
@@ -559,9 +559,12 @@ class PointShape implements Shape, SelectableShape {
         }
 
         const length = approxCurveLength(p0, p1, p2, p3);
-        const midpoint = math.evalBezier(p0, p1, p2, p3, findMidT(p0, p1, p2, p3, length / 2));
+        return math.evalBezier(p0, p1, p2, p3, findMidT(p0, p1, p2, p3, length / 2));
+    }
 
-        return new Text({ text, tex: isTex }).nextTo(midpoint, direction);
+    private _textOnEdge(text: string, position: number, direction: Point, isTex: boolean, standoff: number): Text {
+        const midpoint = this.edgeMidpoint(position);
+        return new Text({ text, tex: isTex }).nextTo(midpoint, direction, standoff);
     }
 
     private boundingBox(): { minX: number, minY: number, maxX: number, maxY: number } {

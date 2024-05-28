@@ -227,12 +227,10 @@ class Axes extends ComposedShape {
             throw new Error('Invalid arguments. Y value must be provided');
         }
 
-        const adjustedCenter = math.subVec(this.center(), this._initialCenter);
-
-        return math.addVec([
+        return [
             this._xAxis.pointOnLine(x)[0],
-            this._yAxis.pointOnLine(y)[0]
-        ], adjustedCenter);
+            this._yAxis.pointOnLine(y)[1]
+        ];
     }
 
     private origin(): Point {
