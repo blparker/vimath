@@ -165,47 +165,37 @@ class TestScene extends Scene {
         this.add(c);
         const segment = this.add(new Arc({ radius: 8, center, startAngle: 0, endAngle: Math.PI / 4, lineColor: Colors.blue() }));
 
-        // this.add(new Tex('\\theta').nextTo(segment.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
+        const startPoint = c.pointAtAngle(Math.PI / 4);
+        const zeroPoint = c.pointAtAngle(0);
+        const p = this.add(new Dot(startPoint));
 
-        // const o = this.add(new Dot());
-        const p = this.add(new Dot(c.pointAtAngle(Math.PI / 4)));
-
-        function triangle(p: Point) {
+        function triangle(p: Point): [Point, Point, Point, Point] {
             return [center, p, [p[0], center[1]], center];
         }
 
-        this.add(new Line({ from: center, to: c.pointAtAngle(0), lineStyle: 'dashed', lineWidth: 2, lineColor: Colors.gray() }));
+        const dashedLine = this.add(new Line({ from: center, to: zeroPoint, lineWidth: 2, lineColor: Colors.red() }));
         const t = this.add(new PointShape({
-            points: triangle(c.pointAtAngle(Math.PI / 4)),
+            points: triangle(startPoint),
         }));
 
-        // const hypText = this.add(t.texOnEdge('1', 0, UP(), 0.2));
-        // const sineText = this.add(t.texOnEdge('\\sin \\theta', 1, LEFT(), 0.2));
-        // const angleText = this.add(new Tex('\\theta').shift(RIGHT(0.5), UP(0.25)));
+        const sineText = this.add(t.texOnEdge('\\cos \\theta', 2, DOWN(), 0.2));
+        const angleText = this.add(new Tex('\\theta').nextTo(c.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
 
-        // function triangle(p: Point) {
-        //     return [[-6, -3], p, [p[0], -3], [-6, -3]];
-        // }
-
-        // const tri = this.add(new PointShape({
-        //     points: triangle([0, 3])
-        // }));
-
-        // this.add(new Arc({
-        //     center: [-6, -3],
-        //     radius: 8.5,
-        //     startAngle: 0,
-        //     endAngle: Math.PI / 4,
-        //     lineColor: Colors.blue(),
-        // }));
+        console.log(startPoint, zeroPoint);
+        const b = this.add(new Brace([startPoint[0], -3], [4, -3], DOWN()));
+        const bt = this.add(b.tex('1 - \\cos \\theta'))
 
         this.add(new Updater((pctComplete: number, starting: boolean) => {
             const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);
-            p.moveTo(c.pointAtAngle(x));
-            // tri.changePoints(triangle(p.center()));
-            // hypText.nextTo(t.edgeMidpoint(0), UP(), 0.2);
-            // sineText.nextTo(t.edgeMidpoint(1), RIGHT(), 0.2);
-        }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, }));
+            const newPoint = c.pointAtAngle(x);
+            p.moveTo(newPoint);
+            t.changePoints(triangle(p.center()));
+            segment.changeAngle(x);
+            sineText.nextTo(t.edgeMidpoint(1), LEFT(), 0.2);
+            angleText.nextTo(segment.pointAtAngle(x / 2), RIGHT(), 0.2);
+            b.changeFrom([newPoint[0], -3]);
+            bt.nextTo(b, DOWN(), 0.2);
+        }, { duration: 5000, easing: Easing.linear, repeat: true, }));
 
 
         // this.add(new Updater((pctComplete: number, starting: boolean) => {

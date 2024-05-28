@@ -75,6 +75,10 @@ class Easing {
         const stepSize = 1 / steps;
         return Math.floor(math.clamp(x, 0, 1) / stepSize) * stepSize;
     }
+
+    static easeStepFn(steps: number = 10): (x: number) => number {
+        return x => Easing.easeStep(x, steps);
+    }
 }
 
 

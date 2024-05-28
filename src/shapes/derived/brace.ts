@@ -97,6 +97,20 @@ class Brace extends PointShape {
         return this._to;
     }
 
+    changeFrom(newFrom: Point): this {
+        this._from = newFrom;
+        this.changePoints(Brace.calculateBezierPoints(newFrom, this._to, this._direction));
+
+        return this;
+    }
+
+    changeTo(newTo: Point): this {
+        this._to = newTo;
+        this.changePoints(Brace.calculateBezierPoints(this._from, newTo, this._direction));
+
+        return this;
+    }
+
     standoff(): number {
         return this._standoff;
     }
