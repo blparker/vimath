@@ -159,26 +159,54 @@ class TestScene extends Scene {
         // console.log(n.from());
 
         // const c = this.add(new Circle(4).changeLineColor(Colors.gray()));
-        const c = this.add(new Circle({ radius: 4, lineWidth: 2, lineColor: Colors.gray() }));
-        const segment = this.add(new Arc({ radius: 4, startAngle: 0, endAngle: Math.PI / 4 }).changeLineColor(Colors.blue()));
 
-        this.add(new Tex('\\theta').nextTo(segment.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
-        // segment.changeAngle(Math.PI / 8);
+        const center = [-4, -3] as Point;
+        const c = new Circle({ radius: 8, center, lineWidth: 2, lineColor: Colors.gray() });
+        this.add(c);
+        const segment = this.add(new Arc({ radius: 8, center, startAngle: 0, endAngle: Math.PI / 4, lineColor: Colors.blue() }));
 
-        const o = this.add(new Dot());
+        // this.add(new Tex('\\theta').nextTo(segment.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
+
+        // const o = this.add(new Dot());
         const p = this.add(new Dot(c.pointAtAngle(Math.PI / 4)));
 
         function triangle(p: Point) {
-            return [o.center(), p, [p[0], 0], o.center()];
+            return [center, p, [p[0], center[1]], center];
         }
 
+        this.add(new Line({ from: center, to: c.pointAtAngle(0), lineStyle: 'dashed', lineWidth: 2, lineColor: Colors.gray() }));
         const t = this.add(new PointShape({
-            points: triangle(p.center()),
+            points: triangle(c.pointAtAngle(Math.PI / 4)),
         }));
 
-        const hypText = this.add(t.texOnEdge('1', 0, UP(), 0.2));
-        const sineText = this.add(t.texOnEdge('\\sin \\theta', 1, LEFT(), 0.2));
-        const angleText = this.add(new Tex('\\theta').shift(RIGHT(0.5), UP(0.25)));
+        // const hypText = this.add(t.texOnEdge('1', 0, UP(), 0.2));
+        // const sineText = this.add(t.texOnEdge('\\sin \\theta', 1, LEFT(), 0.2));
+        // const angleText = this.add(new Tex('\\theta').shift(RIGHT(0.5), UP(0.25)));
+
+        // function triangle(p: Point) {
+        //     return [[-6, -3], p, [p[0], -3], [-6, -3]];
+        // }
+
+        // const tri = this.add(new PointShape({
+        //     points: triangle([0, 3])
+        // }));
+
+        // this.add(new Arc({
+        //     center: [-6, -3],
+        //     radius: 8.5,
+        //     startAngle: 0,
+        //     endAngle: Math.PI / 4,
+        //     lineColor: Colors.blue(),
+        // }));
+
+        this.add(new Updater((pctComplete: number, starting: boolean) => {
+            const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);
+            p.moveTo(c.pointAtAngle(x));
+            // tri.changePoints(triangle(p.center()));
+            // hypText.nextTo(t.edgeMidpoint(0), UP(), 0.2);
+            // sineText.nextTo(t.edgeMidpoint(1), RIGHT(), 0.2);
+        }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, }));
+
 
         // this.add(new Updater((pctComplete: number, starting: boolean) => {
         //     const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);

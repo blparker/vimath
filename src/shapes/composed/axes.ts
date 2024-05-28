@@ -102,8 +102,6 @@ class Axes extends ComposedShape {
         this._showTips = tips;
 
         [this._xAxis, this._yAxis] = this.initializeNumberlines();
-
-        this._initialCenter = this.center();
     }
 
     private initializeNumberlines(): [NumberLine, NumberLine] {
