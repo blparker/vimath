@@ -125,21 +125,19 @@ class TestScene extends Scene {
         // this.add(new Group(n1, n2, n3).arrange(UP(), 2));
 
         // this.add(new Tex('x').nextTo(n3, LEFT(), 0.5))
-        // this.add(new Tex('x^2 + 2').nextTo(n2, LEFT(), 0.5))
-        // this.add(new Tex('(x^2 + 2)^3').nextTo(n1, LEFT(), 0.5))
+        // this.add(new Tex('2x + 1').nextTo(n2, LEFT(), 0.5))
+        // this.add(new Tex('(2x + 1)^2').nextTo(n1, LEFT(), 0.5))
 
         // const f1 = x => x;
-        // const f2 = x => x * x + 2;
-        // const f3 = x => Math.pow(f2(x), 3);
+        // const f2 = x => 2 * x + 1;
+        // const f3 = x => Math.pow(f2(x), 2);
 
-        // const d3 = this.add(new Dot(n1.pointOnLine(8)));
-        // const d2 = this.add(new Dot(n2.pointOnLine(2)));
-        // const d1 = this.add(new Dot(n3.pointOnLine(0)));
+        // const d3 = this.add(new Dot(n1.pointOnLine(f3(0))));
+        // const d2 = this.add(new Dot(n2.pointOnLine(f2(0))));
+        // const d1 = this.add(new Dot(n3.pointOnLine(f1(0))));
 
         // this.add(new Updater((pctComplete: number, starting: boolean) => {
-        //     const x = math.lerp(0, 1, pctComplete);
-
-        //     console.log(pctComplete, x, f1(x), f2(x), f3(x));
+        //     const x = math.lerp(0, 2, pctComplete);
 
         //     d1.moveTo(n3.pointOnLine(f1(x)));
         //     d2.moveTo(n2.pointOnLine(f2(x)));
@@ -160,42 +158,42 @@ class TestScene extends Scene {
 
         // const c = this.add(new Circle(4).changeLineColor(Colors.gray()));
 
-        const center = [-4, -3] as Point;
-        const c = new Circle({ radius: 8, center, lineWidth: 2, lineColor: Colors.gray() });
-        this.add(c);
-        const segment = this.add(new Arc({ radius: 8, center, startAngle: 0, endAngle: Math.PI / 4, lineColor: Colors.blue() }));
+        // const center = [-4, -3] as Point;
+        // const c = new Circle({ radius: 8, center, lineWidth: 2, lineColor: Colors.gray() });
+        // this.add(c);
+        // const segment = this.add(new Arc({ radius: 8, center, startAngle: 0, endAngle: Math.PI / 4, lineColor: Colors.blue() }));
 
-        const startPoint = c.pointAtAngle(Math.PI / 4);
-        const zeroPoint = c.pointAtAngle(0);
-        const p = this.add(new Dot(startPoint));
+        // const startPoint = c.pointAtAngle(Math.PI / 4);
+        // const zeroPoint = c.pointAtAngle(0);
+        // const p = this.add(new Dot(startPoint));
 
-        function triangle(p: Point): [Point, Point, Point, Point] {
-            return [center, p, [p[0], center[1]], center];
-        }
+        // function triangle(p: Point): [Point, Point, Point, Point] {
+        //     return [center, p, [p[0], center[1]], center];
+        // }
 
-        const dashedLine = this.add(new Line({ from: center, to: zeroPoint, lineWidth: 2, lineColor: Colors.red() }));
-        const t = this.add(new PointShape({
-            points: triangle(startPoint),
-        }));
+        // const dashedLine = this.add(new Line({ from: center, to: zeroPoint, lineWidth: 2, lineColor: Colors.red() }));
+        // const t = this.add(new PointShape({
+        //     points: triangle(startPoint),
+        // }));
 
-        const sineText = this.add(t.texOnEdge('\\cos \\theta', 2, DOWN(), 0.2));
-        const angleText = this.add(new Tex('\\theta').nextTo(c.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
+        // const sineText = this.add(t.texOnEdge('\\cos \\theta', 2, DOWN(), 0.2));
+        // const angleText = this.add(new Tex('\\theta').nextTo(c.pointAtAngle(Math.PI / 8), RIGHT(), 0.2).changeColor(Colors.blue()));
 
-        console.log(startPoint, zeroPoint);
-        const b = this.add(new Brace([startPoint[0], -3], [4, -3], DOWN()));
-        const bt = this.add(b.tex('1 - \\cos \\theta'))
+        // console.log(startPoint, zeroPoint);
+        // const b = this.add(new Brace([startPoint[0], -3], [4, -3], DOWN()));
+        // const bt = this.add(b.tex('1 - \\cos \\theta'))
 
-        this.add(new Updater((pctComplete: number, starting: boolean) => {
-            const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);
-            const newPoint = c.pointAtAngle(x);
-            p.moveTo(newPoint);
-            t.changePoints(triangle(p.center()));
-            segment.changeAngle(x);
-            sineText.nextTo(t.edgeMidpoint(1), LEFT(), 0.2);
-            angleText.nextTo(segment.pointAtAngle(x / 2), RIGHT(), 0.2);
-            b.changeFrom([newPoint[0], -3]);
-            bt.nextTo(b, DOWN(), 0.2);
-        }, { duration: 5000, easing: Easing.linear, repeat: true, }));
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const x = Math.PI / 4 - math.lerp(0, Math.PI / 4, pctComplete);
+        //     const newPoint = c.pointAtAngle(x);
+        //     p.moveTo(newPoint);
+        //     t.changePoints(triangle(p.center()));
+        //     segment.changeAngle(x);
+        //     sineText.nextTo(t.edgeMidpoint(1), LEFT(), 0.2);
+        //     angleText.nextTo(segment.pointAtAngle(x / 2), RIGHT(), 0.2);
+        //     b.changeFrom([newPoint[0], -3]);
+        //     bt.nextTo(b, DOWN(), 0.2);
+        // }, { duration: 5000, easing: Easing.linear, repeat: true, }));
 
 
         // this.add(new Updater((pctComplete: number, starting: boolean) => {
@@ -237,6 +235,83 @@ class TestScene extends Scene {
         // }));
 
         // this.add(a.plot(x => x * x));
+
+        // const ground = this.add(new Line({ from: [-4, -3], to: [4, -3], lineColor: Colors.blue() }));
+        // const wall = this.add(new Line({ from: [4, -3], to: [4, 4], lineColor: Colors.blue() }));
+
+        // // 4^2 + 5^2 = c^2
+        // // 16 + 25 = c^2
+        // // 41 = c^2
+        // // c = sqrt(41)
+        // const ladder = this.add(new Line({ from: [0, -3], to: [4, 2] }))
+        // const groundBrace = this.add(new Brace({ from: ladder.from(), to: [4, -3], direction: DOWN() }));
+        // const xText = this.add(groundBrace.tex('x'));
+
+        // const wallBrace = this.add(new Brace({ from: [4, -3], to: ladder.to(), direction: RIGHT() }));
+        // const yText = this.add(wallBrace.tex('y'));
+
+        // const hText = this.add(ladder.texOnEdge('5', 0, UL()));
+
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const newY = math.lerp(2, -3, pctComplete);
+        //     const newX = math.lerp(0, 4 - Math.sqrt(41), pctComplete);
+        //     ladder.changePoints([[newX, -3], [4, newY]]);
+
+        //     groundBrace.changeFrom([newX, -3]);
+        //     wallBrace.changeTo([4, newY]);
+
+        //     xText.nextTo(groundBrace, DOWN(), 0.2);
+        //     yText.nextTo(wallBrace, RIGHT(), 0.2);
+        //     hText.nextTo(ladder.edgeMidpoint(0), UL(), 0.2);
+        // }, { duration: 3000, easing: Easing.linear, repeat: true, }));
+
+
+        const aConfig = {
+            xRange: [0, 2],
+            yRange: [0, 2],
+            xLength: 3,
+            yLength: 3,
+            xStep: 0.5,
+            showTicks: false,
+            showLabels: false,
+        };
+
+        const a1 = new Axes(aConfig);
+        const a2 = new Axes(aConfig);
+        const a3 = new Axes(aConfig);
+        const a4 = new Axes(aConfig);
+
+        const fn = x => x * x * x;
+
+        function centerPoint(a) {
+            const pt = a.point(0.8, fn(0.8));
+            return new Dot({ x: pt[0], y: pt[1], radius: 0.05, color: Colors.blue() });
+        }
+
+        function pointsAndLine(a, x1, x2) {
+            const pt1 = a.point(x1, fn(x1));
+            const pt2 = a.point(x2, fn(x2));
+        
+            return [
+                new Line({ from: pt1, to: pt2, lineColor: Colors.red(), }),
+                new Dot({ x: pt1[0], y: pt1[1], radius: 0.05, color: Colors.red() }),
+                new Dot({ x: pt2[0], y: pt2[1], radius: 0.05, color: Colors.red() }),
+                centerPoint(a)
+            ];
+        }
+
+        const p1 = a1.plot(fn);
+        const p2 = a2.plot(fn);
+        const p3 = a3.plot(fn);
+        const p4 = a4.plot(fn);
+
+        this.add(
+            // new Group(a1, p1).shift(LEFT(3), UP(2))
+            new Group(a1, p1, ...pointsAndLine(a1, 0.5, 1)).shift(LEFT(3), UP(2)),
+            new Group(a2, p2, ...pointsAndLine(a2, 0.1, 0.75)).shift(RIGHT(3), UP(2)),
+            new Group(a3, p3, ...pointsAndLine(a3, 0.7, 1.2)).shift(LEFT(3), DOWN(2)),
+            new Group(a4, p4, ...pointsAndLine(a4, 1, 1.25)).shift(RIGHT(3), DOWN(2)),
+        );
     }
 }
 

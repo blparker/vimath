@@ -116,6 +116,20 @@ class Plot extends ComposedShape {
         return this;
     }
 
+    /*
+     * TODO: Fix this. This was added to prevent the plot from being shifted. The plot is already added relative to the axes, so by using the following
+     * code:
+     * 
+     * const a = new Axes();
+     * const p = a.plot(x => x);
+     * this.add(new Group(a, p).shift(LEFT(2), UP(2)))
+     * 
+     * The plot first gets shifted to align with the axes, then get's shifted again by 2 to the left and 2 up, so it's no longer aligned with the axes
+     */
+    shift(...shifts: Point[]): this {
+        return this;
+    }
+
     valueAtX(x: number): number | null {
         return this._fn(x);
     }
