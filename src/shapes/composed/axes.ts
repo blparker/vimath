@@ -141,37 +141,6 @@ class Axes extends ComposedShape {
     }
 
     compose(): this {
-        // const [oX, oY] = this.origin();
-
-        // const xAxis = new NumberLine({
-        //     range: this._xRange,
-        //     length: this._xLength,
-        //     excludeNumbers: [0],
-        //     showTicks: this._showXTicks,
-        //     showLabels: this._showXLabels,
-        //     tickSize: this._tickSize,
-        //     tickLabelStandoff: this._labelStandoff,
-        //     labelSize: this._labelSize,
-        //     tickStep: this._xStep,
-        //     // lineCap: 'round',
-        //     rightTip: this._showTips,
-        // }).shift([0, oY]);
-
-        // const yAxis = new NumberLine({
-        //     range: this._yRange,
-        //     length: this._yLength,
-        //     rotation: Math.PI / 2,
-        //     labelDirection: LEFT(),
-        //     excludeNumbers: [0],
-        //     showTicks: this._showYTicks,
-        //     showLabels: this._showYLabels,
-        //     tickSize: this._tickSize,
-        //     tickLabelStandoff: this._labelStandoff,
-        //     labelSize: this._labelSize,
-        //     tickStep: this._yStep,
-        //     // lineCap: 'round',
-        //     rightTip: this._showTips,
-        // }).shift([oX, 0]);
         const [xAxis, yAxis] = [this._xAxis, this._yAxis];
 
         if (this._showGrid) {

@@ -22,6 +22,7 @@
 // import math from '../src/math';
 import { Scene, createScene, BaseAnimation, GridLines, Square, Text, RIGHT, LEFT, UP, DOWN, UR, DR, DL, UL, Tex, Axes, Triangle, NumberLine, Colors, Dot, Line, Arrow, Circle, Group, TangentLine, PointShape, Point, Updater, Easing, Brace, ORIGIN, Arc } from '../src';
 import math from '../src/math';
+import utils from '../src/utils';
 
 
 // const cvs = document.getElementById('cvs') as HTMLCanvasElement;
@@ -266,52 +267,170 @@ class TestScene extends Scene {
         // }, { duration: 3000, easing: Easing.linear, repeat: true, }));
 
 
-        const aConfig = {
-            xRange: [0, 2],
-            yRange: [0, 2],
-            xLength: 3,
-            yLength: 3,
-            xStep: 0.5,
-            showTicks: false,
-            showLabels: false,
-        };
-
-        const a1 = new Axes(aConfig);
-        const a2 = new Axes(aConfig);
-        const a3 = new Axes(aConfig);
-        const a4 = new Axes(aConfig);
-
-        const fn = x => x * x * x;
-
-        function centerPoint(a) {
-            const pt = a.point(0.8, fn(0.8));
-            return new Dot({ x: pt[0], y: pt[1], radius: 0.05, color: Colors.blue() });
-        }
-
-        function pointsAndLine(a, x1, x2) {
-            const pt1 = a.point(x1, fn(x1));
-            const pt2 = a.point(x2, fn(x2));
+        // const aConfig = {
+        //     xRange: [0, 2],
+        //     yRange: [0, 2],
+        //     xLength: 3,
+        //     yLength: 3,
+        //     xStep: 0.5,
+        //     showTicks: false,
+        //     showLabels: false,
+        // };
         
-            return [
-                new Line({ from: pt1, to: pt2, lineColor: Colors.red(), }),
-                new Dot({ x: pt1[0], y: pt1[1], radius: 0.05, color: Colors.red() }),
-                new Dot({ x: pt2[0], y: pt2[1], radius: 0.05, color: Colors.red() }),
-                centerPoint(a)
-            ];
-        }
+        // const a1 = new Axes(aConfig);
+        // const a2 = new Axes(aConfig);
+        // const a3 = new Axes(aConfig);
+        // const a4 = new Axes(aConfig);
+        
+        // const fn = x => x * x * x;
+        
+        // const p1 = a1.plot(fn);
+        // const p2 = a2.plot(fn);
+        // const p3 = a3.plot(fn);
+        // const p4 = a4.plot(fn);
+        
+        // function centerPoint(a) {
+        //     const pt = a.point(0.8, fn(0.8));
+        //     return new Dot({ x: pt[0], y: pt[1], radius: 0.05, color: Colors.blue() });
+        // }
+        
+        // function pointsAndLine(a, x1, x2) {
+        //     const pt1 = a.point(x1, fn(x1));
+        //     const pt2 = a.point(x2, fn(x2));
+        
+        //     return [
+        //         new Line({ from: pt1, to: pt2, lineColor: Colors.red(), }),
+        //         new Dot({ x: pt1[0], y: pt1[1], radius: 0.05, color: Colors.red() }),
+        //         new Dot({ x: pt2[0], y: pt2[1], radius: 0.05, color: Colors.red() }),
+        //         centerPoint(a)
+        //     ];
+        // }
 
-        const p1 = a1.plot(fn);
-        const p2 = a2.plot(fn);
-        const p3 = a3.plot(fn);
-        const p4 = a4.plot(fn);
+        // this.add(
+        //     new Group(a1, p1, ...pointsAndLine(a1, 0.5, 1)).shift(LEFT(3), UP(2)),
+        //     new Group(a2, p2, ...pointsAndLine(a2, 0.1, 0.75)).shift(RIGHT(3), UP(2)),
+        //     new Group(a3, p3, ...pointsAndLine(a3, 0.7, 1.2)).shift(LEFT(3), DOWN(2)),
+        //     new Group(a4, p4, ...pointsAndLine(a4, 1, 1.25)).shift(RIGHT(3), DOWN(2)),
+        // );
 
+        // const aConfig = {
+        //     xRange: [0, 2],
+        //     yRange: [0, 20],
+        //     xLength: 5,
+        //     yLength: 5,
+        //     xStep: 0.5,
+        //     showTicks: false,
+        //     showLabels: false,
+        // };
+
+        // const a1 = new Axes(aConfig);
+        // const a2 = new Axes(aConfig);
+
+        // const leftP1 = a1.point(0.5, 10 * 0.5);
+        // const leftP2 = a1.point(1.5, 10 * 1.5);
+        // const leftMid = a1.point(1, 10);
+
+        // const endpointStyles = { radius: 0.05, color: Colors.red() };
+        // const midpointStyles = { radius: 0.05, color: Colors.blue() };
+
+        // const rightP1 = a2.point(0.5, 5 * 0.5 * 0.5);
+        // const rightP2 = a2.point(1.5, 5 * 1.5 * 1.5);
+        // const rightMid = a2.point(1, 5 * 1 * 1);
+
+        // const left = this.add(new Group(
+        //     a1, a1.plot(x => 10 * x),
+        //     new Line({ from: leftP1, to: leftP2, lineColor: Colors.red() }),
+        //     new Dot({ center: leftP1, ...endpointStyles }),
+        //     new Dot({ center: leftP2, ...endpointStyles }),
+        //     new Dot({ center: leftMid, ...midpointStyles }),
+        //     new Text('(a)').nextTo(a1, DOWN()),
+        // ).shift(LEFT(3)));
+
+        // const right = this.add(new Group(
+        //     a2, a2.plot(x => 5 * x * x),
+        //     new Line({ from: rightP1, to: rightP2, lineColor: Colors.red() }),
+        //     new Dot({ center: rightP1, ...endpointStyles }),
+        //     new Dot({ center: rightP2, ...endpointStyles }),
+        //     new Dot({ center: rightMid, ...midpointStyles }),
+        //     new Text('(b)').nextTo(a2, DOWN()),
+        // ).shift(RIGHT(3)));
+
+        // this.add(
+        //     new Line({ from: rightP1, to: rightP2, lineColor: Colors.red() }),
+        //     new Dot({ center: rightP1, ...endpointStyles }),
+        //     new Dot({ center: rightP2, ...endpointStyles }),
+        //     new Dot({ center: rightMid, ...midpointStyles }),
+        // );
+
+        // this.add(axes.shift(LEFT(2)), p);
+        // this.add(new Group(axes, p).shift(LEFT(2)));
+
+        // this.add(axes.shift(LEFT(2)))
+        // this.add(axes.plot(x => x));
+
+        // const fn = x => x * x * x;
+
+        // const p1 = a1.plot(fn);
+        // const p2 = a2.plot(fn);
+
+        // function centerPoint(a) {
+        //     const pt = a.point(0.8, fn(0.8));
+        //     return new Dot({ x: pt[0], y: pt[1], radius: 0.05, color: Colors.blue() });
+        // }
+        
+        // function pointsAndLine(a, x1, x2) {
+        //     const pt1 = a.point(x1, fn(x1));
+        //     const pt2 = a.point(x2, fn(x2));
+        
+        //     return [
+        //         new Line({ from: pt1, to: pt2, lineColor: Colors.red(), }),
+        //         new Dot({ x: pt1[0], y: pt1[1], radius: 0.05, color: Colors.red() }),
+        //         new Dot({ x: pt2[0], y: pt2[1], radius: 0.05, color: Colors.red() }),
+        //         centerPoint(a)
+        //     ];
+        // }
+
+        // this.add(
+        //     new Group(a1, p1, ...pointsAndLine(a1, 0.5, 1)).shift(LEFT(3), UP(2)),
+        //     new Group(a2, p2, ...pointsAndLine(a2, 0.1, 0.75)).shift(RIGHT(3), UP(2)),
+        //     new Group(a3, p3, ...pointsAndLine(a3, 0.7, 1.2)).shift(LEFT(3), DOWN(2)),
+        //     new Group(a4, p4, ...pointsAndLine(a4, 1, 1.25)).shift(RIGHT(3), DOWN(2)),
+        // );
+
+        const axes = new Axes({
+            xLength: 10,
+            yLength: 6,
+            xRange: [0, 1],
+            xStep: 0.25,
+            yRange: [0, 50],
+            yStep: 5,
+            xLabel: 'time (h)',
+            yLabel: 'distance (miles)'
+        });
+        
+        const p = axes.plot(x => 25 * x * x).changeLineColor(Colors.green());
+        
+        const d1 = new Dot({ center: p.pointAtX(0.0), color: Colors.red() });
+        const d2 = new Dot({ center: p.pointAtX(0.5), color: Colors.red() });
+        const d3 = new Dot({ center: p.pointAtX(0.5), color: Colors.green() });
+        const l = new Line(d1, d2).changeLineColor(Colors.red());
+        
         this.add(
-            // new Group(a1, p1).shift(LEFT(3), UP(2))
-            new Group(a1, p1, ...pointsAndLine(a1, 0.5, 1)).shift(LEFT(3), UP(2)),
-            new Group(a2, p2, ...pointsAndLine(a2, 0.1, 0.75)).shift(RIGHT(3), UP(2)),
-            new Group(a3, p3, ...pointsAndLine(a3, 0.7, 1.2)).shift(LEFT(3), DOWN(2)),
-            new Group(a4, p4, ...pointsAndLine(a4, 1, 1.25)).shift(RIGHT(3), DOWN(2)),
+            axes, p,
+            d3,
+            d1,
+            d2,
+            l,
         );
+
+        this.add(new Updater((pctComplete: number, starting: boolean) => {
+            const x1 = math.lerp(0, 0.5, pctComplete);
+            const x2 = math.lerp(0.5, 1, pctComplete);
+
+            d1.moveTo(p.pointAtX(x1));
+            d2.moveTo(p.pointAtX(x2));
+            l.changeEndpoints(d1, d2);
+        }, { duration: 3000, easing: Easing.linear, repeat: true, yoyo: true, }));
     }
 }
 
