@@ -283,10 +283,19 @@ class Text implements Shape {
         return [this._x, this._y];
     }
 
+    /**
+     * Returns a boolean indicating whether the text is in TeX format
+     * @returns true if the text is in TeX format, false otherwise
+     */
     isTex(): boolean {
         return this._tex;
     }
 
+    /**
+     * Updates the text contents of the Text object
+     * @param text the new text
+     * @returns this (for chaining)
+     */
     changeText(text: string): this {
         this._text = text;
 

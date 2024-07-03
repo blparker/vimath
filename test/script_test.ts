@@ -457,7 +457,8 @@ class TestScene extends Scene {
         const secant = new Line({ from: p, to: q, length: 6, lineColor: Colors.blue() });
         const tangent = new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() });
         const tangentText = new Tex(`m`).changeColor(Colors.pink()).nextTo(tangent.to());
-        const secantText = new Tex(`m_{\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
+        const secantText = new Tex(`m_{\sec} = `).nextTo(secant.to()).changeColor(Colors.blue());
+        const secantSlope = new Text('').changeColor(Colors.blue()).nextTo(secantText, RIGHT());
         // const secantText = new Text(`m_{\\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
 
         this.add(
@@ -471,8 +472,10 @@ class TestScene extends Scene {
             pText, qText,
             tangentText,
             secantText,
+            secantSlope,
         );
 
+        // Need to throttle how quickly tex is updated since an image is being generated and rendered
         const updateText = utils.throttle(text => secantText.changeText(text), 200);
 
         this.add(new Updater((pctComplete: number, starting: boolean) => {
@@ -486,7 +489,8 @@ class TestScene extends Scene {
             secantText.nextTo(secant.to()) //.changeText(`m_{\\sec} = ${m.toFixed(2)}`);
 
             // console.log(m, pctComplete)
-            updateText(`m_{\\sec} = ${m.toFixed(2)}`);
+            // updateText(`m_{\\sec} = ${m.toFixed(2)}`);
+            secantSlope.nextTo(secantText, RIGHT()).changeText(`${m.toFixed(2)}`);
 
         }, { duration: 5000, easing: Easing.linear, repeat: true, yoyo: true, }));
         // }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, yoyo: true, }));
