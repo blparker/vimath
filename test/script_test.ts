@@ -397,39 +397,80 @@ class TestScene extends Scene {
         //     new Group(a4, p4, ...pointsAndLine(a4, 1, 1.25)).shift(RIGHT(3), DOWN(2)),
         // );
 
+        // const axes = new Axes({
+        //     xLength: 10,
+        //     ylength: 6,
+        //     xrange: [0, 1],
+        //     xstep: 0.25,
+        //     yrange: [0, 50],
+        //     ystep: 5,
+        //     xlabel: 'time (h)',
+        //     ylabel: 'distance (miles)'
+        // });
+        
+        // const p = axes.plot(x => 25 * x * x).changelinecolor(colors.green());
+        
+        // const d1 = new dot({ center: p.pointatx(0.0), color: colors.red() });
+        // const d2 = new dot({ center: p.pointatx(0.5), color: colors.red() });
+        // const d3 = new dot({ center: p.pointatx(0.5), color: colors.green() });
+        // const l = new line(d1, d2).changelinecolor(colors.red());
+        
+        // this.add(
+        //     axes, p,
+        //     d3,
+        //     d1,
+        //     d2,
+        //     l,
+        // );
+
+        // this.add(new updater((pctcomplete: number, starting: boolean) => {
+        //     const x1 = math.lerp(0, 0.5, pctcomplete);
+        //     const x2 = math.lerp(0.5, 1, pctcomplete);
+
+        //     d1.moveto(p.pointatx(x1));
+        //     d2.moveto(p.pointatx(x2));
+        //     l.changeendpoints(d1, d2);
+        // }, { duration: 3000, easing: easing.linear, repeat: true, yoyo: true, }));
+
         const axes = new Axes({
-            xLength: 10,
+            xLength: 8,
             yLength: 6,
             xRange: [0, 1],
             xStep: 0.25,
-            yRange: [0, 50],
+            yRange: [0, 35],
             yStep: 5,
+            showLabels: false,
+            showTicks: false,
             xLabel: 'time (h)',
             yLabel: 'distance (miles)'
         });
         
-        const p = axes.plot(x => 25 * x * x).changeLineColor(Colors.green());
-        
-        const d1 = new Dot({ center: p.pointAtX(0.0), color: Colors.red() });
-        const d2 = new Dot({ center: p.pointAtX(0.5), color: Colors.red() });
-        const d3 = new Dot({ center: p.pointAtX(0.5), color: Colors.green() });
-        const l = new Line(d1, d2).changeLineColor(Colors.red());
-        
+        const fn = x => Math.pow(Math.E, 12 * x * x - 2.5);
+        const plot = axes.plot(fn).changeLineColor(Colors.green());
+
+        const p = axes.point([0.5, fn(0.5)]);
+        const q = axes.point([0.69, fn(0.69)]);
+
+        const pText = new Text({ text: 'P' }).nextTo(p, [-1, 1]);
+        const qText = new Text({ text: 'Q' }).nextTo(q, LEFT(1.5));
+        const qDot = new Dot({ center: q, color: Colors.blue() });
+        const secant = new Line({ from: p, to: q, length: 6, lineColor: Colors.blue() });
+
         this.add(
-            axes, p,
-            d3,
-            d1,
-            d2,
-            l,
+            axes, plot,
+        
+            secant,
+            new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() }),
+            new Dot({ center: p, color: Colors.pink() }),
+        
+            qDot,
+            pText, qText
         );
 
         this.add(new Updater((pctComplete: number, starting: boolean) => {
-            const x1 = math.lerp(0, 0.5, pctComplete);
-            const x2 = math.lerp(0.5, 1, pctComplete);
-
-            d1.moveTo(p.pointAtX(x1));
-            d2.moveTo(p.pointAtX(x2));
-            l.changeEndpoints(d1, d2);
+            const x = math.lerp(0.5, 0.69, 1 - pctComplete);
+            qDot.moveTo(plot.pointAtX(x));
+            secant.changeEndpoints(p, qDot, true);
         }, { duration: 3000, easing: Easing.linear, repeat: true, yoyo: true, }));
     }
 }

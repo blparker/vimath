@@ -18,6 +18,7 @@ const defaultLineArgs = {
 
 class Line extends PointShape {
     private _lineCap: LineCap;
+    private _initialLength: number | undefined;
 
     constructor();
     constructor(from: Locatable, to: Locatable);
@@ -57,6 +58,7 @@ class Line extends PointShape {
 
         super({ points: Line.fromPoints(_from, _to, length), ...styles });
         this._lineCap = lineCap;
+        this._initialLength = length;
     }
 
     changeColor(color: RGBA): this {
@@ -78,8 +80,8 @@ class Line extends PointShape {
         return this.points()[0][3]!;
     }
 
-    changeEndpoints(from: Locatable, to: Locatable): this {
-        const length = math.dist(locatableToPoint(from), locatableToPoint(to));
+    changeEndpoints(from: Locatable, to: Locatable, maintainLength: boolean = false): this {
+        const length = maintainLength ? this._initialLength : math.dist(locatableToPoint(from), locatableToPoint(to));
         this.changePoints(Line.fromPoints(from, to, length));
 
         return this;
