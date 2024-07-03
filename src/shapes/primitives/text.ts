@@ -287,6 +287,16 @@ class Text implements Shape {
         return this._tex;
     }
 
+    changeText(text: string): this {
+        this._text = text;
+
+        this._textMeasurement = new TextMeasurement(config.canvasInstance!, this._tex);
+        this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
+        this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
+
+        return this;
+    }
+
     private boundingBox(): { minX: number, maxX: number, minY: number, maxY: number } {
         const left = this._align === 'left' ? this._x : this._align === 'center' ? this._x - this._textWidth / 2 : this._x - this._textWidth;
         const top = this._baseline === 'top' ? this._y : this._baseline === 'middle' ? this._y - this._textHeight / 2 : this._y - this._textHeight;

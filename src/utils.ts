@@ -49,4 +49,27 @@ function extractType<T extends Object>(obj: any): T {
 }
 
 
-export default { deepCopy, extractType };
+function throttle<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    let lastCallTime: number | null = null;
+
+    return function(...args: Parameters<T>): void {
+        const now = Date.now();
+
+        if (lastCallTime && now < lastCallTime + wait) {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(() => {
+                lastCallTime = Date.now();
+                func(...args);
+            }, wait - (now - lastCallTime));
+        } else {
+            lastCallTime = Date.now();
+            func(...args);
+        }
+    };
+}
+
+
+export default { deepCopy, extractType, throttle, };

@@ -451,27 +451,45 @@ class TestScene extends Scene {
         const p = axes.point([0.5, fn(0.5)]);
         const q = axes.point([0.69, fn(0.69)]);
 
-        const pText = new Text({ text: 'P' }).nextTo(p, [-1, 1]);
-        const qText = new Text({ text: 'Q' }).nextTo(q, LEFT(1.5));
+        const pText = new Tex({ text: 'P' }).nextTo(p, [-1, 1]);
+        const qText = new Tex({ text: 'Q' }).nextTo(q, RIGHT(1.5));
         const qDot = new Dot({ center: q, color: Colors.blue() });
         const secant = new Line({ from: p, to: q, length: 6, lineColor: Colors.blue() });
+        const tangent = new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() });
+        const tangentText = new Tex(`m`).changeColor(Colors.pink()).nextTo(tangent.to());
+        const secantText = new Tex(`m_{\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
+        // const secantText = new Text(`m_{\\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
 
         this.add(
             axes, plot,
         
             secant,
-            new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() }),
+            tangent,
             new Dot({ center: p, color: Colors.pink() }),
         
             qDot,
-            pText, qText
+            pText, qText,
+            tangentText,
+            secantText,
         );
 
+        const updateText = utils.throttle(text => secantText.changeText(text), 200);
+
         this.add(new Updater((pctComplete: number, starting: boolean) => {
-            const x = math.lerp(0.5, 0.69, 1 - pctComplete);
+            const rx = math.lerp(0.5, 0.75, 1 - pctComplete);
+            const m = (25 * rx * rx - 25 * 0.5 * 0.5) / (rx - 0.5);
+
+            const x = math.lerp(0.51, 0.69, 1 - pctComplete);
             qDot.moveTo(plot.pointAtX(x));
             secant.changeEndpoints(p, qDot, true);
-        }, { duration: 3000, easing: Easing.linear, repeat: true, yoyo: true, }));
+            qText.nextTo(qDot.center(), RIGHT(), 0.3);
+            secantText.nextTo(secant.to()) //.changeText(`m_{\\sec} = ${m.toFixed(2)}`);
+
+            // console.log(m, pctComplete)
+            updateText(`m_{\\sec} = ${m.toFixed(2)}`);
+
+        }, { duration: 5000, easing: Easing.linear, repeat: true, yoyo: true, }));
+        // }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, yoyo: true, }));
     }
 }
 
