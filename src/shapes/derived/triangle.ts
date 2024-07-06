@@ -7,7 +7,7 @@ type TriangleArgs = { x?: number; y?: number; center?: Locatable; width?: number
 
 
 class Triangle extends PointShape {
-    constructor({ x = 0, y = 0, center = undefined, width = 1, height = 1, ...styleArgs }: TriangleArgs = {}) {
+    constructor({ x = 0, y = 0, center = undefined, width = 2, height = 2, ...styleArgs }: TriangleArgs = {}) {
         super({ points: Triangle.trianglePoints(x, y, width, height), ...styleArgs });
     }
 

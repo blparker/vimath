@@ -64,8 +64,7 @@ class Text implements Shape {
         }
 
         this._textMeasurement = new TextMeasurement(config.canvasInstance!, this._tex);
-        this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
-        this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
+        [this._textWidth, this._textHeight] = this.updateDimensions();
     }
 
     center(): Point {
@@ -121,6 +120,7 @@ class Text implements Shape {
 
     scale(factor: number): this {
         this._scale += factor;
+        this.updateDimensions();
         return this;
     }
 
@@ -270,8 +270,7 @@ class Text implements Shape {
 
     changeFontSize(size: number): this {
         this._size = size;
-        this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
-        this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
+        this.updateDimensions();
         return this;
     }
 
@@ -299,9 +298,7 @@ class Text implements Shape {
     changeText(text: string): this {
         this._text = text;
 
-        this._textMeasurement = new TextMeasurement(config.canvasInstance!, this._tex);
-        this._textWidth = this._textMeasurement.textWidth(this._text, this._size, this._font);
-        this._textHeight = this._textMeasurement.textHeight(this._text, this._size, this._font);
+        this.updateDimensions();
 
         return this;
     }
@@ -317,6 +314,15 @@ class Text implements Shape {
             maxY: top + this._textHeight
         };
     }
+
+    private updateDimensions(): [number, number] {
+        const { width, height } = this._textMeasurement.textDimensions(this._text, this._size, this._font, this._scale);
+        this._textWidth = width;
+        this._textHeight = height;
+
+        return [this._textWidth, this._textHeight];
+    }
 }
+
 
 export { Text, type TextBaseline, type TextAlign, type TextArgs };

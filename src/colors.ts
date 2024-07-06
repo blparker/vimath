@@ -32,7 +32,7 @@ function parseColor(color: string | RGBA): Readonly<RGBA> {
  * @param color The RGBA color
  * @returns the rgba string
  */
-function rgbaToString(color: RGBA): string {
+function rgbaToString(color: RGBA | Readonly<RGBA>): string {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`;
 }
 

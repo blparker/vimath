@@ -33,7 +33,7 @@ class TexGenerator {
         const height = parseFloat(adaptor.getAttribute(svgNode, 'height'));
 
         const pixelsPerEx = 2;
-        const scaleFactor = size / pixelsPerEx;
+        const scaleFactor = size * scale / pixelsPerEx;
 
         const adjustedWidth = width * scaleFactor;
         const adjustedHeight = height * scaleFactor;

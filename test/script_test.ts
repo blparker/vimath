@@ -39,7 +39,7 @@ class TestAnimation extends BaseAnimation {
 
 class TestScene extends Scene {
     compose() {
-        this.add(new GridLines());
+        // this.add(new GridLines());
 
         // const a = this.add(new Axes({
         //     xRange: [-1, 5],
@@ -432,68 +432,79 @@ class TestScene extends Scene {
         //     l.changeendpoints(d1, d2);
         // }, { duration: 3000, easing: easing.linear, repeat: true, yoyo: true, }));
 
-        const axes = new Axes({
-            xLength: 8,
-            yLength: 6,
-            xRange: [0, 1],
-            xStep: 0.25,
-            yRange: [0, 35],
-            yStep: 5,
-            showLabels: false,
-            showTicks: false,
-            xLabel: 'time (h)',
-            yLabel: 'distance (miles)'
-        });
+        // const axes = new Axes({
+        //     xLength: 8,
+        //     yLength: 6,
+        //     xRange: [0, 1],
+        //     xStep: 0.25,
+        //     yRange: [0, 35],
+        //     yStep: 5,
+        //     showLabels: false,
+        //     showTicks: false,
+        //     xLabel: 'time (h)',
+        //     yLabel: 'distance (miles)'
+        // });
         
-        const fn = x => Math.pow(Math.E, 12 * x * x - 2.5);
-        const plot = axes.plot(fn).changeLineColor(Colors.green());
+        // const fn = x => Math.pow(Math.E, 12 * x * x - 2.5);
+        // const plot = axes.plot(fn).changeLineColor(Colors.green());
 
-        const p = axes.point([0.5, fn(0.5)]);
-        const q = axes.point([0.69, fn(0.69)]);
+        // const p = axes.point([0.5, fn(0.5)]);
+        // const q = axes.point([0.69, fn(0.69)]);
 
-        const pText = new Tex({ text: 'P' }).nextTo(p, [-1, 1]);
-        const qText = new Tex({ text: 'Q' }).nextTo(q, RIGHT(1.5));
-        const qDot = new Dot({ center: q, color: Colors.blue() });
-        const secant = new Line({ from: p, to: q, length: 6, lineColor: Colors.blue() });
-        const tangent = new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() });
-        const tangentText = new Tex(`m`).changeColor(Colors.pink()).nextTo(tangent.to());
-        const secantText = new Tex(`m_{\sec} = `).nextTo(secant.to()).changeColor(Colors.blue());
-        const secantSlope = new Text('').changeColor(Colors.blue()).nextTo(secantText, RIGHT());
-        // const secantText = new Text(`m_{\\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
+        // const pText = new Tex({ text: 'P' }).nextTo(p, [-1, 1]);
+        // const qText = new Tex({ text: 'Q' }).nextTo(q, RIGHT(1.5));
+        // const qDot = new Dot({ center: q, color: Colors.blue() });
+        // const secant = new Line({ from: p, to: q, length: 6, lineColor: Colors.blue() });
+        // const tangent = new TangentLine({ plot, x: 0.5, length: 4, color: Colors.pink() });
+        // const tangentText = new Tex(`m`).changeColor(Colors.pink()).nextTo(tangent.to());
+        // const secantText = new Tex(`m_{\sec} = `).nextTo(secant.to()).changeColor(Colors.blue());
+        // const secantSlope = new Text('').changeColor(Colors.blue()).nextTo(secantText, RIGHT());
+        // // const secantText = new Text(`m_{\\sec}`).nextTo(secant.to()).changeColor(Colors.blue());
 
-        this.add(
-            axes, plot,
+        // this.add(
+        //     axes, plot,
         
-            secant,
-            tangent,
-            new Dot({ center: p, color: Colors.pink() }),
+        //     secant,
+        //     tangent,
+        //     new Dot({ center: p, color: Colors.pink() }),
         
-            qDot,
-            pText, qText,
-            tangentText,
-            secantText,
-            secantSlope,
-        );
+        //     qDot,
+        //     pText, qText,
+        //     tangentText,
+        //     secantText,
+        //     secantSlope,
+        // );
 
-        // Need to throttle how quickly tex is updated since an image is being generated and rendered
-        const updateText = utils.throttle(text => secantText.changeText(text), 200);
+        // // Need to throttle how quickly tex is updated since an image is being generated and rendered
+        // const updateText = utils.throttle(text => secantText.changeText(text), 200);
 
-        this.add(new Updater((pctComplete: number, starting: boolean) => {
-            const rx = math.lerp(0.5, 0.75, 1 - pctComplete);
-            const m = (25 * rx * rx - 25 * 0.5 * 0.5) / (rx - 0.5);
+        // this.add(new Updater((pctComplete: number, starting: boolean) => {
+        //     const rx = math.lerp(0.5, 0.75, 1 - pctComplete);
+        //     const m = (25 * rx * rx - 25 * 0.5 * 0.5) / (rx - 0.5);
 
-            const x = math.lerp(0.51, 0.69, 1 - pctComplete);
-            qDot.moveTo(plot.pointAtX(x));
-            secant.changeEndpoints(p, qDot, true);
-            qText.nextTo(qDot.center(), RIGHT(), 0.3);
-            secantText.nextTo(secant.to()) //.changeText(`m_{\\sec} = ${m.toFixed(2)}`);
+        //     const x = math.lerp(0.51, 0.69, 1 - pctComplete);
+        //     qDot.moveTo(plot.pointAtX(x));
+        //     secant.changeEndpoints(p, qDot, true);
+        //     qText.nextTo(qDot.center(), RIGHT(), 0.3);
+        //     secantText.nextTo(secant.to()) //.changeText(`m_{\\sec} = ${m.toFixed(2)}`);
 
-            // console.log(m, pctComplete)
-            // updateText(`m_{\\sec} = ${m.toFixed(2)}`);
-            secantSlope.nextTo(secantText, RIGHT()).changeText(`${m.toFixed(2)}`);
+        //     // console.log(m, pctComplete)
+        //     // updateText(`m_{\\sec} = ${m.toFixed(2)}`);
+        //     secantSlope.nextTo(secantText, RIGHT()).changeText(`${m.toFixed(2)}`);
 
-        }, { duration: 5000, easing: Easing.linear, repeat: true, yoyo: true, }));
+        // }, { duration: 5000, easing: Easing.linear, repeat: true, yoyo: true, }));
         // }, { duration: 5000, easing: x => Easing.easeStep(x, 10), repeat: true, yoyo: true, }));
+
+        const v = new Tex({ text: '\\mathbb{V}', color: '#343434' }).scale(7);
+        v.shift(LEFT(2.25), UP(1.5));
+
+        const circle = new Circle({ color: '#87c2a5', lineColor: Colors.transparent() }).shift(LEFT());
+        const square = new Square({ color: '#525893', lineColor: Colors.transparent() }).shift(UP());
+        const triangle = new Triangle({ color: '#e07a5f', lineColor: Colors.transparent() }).shift(RIGHT());
+
+        const logo = new Group(triangle, square, circle, v);
+        logo.moveTo(ORIGIN);
+        this.add(logo);
     }
 }
 

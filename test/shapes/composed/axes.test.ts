@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from 'vitest';
 import { Axes } from '../../../src/shapes/composed/axes';
 import { before } from 'node:test';
-import { getTestCanvas } from '../../test_utils';
+import { expectArraysToBeClose, getTestCanvas } from '../../test_utils';
 import { config } from '../../../src/config';
 import { Line, NumberLine, Shape } from '../../../src/shapes';
 import { Text } from '../../../src/shapes';
@@ -14,7 +14,7 @@ beforeEach(() => {
 
 test('should create axes with balanced ranges and default length at (0, 0)', () => {
     const a = new Axes({
-        xRang: [-4, 4],
+        xRange: [-4, 4],
         yRange: [-4, 4],
         showXTicks: false,
         showYTicks: false,
@@ -27,15 +27,15 @@ test('should create axes with balanced ranges and default length at (0, 0)', () 
 
     expect(shapes[0].from()).toEqual([-7, 0]);
     expect(shapes[0].to()).toEqual([7, 0]);
-    // They start off unrotated
-    expect(shapes[1].from()).toEqual([-4, 0]);
-    expect(shapes[1].to()).toEqual([4, 0]);
+
+    expectArraysToBeClose(shapes[1].from(), [0, -4]);
+    expectArraysToBeClose(shapes[1].to(), [0, 4]);
 });
 
 
 test('should create axes with balanced ranges and specified length at (0, 0)', () => {
     const a = new Axes({
-        xRang: [-4, 4],
+        xRange: [-4, 4],
         yRange: [-4, 4],
         xLength: 4,
         yLength: 4,
@@ -47,9 +47,9 @@ test('should create axes with balanced ranges and specified length at (0, 0)', (
 
     expect(shapes[0].from()).toEqual([-2, 0]);
     expect(shapes[0].to()).toEqual([2, 0]);
-    // They start off unrotated
-    expect(shapes[1].from()).toEqual([-2, 0]);
-    expect(shapes[1].to()).toEqual([2, 0]);
+
+    expectArraysToBeClose(shapes[1].from(), [0, -2]);
+    expectArraysToBeClose(shapes[1].to(), [0, 2]);
 });
 
 

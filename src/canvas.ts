@@ -1,4 +1,4 @@
-import { Colors, rgbaToString } from '@/colors';
+import { Colors, rgbaToString, parseColor } from '@/colors';
 import { config } from '@/config';
 import { Shape } from '@/shapes/shape';
 import { PointShape } from '@/shapes/primitives/point_shape';
@@ -165,7 +165,7 @@ class HtmlCanvas implements Canvas {
             this._ctx.font = `${text.fontSize() * text.currentScale()}px ${text.fontFamily()}`;
             this._ctx.textBaseline = 'top';
             this._ctx.textAlign = 'left';
-            this._ctx.fillStyle = rgbaToString(styles.color ?? styles.lineColor ?? Colors.black() )
+            this._ctx.fillStyle = rgbaToString(parseColor(styles.color ?? styles.lineColor ?? Colors.black()));
 
             this._ctx.fillText(text.text(), ...this.t.translateRelative([xDraw, yDraw]));
         }
@@ -295,15 +295,14 @@ class HtmlCanvas implements Canvas {
     }
 
     private setContextStyles(shape: Shape): void {
-        // const styles = isShape(shape) ? shape.styles() : shape;
         const styles = shape.styles();
 
         if (styles.color) {
-            this._ctx.fillStyle = rgbaToString(styles.color);
+            this._ctx.fillStyle = rgbaToString(parseColor(styles.color));
         }
 
         if (styles.lineColor) {
-            this._ctx.strokeStyle = rgbaToString(styles.lineColor);
+            this._ctx.strokeStyle = rgbaToString(parseColor(styles.lineColor));
         }
 
         if (styles.lineWidth) {
